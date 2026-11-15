@@ -20,7 +20,7 @@ Requires Node.js 22.22.2+, 24.15.0+ or 26+ (see `.nvmrc`). It is an [npm workspa
 | [`packages/template-manifest`](packages/template-manifest/) | [`@dsplay/template-manifest`](https://www.npmjs.com/package/@dsplay/template-manifest): scans a template's variables for the CMS |
 | [`boilerplates/react`](boilerplates/react/), [`javascript`](boilerplates/javascript/), [`jquery`](boilerplates/jquery/) | starting points: copy one with `npx degit dsplay/dsplay-templates/boilerplates/<name> my-template` |
 
-The 31 templates (each has its own README with its variables and screen formats):
+The 33 templates (each has its own README with its variables and screen formats):
 
 | Template | |
 |---|---|
@@ -36,10 +36,12 @@ The 31 templates (each has its own README with its variables and screen formats)
 | [`facebook-posts`](templates/facebook-posts/) | Facebook Posts Template |
 | [`flight-information`](templates/flight-information/) | Flight Information Template |
 | [`horizontal-info-bar`](templates/horizontal-info-bar/) | Horizontal Information Bar |
+| [`horoscope`](templates/horoscope/) | Daily Horoscope: eight styles, one zip each |
 | [`hotel-rates`](templates/hotel-rates/) | Hotel Rates Template |
 | [`image`](templates/image/) | Image Template |
 | [`instagram-basic`](templates/instagram-basic/) | Instagram Basic Template |
 | [`instagram-image-only`](templates/instagram-image-only/) | Instagram Image Only Template |
+| [`jokes`](templates/jokes/) | Jokes: four styles, one zip each |
 | [`lottery-br-caixa-economica-federal`](templates/lottery-br-caixa-economica-federal/) | Loterias Caixa Template |
 | [`meeting-room`](templates/meeting-room/) | Meeting Room Template |
 | [`menuboard-featured-products`](templates/menuboard-featured-products/) | Menu Board (Featured Products) Template |
