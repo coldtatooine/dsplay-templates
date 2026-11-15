@@ -1,46 +1,29 @@
 import { useMemo } from 'react';
 import { useScreenInfo, screen } from '@dsplay/react-template-utils';
-import spinner from '../../assets/image/loader.gif';
 import './style.sass';
 
+// The loader draws what the template is about: a stopwatch whose hand goes round while its ring fills.
+
 function Intro(props) {
-  const {
-    w, h, screenFormat,
-  } = useScreenInfo();
+  const { w, h, screenFormat } = useScreenInfo();
 
-  const spinnerDimension = useMemo(() => {
-    let dimension = Math.min(w, h) / 8;
-
-    switch (screenFormat) {
-      case screen.LANDSCAPE:
-        break;
-      case screen.PORTRAIT:
-        break;
-      case screen.SQUARE:
-        break;
-      case screen.BANNER_H:
-      case screen.BANNER_V:
-        dimension = Math.min(w, h) / 2;
-        break;
-      default:
-        break;
-    }
-
-    return dimension;
+  const dimension = useMemo(() => {
+    const smaller = Math.min(w, h);
+    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 2 : smaller / 6;
   }, [w, h, screenFormat]);
-
-  const imageStyle = {
-    width: `${spinnerDimension}px`,
-    height: `${spinnerDimension}px`,
-  };
 
   const { className } = props;
 
   return (
     <div {...props} className={`intro ${className || ''}`}>
-      <div>
-        <img src={spinner} alt="" style={imageStyle} />
-      </div>
+      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} aria-hidden="true" focusable="false">
+        <rect x="52" y="12" width="16" height="9" rx="2" fill="#e8edf4" />
+        <line x1="60" y1="21" x2="60" y2="27" stroke="#e8edf4" strokeWidth="4" />
+        <circle cx="60" cy="68" r="38" fill="none" stroke="#2b3441" strokeWidth="6" />
+        <circle className="intro__ring" cx="60" cy="68" r="38" fill="none" stroke="#4cc38a" strokeWidth="6" strokeLinecap="round" strokeDasharray="239" transform="rotate(-90 60 68)" />
+        <line className="intro__hand" x1="60" y1="68" x2="60" y2="42" stroke="#e8edf4" strokeWidth="4" strokeLinecap="round" />
+        <circle cx="60" cy="68" r="4.5" fill="#e8edf4" />
+      </svg>
     </div>
   );
 }

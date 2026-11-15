@@ -1,48 +1,29 @@
 import { useMemo } from 'react';
 import { useScreenInfo, screen } from '@dsplay/react-template-utils';
-import spinner from '../../images/loader.gif';
 import './style.sass';
 
-// component
+// The loader draws what the template is about: a globe turning, with the hand of a clock going round it.
 
 function Intro(props) {
-  const {
-    w, h, screenFormat,
-  } = useScreenInfo();
+  const { w, h, screenFormat } = useScreenInfo();
 
-  const spinnerDimension = useMemo(() => {
-    let dimension = Math.min(w, h) / 8;
-
-    switch (screenFormat) {
-      case screen.LANDSCAPE:
-        break;
-      case screen.PORTRAIT:
-        break;
-      case screen.SQUARE:
-        break;
-      case screen.BANNER_H:
-      case screen.BANNER_V:
-        dimension = Math.min(w, h) / 2;
-        break;
-      default:
-        break;
-    }
-
-    return dimension;
+  const dimension = useMemo(() => {
+    const smaller = Math.min(w, h);
+    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 2 : smaller / 6;
   }, [w, h, screenFormat]);
-
-  const imageStyle = {
-    width: `${spinnerDimension}px`,
-    height: `${spinnerDimension}px`,
-  };
 
   const { className } = props;
 
   return (
     <div {...props} className={`intro ${className || ''}`}>
-      <div>
-        <img src={spinner} alt="" style={imageStyle} />
-      </div>
+      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} aria-hidden="true" focusable="false">
+        <circle cx="60" cy="60" r="40" fill="rgba(0, 0, 0, 0.35)" stroke="#f2f4f7" strokeWidth="5" />
+        <path d="M22 44h76M22 76h76M60 20v80" fill="none" stroke="#4dd0e1" strokeWidth="2.5" />
+        <ellipse className="intro__meridian intro__meridian--1" cx="60" cy="60" rx="26" ry="40" fill="none" stroke="#4dd0e1" strokeWidth="2.5" />
+        <ellipse className="intro__meridian intro__meridian--2" cx="60" cy="60" rx="26" ry="40" fill="none" stroke="#4dd0e1" strokeWidth="2.5" />
+        <line className="intro__hand" x1="60" y1="60" x2="60" y2="14" stroke="#ffb300" strokeWidth="4" strokeLinecap="round" />
+        <circle cx="60" cy="60" r="4.5" fill="#f2f4f7" />
+      </svg>
     </div>
   );
 }

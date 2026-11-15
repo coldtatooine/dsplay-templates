@@ -17,7 +17,6 @@ public/
 src/
   index.jsx                 <-- React entry point
   setup-tests.js             <-- Vitest setup (referenced by vite.config.js)
-  images/loader.gif          <-- intro spinner asset
   components/
     app/                      <-- top-level component (loader, images-to-preload, grid shuffle)
     main/                     <-- renders GridGallery with the preloaded images

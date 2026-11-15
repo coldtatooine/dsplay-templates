@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,36 @@
   display: flex
   justify-content: center
   align-items: center
+
+// the template can have any picture behind it: a soft shadow keeps the light strokes readable
+.intro__icon
+  overflow: visible
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
+
+.intro__meridian
+  -webkit-transform-origin: 60px 60px
+  transform-origin: 60px 60px
+  +animation(intro-turn 3s linear infinite)
+
+.intro__meridian--2
+  +animation-delay(-1.5s)
+
+.intro__hand
+  -webkit-transform-origin: 60px 60px
+  transform-origin: 60px 60px
+  +animation(intro-hand 6s linear infinite)
+
++keyframes(intro-turn)
+  0%
+    +transform(scaleX(1))
+  50%
+    +transform(scaleX(0.05))
+  100%
+    +transform(scaleX(1))
+
++keyframes(intro-hand)
+  0%
+    +transform(rotate(0deg))
+  100%
+    +transform(rotate(360deg))
