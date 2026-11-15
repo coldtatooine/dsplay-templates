@@ -76,4 +76,27 @@ describe('buildLabels', () => {
     expect(names).toContain('Alagoas');
     expect(buildLabels({ ...base, project: world, scope: { type: 'world' } }).map((l) => l.text)).not.toContain('Pernambuco');
   });
+
+  it('writes the place of the media first and the cities as dots, only for a scope with an area', () => {
+    const close = projection([[-12, -40], [-4, -34]], 1000, 500);
+    const scope = { type: 'radius', lat: -8, lon: -36, radiusKm: 300 };
+    const cities = [
+      {
+        name: 'Recife', lat: -8.07, lon: -34.92, population: 3651000,
+      },
+      {
+        name: 'Caruaru', lat: -8.28, lon: -35.97, population: 300000,
+      },
+    ];
+    const labels = buildLabels({
+      ...base, project: close, scope, cities, place: cities[0],
+    });
+    expect(labels.find((l) => l.kind === 'place').text).toBe('Recife');
+    expect(labels.filter((l) => l.text === 'Recife')).toHaveLength(1);
+    expect(labels.find((l) => l.kind === 'city').text).toBe('Caruaru');
+    expect(labels.every((l) => l.kind !== 'city' && l.kind !== 'place')).toBe(false);
+    expect(buildLabels({
+      ...base, project: world, scope: { type: 'world' }, cities, place: cities[0],
+    }).some((l) => l.kind === 'city' || l.kind === 'place')).toBe(false);
+  });
 });

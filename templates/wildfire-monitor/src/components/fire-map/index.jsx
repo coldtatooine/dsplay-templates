@@ -69,7 +69,7 @@ function FireMap({ data, dot, language }) {
   // the biggest dot is a fraction of the map's width (so a big screen does not get relatively smaller dots), never more than `dot`
   const biggestDot = Math.max(MIN_DOT_PX, Math.min(dot, width / WIDTH_PER_DOT_PX));
   const labels = outlines ? buildLabels({
-    outlines, project, width, height, scope, language,
+    outlines, project, width, height, scope, language, cities: data.cities, place: data.place,
   }) : [];
 
   return (
@@ -112,6 +112,9 @@ function FireMap({ data, dot, language }) {
             <circle cx={project.x(scope.lon)} cy={project.y(scope.lat)} r="2.5" className="fire-map__center-dot" />
           </g>
         )}
+        {labels.filter((label) => label.dotX !== undefined).map((label) => (
+          <circle key={`d-${label.key}`} className={`fire-map__city fire-map__city--${label.kind}`} cx={label.dotX} cy={label.dotY} r={label.kind === 'place' ? 4 : 2.2} />
+        ))}
         {labels.map((label) => (
           <text
             key={label.key}
