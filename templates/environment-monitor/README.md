@@ -24,7 +24,7 @@ There is no page-time variable: the rain cards are paged and every page lasts **
 
 | Field | What the template does with it |
 |-------|--------------------------------|
-| `sources` | The names of the sources in the header |
+| `sources` | The names of the sources in the header, and each `attribution.text` as the credit line in the footer |
 | `rainfall[]` | Rain cards: `last1hMm` and `intensity` (`light`, `moderate`, `heavy`, `very_heavy`, `extreme`), `name`, `city`, `operator`, `observedAt`; stations with no rain in the last hour are not drawn. `summary.rainfall` feeds the section and the footer |
 | `rivers[]` | River cards: `levelCm` against `thresholds` (`attention`, `alert`, `flood`), `status` |
 | `alerts[]` | With the rivers above their attention level, the banner at the top: `event`, `severity`, `areas`, `areaCount` |

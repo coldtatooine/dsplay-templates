@@ -21,7 +21,10 @@ const station = (id, name, last1hMm, intensity) => ({
 const result = {
   generatedAt: '2026-11-14T19:00:00.000Z',
   unavailable: [],
-  sources: { rainfall: { name: 'CEMADEN' }, rivers: { name: 'APAC' } },
+  sources: {
+    rainfall: { name: 'CEMADEN', attribution: { text: 'CEMADEN – Centro Nacional' } },
+    rivers: { name: 'APAC', attribution: { text: 'APAC – Agência Pernambucana' } },
+  },
   summary: { rainfall: { stationsReporting: 5, stationsRaining: 3, maxLast1hMm: 31.2 } },
   rainfall: [
     station('1', 'Ibura', 31.2, 'very_heavy'),
@@ -55,6 +58,7 @@ describe('Main', () => {
     expect(screen.queryByText('Moreno')).not.toBeInTheDocument(); // no rain in the last hour
     expect(screen.getByText('Nível dos Rios')).toBeInTheDocument();
     expect(screen.getByText('CEMADEN / APAC')).toBeInTheDocument();
+    expect(screen.getByText('Fonte: CEMADEN – Centro Nacional · APAC – Agência Pernambucana')).toBeInTheDocument();
     expect(screen.getByText(/Alerta — Capibaribe/)).toBeInTheDocument(); // the banner
     expect(screen.queryByText('Condições Meteorológicas')).not.toBeInTheDocument();
     expect(screen.queryByText('Mesoregião')).not.toBeInTheDocument();

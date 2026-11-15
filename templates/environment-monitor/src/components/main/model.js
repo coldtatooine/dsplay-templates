@@ -80,6 +80,11 @@ const SHORT_NAMES = {
 
 export const shortRegionName = (name) => SHORT_NAMES[name] || name;
 
+/** The credit lines of the sources that served this answer, once each: the data providers ask to be named where their data is shown. */
+export function attributions(sources) {
+  return [...new Set(Object.values(sources || {}).map((s) => s.attribution && s.attribution.text).filter(Boolean))];
+}
+
 /** The names of the sources that served this answer, once each, in the order of the datasets. */
 export function sourceNames(sources) {
   return [...new Set(Object.values(sources || {}).map((s) => s.name))];
