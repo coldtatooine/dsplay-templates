@@ -141,6 +141,12 @@ describe('Main', () => {
     expect(screen.getByText('No active alerts')).toBeInTheDocument();
   });
 
+  it('puts the message of an empty panel in a panel of its own, so it fills it and sits in the middle', () => {
+    setMedia({ duration: 30000, result: { generatedAt: result.generatedAt, sources: {}, alerts: [] } });
+    renderMain();
+    expect(screen.getByText('No active alerts').parentElement).toHaveClass('alerts-section__grid--empty');
+  });
+
   it('says so when the answer has nothing at all', () => {
     setMedia({ duration: 30000, result: { generatedAt: result.generatedAt, sources: {} } });
     renderMain();

@@ -111,7 +111,7 @@ function RainfallSection({ stations, summary, alone }) {
           {summary.maxLast1hMm > 0 ? t('max {{value}} mm', { value: summary.maxLast1hMm.toFixed(1) }) : t('no rain')}
         </span>
       </div>
-      <div className="rain-section__grid">
+      <div className={`rain-section__grid${stations.length === 0 ? ' rain-section__grid--empty' : ''}`}>
         {stations.length > 0
           ? stations.map((s) => <StationCard key={s.id} station={s} />)
           : <div className="section-empty">{t('No rain right now')}</div>}
@@ -155,7 +155,7 @@ function RiversSection({ rivers, total }) {
           {t('stations')}
         </span>
       </div>
-      <div className="rivers-section__list">
+      <div className={`rivers-section__list${rivers.length === 0 ? ' rivers-section__list--empty' : ''}`}>
         {rivers.length > 0
           ? rivers.map((r) => <RiverCard key={r.id} river={r} />)
           : <div className="section-empty">{t('No hydrological data')}</div>}
@@ -202,7 +202,7 @@ function ConditionsSection({ conditions, summary }) {
           {t('stations')}
         </span>
       </div>
-      <div className="meteo-section__grid">
+      <div className={`meteo-section__grid${conditions.length === 0 ? ' meteo-section__grid--empty' : ''}`}>
         {conditions.length > 0
           ? conditions.map((c) => <ConditionCard key={c.id} item={c} />)
           : <div className="section-empty">{t('No weather data')}</div>}
@@ -351,7 +351,7 @@ function AlertsSection({ alerts, shown }) {
         <span className="section-header__title">{t('Weather alerts')}</span>
         <span className="section-header__meta">{alerts.length}</span>
       </div>
-      <div className="alerts-section__grid">
+      <div className={`alerts-section__grid${alerts.length === 0 ? ' alerts-section__grid--empty' : ''}`}>
         {alerts.length > 0
           ? shown.map((a) => <AlertCard key={a.id} alert={a} />)
           : <div className="section-empty">{t('No active alerts')}</div>}
