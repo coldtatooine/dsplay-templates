@@ -4,12 +4,42 @@
 export const FALLBACK_PAGE_MS = 8000;
 
 /**
- * How many rain cards one page holds: the cells of the grid the stylesheet draws (2 columns by 4 rows, or 3 by 3 on a portrait screen), so nothing has to be
- * configured and a page is always full except the last. Where matchMedia is missing (a test) it is the landscape grid.
+ * How many rain cards one page holds: the cells of the grid the stylesheet draws for the screen format (2 columns by 4 rows in landscape, 3 by 3 on a portrait
+ * screen, 3 by 2 on a square one, which has less height for the stacked panels), so nothing has to be configured and a page is always full except the last.
  */
-export function cardsPerPage() {
-  const portrait = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(orientation: portrait)').matches;
-  return portrait ? 9 : 8;
+export const cardsPerPage = (screenFormat) => {
+  if (screenFormat === 'portrait') return 9;
+  if (screenFormat === 'square') return 6;
+  return 8;
+};
+
+/**
+ * How many river rows fit the panel in each format (the service lists the most serious first, so what is left out is the least): a row is never shown half.
+ * 5 in landscape, 12 in portrait (two columns of 6), 4 on a square screen (two columns of 2).
+ */
+export const riversShown = (screenFormat) => {
+  if (screenFormat === 'portrait') return 12;
+  if (screenFormat === 'square') return 4;
+  return 5;
+};
+
+/** How many warning cards one page of the alerts panel holds (2 columns by 2 rows, or 1 by 4 stacked). */
+export const ALERT_CARDS_PER_PAGE = 4;
+
+/** What the answer brings, so that a panel is drawn only for information that exists: an absent dataset is no panel, an empty one is a panel that says so. */
+export function panelsOf(data) {
+  const present = (list) => Array.isArray(list);
+  const panels = {
+    rain: present(data.rainfall),
+    rivers: present(data.rivers),
+    conditions: present(data.conditions),
+    climate: present(data.climate) && data.climate.length > 0,
+    alerts: present(data.alerts),
+  };
+  // A place whose only information is warnings (the United States, Canada, Europe) gets them as a panel of their own; otherwise they ride in the banner.
+  panels.alertsPanel = panels.alerts && !(panels.rain || panels.rivers || panels.conditions || panels.climate);
+  panels.any = panels.rain || panels.rivers || panels.conditions || panels.climate || panels.alerts;
+  return panels;
 }
 
 /** The rain cards are paged; every page is shown for the same time, so that the pages together last as long as the media. */
@@ -100,4 +130,23 @@ export function attributions(sources) {
 /** The names of the sources that served this answer, once each, in the order of the datasets. */
 export function sourceNames(sources) {
   return [...new Set(Object.values(sources || {}).map((s) => s.name))];
+}
+
+/**
+ * What the banner formats (a thin strip, a narrow column) rotate through, most urgent first: the banner items (rivers above their attention level and
+ * warnings), then the stations raining. Each says what to write; the component writes it.
+ */
+export function bannerFeed(data) {
+  const urgent = bannerItems(data.rivers, data.alerts).map((item) => (item.river
+    ? { key: item.key, status: item.status, label: BANNER_LABELS[item.status], title: item.river.name, value: item.river.levelCm.toFixed(1), unit: 'cm' }
+    : { key: item.key, status: item.status, title: item.alert.event, detail: item.alert.area }));
+  const raining = rainingStations(data.rainfall).map((station) => ({
+    key: `rain-${station.id}`,
+    status: SEVERITY_CLASS[station.intensity],
+    title: station.name,
+    detail: station.city,
+    value: station.last1hMm.toFixed(1),
+    unit: 'mm',
+  }));
+  return [...urgent, ...raining].slice(0, 12);
 }

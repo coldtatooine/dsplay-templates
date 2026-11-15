@@ -1,13 +1,16 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   FALLBACK_PAGE_MS,
   attributions,
+  bannerFeed,
   bannerItems,
   cardsPerPage,
+  panelsOf,
   pageInterval,
   rainingStations,
   riverProgress,
   riverStatusClass,
+  riversShown,
   shortRegionName,
   sourceNames,
 } from './model';
@@ -110,17 +113,58 @@ describe('attributions', () => {
 });
 
 describe('cardsPerPage', () => {
-  afterEach(() => vi.unstubAllGlobals());
+  it('is what the stylesheet grid holds for the format: 8 (2x4) in landscape, 9 (3x3) in portrait, 6 (3x2) on a square screen', () => {
+    expect(cardsPerPage('landscape')).toBe(8);
+    expect(cardsPerPage('portrait')).toBe(9);
+    expect(cardsPerPage('square')).toBe(6);
+  });
+});
 
-  it('is what the stylesheet grid holds: 8 (2x4) in landscape, 9 (3x3) in portrait', () => {
-    vi.stubGlobal('matchMedia', (query) => ({ matches: query === '(orientation: portrait)' }));
-    expect(cardsPerPage()).toBe(9);
-    vi.stubGlobal('matchMedia', () => ({ matches: false }));
-    expect(cardsPerPage()).toBe(8);
+describe('panelsOf', () => {
+  it('draws a panel for each dataset the answer brings, an empty list included, and none for an absent one', () => {
+    expect(panelsOf({ rainfall: [], rivers: [{}], alerts: [] })).toMatchObject({ rain: true, rivers: true, conditions: false, climate: false, alerts: true, alertsPanel: false, any: true });
+    expect(panelsOf({ climate: [] }).climate).toBe(false); // a region bar with no region is nothing
   });
 
-  it('is the landscape grid where matchMedia is missing', () => {
-    vi.stubGlobal('matchMedia', undefined);
-    expect(cardsPerPage()).toBe(8);
+  it('gives the warnings a panel of their own only when they are all the place has', () => {
+    expect(panelsOf({ alerts: [{}] })).toMatchObject({ alertsPanel: true, any: true });
+    expect(panelsOf({ alerts: [{}], rainfall: [] }).alertsPanel).toBe(false);
+  });
+
+  it('knows an answer with nothing in it', () => {
+    expect(panelsOf({}).any).toBe(false);
+  });
+});
+
+describe('bannerFeed', () => {
+  it('lists the urgent items first, then the stations raining, at most twelve', () => {
+    const rainfall = Array.from({ length: 14 }, (_, i) => ({
+      id: `s${i}`, name: `S${i}`, city: 'RECIFE', last1hMm: 14 - i, intensity: 'heavy',
+    }));
+    const feed = bannerFeed({
+      rainfall,
+      rivers: [{
+        id: 'r', name: 'Engenho', river: 'Capibaribe', status: 'flood', levelCm: 340.04,
+      }],
+      alerts: [{
+        id: 'w', event: 'Chuvas Intensas', severity: 'severe', areas: ['Recife'], areaCount: 1,
+      }],
+    });
+    expect(feed).toHaveLength(12);
+    expect(feed[0]).toMatchObject({ key: 'river-r', label: 'Flood', title: 'Capibaribe', value: '340.0', unit: 'cm' });
+    expect(feed[1]).toMatchObject({ key: 'alert-w', title: 'Chuvas Intensas', detail: 'Recife' });
+    expect(feed[2]).toMatchObject({ key: 'rain-s0', status: 'forte', title: 'S0', value: '14.0', unit: 'mm' });
+  });
+
+  it('is empty for an answer with nothing urgent and no rain', () => {
+    expect(bannerFeed({})).toEqual([]);
+  });
+});
+
+describe('riversShown', () => {
+  it('is the rows the panel holds for the format, so no row is shown half', () => {
+    expect(riversShown('landscape')).toBe(5);
+    expect(riversShown('portrait')).toBe(12);
+    expect(riversShown('square')).toBe(4);
   });
 });

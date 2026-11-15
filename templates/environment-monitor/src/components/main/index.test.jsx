@@ -5,10 +5,14 @@ import {
   render, screen, cleanup, act,
 } from '@testing-library/react';
 
-const state = { media: {} };
+const state = { media: {}, format: 'landscape' };
 
 vi.mock('@dsplay/react-template-utils', () => ({
   useMedia: () => state.media,
+  useScreenInfo: () => ({ screenFormat: state.format }),
+  screen: {
+    LANDSCAPE: 'landscape', PORTRAIT: 'portrait', SQUARE: 'square', H_BANNER: 'h-banner', V_BANNER: 'v-banner',
+  },
 }));
 
 import { I18nextProvider } from 'react-i18next';
@@ -41,8 +45,9 @@ const result = {
 
 const renderMain = () => render(<I18nextProvider i18n={i18n}><Main /></I18nextProvider>);
 
-function setMedia(media) {
+function setMedia(media, format = 'landscape') {
   state.media = media;
+  state.format = format;
 }
 
 beforeEach(async () => {
@@ -103,5 +108,71 @@ describe('Main', () => {
     expect(screen.getByText('Precipitação')).toBeInTheDocument();
     expect(screen.getByText(/Alerta — Capibaribe/)).toBeInTheDocument();
     expect(screen.getByText('Fonte: CEMADEN – Centro Nacional · APAC – Agência Pernambucana')).toBeInTheDocument();
+  });
+
+  it('draws a panel only for the information the answer brings: no rivers, no conditions, no climate is no empty panel', () => {
+    setMedia({ duration: 30000, result: { ...result, rivers: undefined, sources: { rainfall: result.sources.rainfall } } });
+    const { container } = renderMain();
+    expect(screen.getByText('Rainfall')).toBeInTheDocument();
+    expect(screen.queryByText('River levels')).not.toBeInTheDocument();
+    expect(container.querySelector('.dashboard__right')).toBeNull(); // nothing for the right column
+    expect(container.querySelector('.rain-section--alone')).not.toBeNull(); // so the rain takes the whole width
+    expect(screen.queryByText('No rain right now')).not.toBeInTheDocument();
+  });
+
+  it('gives a place whose only information is warnings a panel of warnings, paged, and no banner repeating them', () => {
+    const alerts = Array.from({ length: 6 }, (_, i) => ({
+      id: `a${i}`, event: `Wind ${i}`, severity: 'moderate', areas: ['Houston'], areaCount: 1, description: 'Strong gusts.', expires: '2026-11-15T20:00:00.000Z',
+    }));
+    setMedia({ duration: 20000, result: { generatedAt: result.generatedAt, sources: {}, alerts } });
+    const { container } = renderMain();
+    expect(screen.getByText('Weather alerts')).toBeInTheDocument();
+    expect(container.querySelector('.alert-banner')).toBeNull();
+    expect(container.querySelectorAll('.alert-card')).toHaveLength(4);
+    expect(screen.getByText('Wind 0')).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(10000)); // 6 warnings, 4 a page: 2 pages of 10 s
+    expect(screen.getByText('Wind 4')).toBeInTheDocument();
+    expect(screen.queryByText('Wind 0')).not.toBeInTheDocument();
+  });
+
+  it('says there are no warnings, rather than showing nothing, when that is all the place has', () => {
+    setMedia({ duration: 30000, result: { generatedAt: result.generatedAt, sources: {}, alerts: [] } });
+    renderMain();
+    expect(screen.getByText('No active alerts')).toBeInTheDocument();
+  });
+
+  it('says so when the answer has nothing at all', () => {
+    setMedia({ duration: 30000, result: { generatedAt: result.generatedAt, sources: {} } });
+    renderMain();
+    expect(screen.getByText('No information for this place')).toBeInTheDocument();
+  });
+
+  it('stacks the panels on a portrait or a square screen, and keeps the rows of the landscape grid otherwise', () => {
+    setMedia({ duration: 30000, result }, 'portrait');
+    expect(renderMain().container.querySelector('.dashboard--stacked')).not.toBeNull();
+    cleanup();
+    setMedia({ duration: 30000, result }, 'square');
+    const square = renderMain().container;
+    expect(square.querySelector('.dashboard--stacked')).not.toBeNull();
+    expect(square.querySelector('.dashboard--square')).not.toBeNull();
+    cleanup();
+    setMedia({ duration: 30000, result }, 'landscape');
+    expect(renderMain().container.querySelector('.dashboard--stacked')).toBeNull();
+  });
+
+  it('shows the most urgent items in a strip on a horizontal banner, three at a time, and in a column on a vertical one, five', () => {
+    const many = Array.from({ length: 10 }, (_, i) => station(`s${i}`, `Station ${i}`, 20 - i, 'heavy'));
+    setMedia({ duration: 20000, result: { ...result, rainfall: many } }, 'h-banner');
+    const strip = renderMain().container;
+    expect(strip.querySelector('.banner--h')).not.toBeNull();
+    expect(strip.querySelector('.dashboard')).toBeNull();
+    expect(strip.querySelectorAll('.banner-item')).toHaveLength(3);
+    expect(screen.getByText('Capibaribe')).toBeInTheDocument(); // the river above its alert level leads, with its level's name under it
+    expect(screen.getByText('Alert')).toBeInTheDocument();
+    cleanup();
+    setMedia({ duration: 20000, result: { ...result, rainfall: many } }, 'v-banner');
+    const column = renderMain().container;
+    expect(column.querySelector('.banner--v')).not.toBeNull();
+    expect(column.querySelectorAll('.banner-item')).toHaveLength(5);
   });
 });

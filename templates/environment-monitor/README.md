@@ -8,6 +8,34 @@ It fetches nothing: DSPLAY's player gateway answers the media with the `environm
 
 > Built with [Vite](https://vitejs.dev/), requires Node.js 22.22.2+, 24.15.0+, or 26+ (see the repository's [`.nvmrc`](https://github.com/dsplay/dsplay-templates/blob/main/.nvmrc)). Only players that speak the gateway protocol play this media type (Android 4.2.0 and later, and the web-based players).
 
+## Supported screen formats
+
+| Landscape | Portrait | Square |
+|-----------|----------|--------|
+| ![Landscape](docs/screenshots/landscape.png) | ![Portrait](docs/screenshots/portrait.png) | ![Square](docs/screenshots/square.png) |
+
+| Horizontal banner | Vertical banner |
+|--------------------|-------------------|
+| ![Horizontal Banner](docs/screenshots/h-banner.png) | ![Vertical Banner](docs/screenshots/v-banner.png) |
+
+> The panels stack on a portrait or square screen (9 rain cards in portrait, 6 on a square one, which has less height). The two banner formats do not draw the panels: they rotate the most urgent items (rivers above their attention level and warnings first, then the stations raining) three at a time on the horizontal strip and five at a time in the vertical column. The screenshots are of the example data in `public/dsplay-data.js`, drawn at the real screen sizes (1920x1080, 1080x1920, 1080x1080, 1920x200, 200x1920).
+
+## Adaptive panels
+
+Nothing is configured for this: the template draws a panel only for the information the answer brings, so a place never shows an empty one.
+
+| The answer has | Panel |
+|----------------|-------|
+| `rainfall` | Rainfall (the stations raining in the last hour; an empty list says "No rain right now") |
+| `rivers` | River levels (the most serious first; as many rows as fit the format) |
+| `conditions` | Weather conditions |
+| `climate` (not empty) | The region bar |
+| `alerts` and nothing else (the United States, Canada, Europe) | Weather alerts, as cards of their own, paged; an empty list says "No active alerts" |
+| `alerts` next to other panels | In the banner at the top, with the rivers above their attention level |
+| nothing | "No information for this place" |
+
+A column with no panel is not drawn, so the other takes the whole width.
+
 ## Template variables
 
 None. Nothing is configured on the template: the rain cards are paged by what fits the grid (8 per page, 9 on a portrait screen), the number of pages comes from the answer (the stations raining in the last hour), and every page lasts **the media's duration divided by the number of pages** (at least one second each), so the pages together last as long as the media.

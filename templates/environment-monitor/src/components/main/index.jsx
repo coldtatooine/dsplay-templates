@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMedia } from '@dsplay/react-template-utils';
+import { screen, useMedia, useScreenInfo } from '@dsplay/react-template-utils';
 import {
   BANNER_LABELS,
   SEVERITY_CLASS,
   SEVERITY_LABELS,
+  ALERT_CARDS_PER_PAGE,
+  bannerFeed,
   bannerItems,
   cardsPerPage,
-  pageInterval,
+  panelsOf,
+  riversShown,
   rainingStations,
   riverProgress,
   attributions,
@@ -15,6 +18,7 @@ import {
   shortRegionName,
   sourceNames,
 } from './model';
+import usePager from './use-pager';
 import './style.sass';
 
 function formatTime(date, lng) {
@@ -93,10 +97,10 @@ function StationCard({ station }) {
   );
 }
 
-function RainfallSection({ stations, summary }) {
+function RainfallSection({ stations, summary, alone }) {
   const { t } = useTranslation();
   return (
-    <div className="rain-section">
+    <div className={`rain-section${alone ? ' rain-section--alone' : ''}`}>
       <div className="section-header">
         <span className="section-header__title">{t('Rainfall')}</span>
         <span className="section-header__meta">
@@ -139,14 +143,14 @@ function RiverCard({ river }) {
   );
 }
 
-function RiversSection({ rivers }) {
+function RiversSection({ rivers, total }) {
   const { t } = useTranslation();
   return (
     <div className="rivers-section">
       <div className="section-header">
         <span className="section-header__title">{t('River levels')}</span>
         <span className="section-header__meta">
-          {rivers.length}
+          {total}
           {' '}
           {t('stations')}
         </span>
@@ -272,13 +276,13 @@ function ClimateBar({ climate }) {
 }
 
 function Footer({
-  summary, generatedAt, partial, page, totalPages, credits,
+  summary, generatedAt, partial, page, totalPages, credits, rain,
 }) {
   const { t, i18n } = useTranslation();
   return (
     <footer className="dashboard__footer">
       <div className="dashboard__legend">
-        {Object.entries(SEVERITY_LABELS).map(([key, lbl]) => (
+        {rain && Object.entries(SEVERITY_LABELS).map(([key, lbl]) => (
           <span key={key} className={`dashboard__legend-item dashboard__legend-item--${key}`}>
             <span className={`dashboard__legend-dot dashboard__legend-dot--${key}`} />
             <span className="dashboard__legend-label">{t(lbl)}</span>
@@ -314,68 +318,160 @@ function Footer({
 }
 
 const EMPTY_SUMMARY = { stationsReporting: 0, stationsRaining: 0, maxLast1hMm: null };
+const SEVERITY_BY_CAP = { minor: 'pre-alerta', moderate: 'alerta', severe: 'enchente', extreme: 'enchente', unknown: 'pre-alerta' };
 
-/**
- * Shows `media.result`, the `environment/1` answer of the DSPLAY player gateway; nothing is fetched here. The rain cards are paged and every
- * page lasts the media's duration divided by the number of pages. Nothing here is configured: the cards per page come from the grid, the pages from the answer.
- */
-function Main() {
-  const { duration, result } = useMedia();
-  const data = result || {};
-  const itemsPerPage = cardsPerPage();
+function AlertCard({ alert }) {
+  const { t, i18n } = useTranslation();
+  const status = SEVERITY_BY_CAP[alert.severity] || 'pre-alerta';
+  const places = alert.areas.slice(0, 3).join(', ');
+  const more = Math.max(0, alert.areaCount - Math.min(alert.areas.length, 3));
+  return (
+    <div className={`alert-card alert-card--${status}`}>
+      <div className="alert-card__bar" />
+      <div className="alert-card__body">
+        <div className="alert-card__event">{alert.event}</div>
+        {places && (
+          <div className="alert-card__places">
+            {places}
+            {more > 0 ? ` ${t('and {{count}} more', { count: more })}` : ''}
+          </div>
+        )}
+        {alert.description && <div className="alert-card__text">{alert.description}</div>}
+        <div className="alert-card__until">{t('Until {{time}}', { time: formatDateTime(new Date(alert.expires), i18n.language) })}</div>
+      </div>
+    </div>
+  );
+}
 
-  const [page, setPage] = useState(0);
+function AlertsSection({ alerts, shown }) {
+  const { t } = useTranslation();
+  return (
+    <div className="alerts-section">
+      <div className="section-header">
+        <span className="section-header__title">{t('Weather alerts')}</span>
+        <span className="section-header__meta">{alerts.length}</span>
+      </div>
+      <div className="alerts-section__grid">
+        {alerts.length > 0
+          ? shown.map((a) => <AlertCard key={a.id} alert={a} />)
+          : <div className="section-empty">{t('No active alerts')}</div>}
+      </div>
+    </div>
+  );
+}
+
+function useClock() {
   const [clock, setClock] = useState(new Date());
-
-  const raining = rainingStations(data.rainfall);
-  const totalPages = Math.max(1, Math.ceil(raining.length / itemsPerPage));
-  const interval = pageInterval(duration, totalPages);
-  const summary = data.summary || {};
-  const banner = bannerItems(data.rivers, data.alerts);
-
   useEffect(() => {
     const timer = setInterval(() => setClock(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+  return clock;
+}
 
-  useEffect(() => {
-    if (totalPages <= 1) return undefined;
-    const timer = setInterval(() => {
-      setPage((p) => (p + 1) % totalPages);
-    }, interval);
-    return () => clearInterval(timer);
-  }, [totalPages, interval]);
-
-  const pageStations = raining.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+/** The thin strip and the narrow column: what is most urgent, a few items at a time. */
+function Banner({ vertical }) {
+  const { t, i18n } = useTranslation();
+  const { duration, result } = useMedia();
+  const data = result || {};
+  const clock = useClock();
+  const feed = bannerFeed(data);
+  const pager = usePager(feed.length, vertical ? 5 : 3, duration);
 
   return (
-    <div className="dashboard">
+    <div className={`banner ${vertical ? 'banner--v' : 'banner--h'}`}>
+      <div className="banner__brand">
+        <span className="banner__title">{t('Weather monitoring')}</span>
+        <span className="banner__clock">{formatTime(clock, i18n.language).slice(0, 5)}</span>
+      </div>
+      <div className="banner__items">
+        {feed.length === 0 && panelsOf(data).any && <span className="banner__none">{t('No rain right now')}</span>}
+        {pager.slice(feed).map((item) => (
+          <div key={item.key} className={`banner-item banner-item--${item.status}`}>
+            <span className="banner-item__bar" />
+            <span className="banner-item__text">
+              <span className="banner-item__title">{item.title}</span>
+              {(item.label || item.detail) && <span className="banner-item__detail">{item.label ? t(item.label) : item.detail}</span>}
+            </span>
+            {item.value && (
+              <span className="banner-item__value">
+                {item.value}
+                <span className="banner-item__unit">{item.unit}</span>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ format }) {
+  const { t } = useTranslation();
+  const { duration, result } = useMedia();
+  const data = result || {};
+  const panels = panelsOf(data);
+  const clock = useClock();
+
+  const stacked = format === 'portrait' || format === 'square';
+  const raining = rainingStations(data.rainfall);
+  const alerts = data.alerts || [];
+  // What turns the pages: the rain cards, or the warnings when they are all the place has.
+  const rainPager = usePager(raining.length, cardsPerPage(format), duration);
+  const alertPager = usePager(alerts.length, ALERT_CARDS_PER_PAGE, duration);
+  const pager = panels.alertsPanel ? alertPager : rainPager;
+
+  const summary = data.summary || {};
+  const banner = bannerItems(data.rivers, panels.alertsPanel ? [] : data.alerts);
+  const left = panels.rain || panels.rivers;
+  const right = panels.conditions || panels.alertsPanel;
+
+  return (
+    <div className={`dashboard${stacked ? ' dashboard--stacked' : ''}${format === 'square' ? ' dashboard--square' : ''}`}>
       <Header clock={clock} sources={data.sources} />
       {banner.length > 0 && <AlertBanner items={banner} />}
-      <div className="dashboard__body">
-        <div className="dashboard__left">
-          {data.rainfall && (
-            <RainfallSection stations={pageStations} summary={summary.rainfall || EMPTY_SUMMARY} />
+      {panels.any ? (
+        <div className="dashboard__body">
+          {left && (
+            <div className={`dashboard__left${right ? '' : ' dashboard__left--alone'}`}>
+              {panels.rain && <RainfallSection stations={rainPager.slice(raining)} summary={summary.rainfall || EMPTY_SUMMARY} alone={!panels.rivers} />}
+              {panels.rivers && <RiversSection rivers={data.rivers.slice(0, riversShown(format))} total={data.rivers.length} />}
+            </div>
           )}
-          {data.rivers && <RiversSection rivers={data.rivers} />}
-        </div>
-        <div className="dashboard__right">
-          {data.conditions && (
-            <ConditionsSection conditions={data.conditions} summary={summary.conditions || { stations: data.conditions.length }} />
+          {right && (
+            <div className={`dashboard__right${left ? '' : ' dashboard__right--alone'}`}>
+              {panels.conditions && <ConditionsSection conditions={data.conditions} summary={summary.conditions || { stations: data.conditions.length }} />}
+              {panels.alertsPanel && <AlertsSection alerts={alerts} shown={alertPager.slice(alerts)} />}
+            </div>
           )}
         </div>
-      </div>
-      <ClimateBar climate={data.climate || []} />
+      ) : (
+        <div className="dashboard__body"><div className="section-empty">{t('No information for this place')}</div></div>
+      )}
+      <ClimateBar climate={panels.climate ? data.climate : []} />
       <Footer
         summary={summary}
         generatedAt={data.generatedAt}
         partial={(data.unavailable || []).length > 0}
-        page={Math.min(page, totalPages - 1)}
-        totalPages={totalPages}
+        page={pager.page}
+        totalPages={pager.pages}
         credits={attributions(data.sources)}
+        rain={panels.rain}
       />
     </div>
   );
+}
+
+/**
+ * Shows `media.result`, the `environment/1` answer of the DSPLAY player gateway; nothing is fetched here, and nothing is configured: a panel is drawn only for
+ * the information the answer brings, the cards per page come from the grid, and every page lasts the media's duration divided by the number of pages. The
+ * banner formats show the most urgent items instead of the panels.
+ */
+function Main() {
+  const { screenFormat } = useScreenInfo();
+  if (screenFormat === screen.H_BANNER) return <Banner />;
+  if (screenFormat === screen.V_BANNER) return <Banner vertical />;
+  return <Dashboard format={screenFormat} />;
 }
 
 export default Main;
