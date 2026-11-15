@@ -20,7 +20,7 @@ There is no page-time variable: the rain cards are paged and every page lasts **
 
 ## Expected media data (`media.result`)
 
-`media.result` is the `environment/1` document. A dataset the place has no source for is **absent** (its section is not drawn); an empty list means there is nothing to report. See `public/dsplay-data.js` for a complete example.
+`media.result` is the `environment/1` document. A dataset the place has no source for is **absent** (its section is not drawn); an empty list means there is nothing to report. `public/dsplay-data.js` is a complete example (Recife and Pernambuco): every field of every dataset is filled (rain of every intensity over two pages, rivers in every status, three warnings, twelve weather stations, the five mesoregions), and the build ships it as the example data the CMS preview and the screenshots use.
 
 | Field | What the template does with it |
 |-------|--------------------------------|
