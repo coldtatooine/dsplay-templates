@@ -41,6 +41,14 @@ describe('FireMap', () => {
     expect(container.querySelector('.fire-map__land--scope')).not.toBeNull();
   });
 
+  it('draws the lines of the states for a country or radius scope, not for the world', async () => {
+    const { container } = renderMap({ data: { scope: { type: 'country', country: 'BR', lat: -8, lon: -35 }, points } });
+    await waitFor(() => expect(container.querySelectorAll('.fire-map__state').length).toBeGreaterThan(0));
+    const world = renderMap({ data: { scope: { type: 'world' }, points } });
+    await waitFor(() => expect(world.container.querySelectorAll('.fire-map__land').length).toBeGreaterThan(0));
+    expect(world.container.querySelector('.fire-map__state')).toBeNull();
+  });
+
   it('draws small dots: the biggest is a fraction of the map width, never past the cap', () => {
     // jsdom has no layout, so the map is the 800 px fallback: 800 / 240 = 3.3 px for the biggest dot
     const { container } = renderMap({ data: { scope: { type: 'world' }, points } });
