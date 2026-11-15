@@ -166,7 +166,7 @@ export function intensityOf(point) {
 /** The radius of a dot on the map, in pixels: the area grows with the number of detections it stands for, between a floor and a ceiling. */
 export function dotRadius(count, max, base) {
   const share = max > 0 ? Math.sqrt(count / max) : 0;
-  return Math.round((base * (0.35 + 0.65 * share)) * 10) / 10;
+  return Math.round((base * (0.3 + 0.7 * share)) * 10) / 10;
 }
 
 /** The strongest dot's count, the scale of every dot. */

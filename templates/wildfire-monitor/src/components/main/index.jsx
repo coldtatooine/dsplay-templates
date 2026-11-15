@@ -166,8 +166,8 @@ function Dashboard({ data, format }) {
   const clock = useClock();
   const panels = panelsOf(data);
   const stacked = format === 'portrait' || format === 'square';
-  // the biggest dot of the map, in pixels: small, so that a world full of detections is not a world on fire
-  const dot = format === 'square' ? 6 : 7;
+  // the cap of the biggest dot of the map, in pixels: small, so that a world full of detections is not a world on fire (the map scales it down on a small box)
+  const dot = format === 'square' ? 4 : 5;
 
   return (
     <div className={`dashboard${stacked ? ' dashboard--stacked' : ''}${format === 'square' ? ' dashboard--square' : ''}`}>
