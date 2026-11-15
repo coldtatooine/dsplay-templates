@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useMedia, useTemplateIntVal } from '@dsplay/react-template-utils';
+import { useMedia } from '@dsplay/react-template-utils';
 import {
   SEVERITY_CLASS,
   SEVERITY_LABELS,
   bannerItems,
+  cardsPerPage,
   pageInterval,
   rainingStations,
   riverProgress,
@@ -308,12 +309,12 @@ const EMPTY_SUMMARY = { stationsReporting: 0, stationsRaining: 0, maxLast1hMm: n
 
 /**
  * Shows `media.result`, the `environment/1` answer of the DSPLAY player gateway; nothing is fetched here. The rain cards are paged and every
- * page lasts the media's duration divided by the number of pages.
+ * page lasts the media's duration divided by the number of pages. Nothing here is configured: the cards per page come from the grid, the pages from the answer.
  */
 function Main() {
   const { duration, result } = useMedia();
   const data = result || {};
-  const itemsPerPage = useTemplateIntVal('items_per_page', 8);
+  const itemsPerPage = cardsPerPage();
 
   const [page, setPage] = useState(0);
   const [clock, setClock] = useState(new Date());
