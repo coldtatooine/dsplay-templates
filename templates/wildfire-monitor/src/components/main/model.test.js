@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  attributions, countryName, dotRadius, formatCount, mapBounds, maxCount, panelsOf, regionName, regionsShown, scopeLabel, trend,
+  attributions, countryName, dotRadius, formatCount, mapBounds, maxCount, panelsOf, projection, regionName, regionsShown, ringPath, scopeLabel, trend,
 } from './model';
 
 describe('regionsShown', () => {
@@ -65,6 +65,46 @@ describe('mapBounds', () => {
   it('shows the points of a country, or a box around its place when it has none', () => {
     expect(mapBounds({ scope: { type: 'country', lat: 0, lon: 0 }, points: [{ lat: -3, lon: 10 }, { lat: 4, lon: 20 }] })).toEqual([[-3, 10], [4, 20]]);
     expect(mapBounds({ scope: { type: 'country', lat: 10, lon: 20 }, points: [] })).toEqual([[5, 15], [15, 25]]);
+  });
+});
+
+describe('projection', () => {
+  const bounds = [[-10, -50], [10, 50]];
+
+  it('fits the bounds in the box, centred, with the longitudes as wide as the latitudes are tall', () => {
+    const p = projection(bounds, 1000, 500, 0);
+    expect(p.x(-50)).toBeCloseTo(0, 0);
+    expect(p.x(50)).toBeCloseTo(1000, 0);
+    // 100 degrees across a 1000 px box is 10 px a degree, so 20 degrees of latitude are 200 px, centred in the 500 px height
+    expect(p.y(10)).toBeCloseTo(150, 0);
+    expect(p.y(-10)).toBeCloseTo(350, 0);
+    expect(p.y(0)).toBeCloseTo(250, 0);
+  });
+
+  it('keeps the proportions in a box of another shape', () => {
+    const wide = projection([[-5, -5], [5, 5]], 1000, 200, 0);
+    expect(wide.y(5)).toBeCloseTo(0, 0);
+    expect(wide.y(-5)).toBeCloseTo(200, 0);
+    expect(wide.x(0)).toBeCloseTo(500, 0);
+  });
+
+  it('narrows the longitudes away from the equator', () => {
+    const equator = projection([[-1, -1], [1, 1]], 500, 500, 0);
+    const north = projection([[59, -1], [61, 1]], 500, 500, 0);
+    expect(equator.scale).toBeGreaterThan(0);
+    expect(north.x(1) - north.x(0)).toBeLessThan(equator.x(1) - equator.x(0) + 1);
+  });
+});
+
+describe('ringPath', () => {
+  const project = { x: (lon) => lon, y: (lat) => lat };
+
+  it('writes a closed path for a ring that touches the box', () => {
+    expect(ringPath([0, 0, 10, 0, 10, 10], project, 100, 100)).toBe('M0 0L10 0L10 10Z');
+  });
+
+  it('writes nothing for a ring wholly outside the box', () => {
+    expect(ringPath([500, 500, 600, 500, 600, 600], project, 100, 100)).toBe('');
   });
 });
 

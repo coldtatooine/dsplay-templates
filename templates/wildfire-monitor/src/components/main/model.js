@@ -109,6 +109,39 @@ export function mapBounds(data) {
   return [[-58, -170], [75, 170]];
 }
 
+/**
+ * Where a position falls in a box of `width` by `height` pixels that shows `bounds` (`[[south, west], [north, east]]`): a plain latitude/longitude grid with the
+ * longitudes narrowed by the cosine of the middle latitude, so a country keeps its shape, fitted and centred with a margin.
+ */
+export function projection(bounds, width, height, margin = 8) {
+  const [[south, west], [north, east]] = bounds;
+  const middle = (south + north) / 2;
+  const narrow = Math.max(Math.cos((middle * Math.PI) / 180), 0.2);
+  const spanX = Math.max((east - west) * narrow, 0.0001);
+  const spanY = Math.max(north - south, 0.0001);
+  const scale = Math.min((width - 2 * margin) / spanX, (height - 2 * margin) / spanY);
+  const offsetX = (width - spanX * scale) / 2;
+  const offsetY = (height - spanY * scale) / 2;
+  return {
+    scale,
+    x: (lon) => offsetX + (lon - west) * narrow * scale,
+    y: (lat) => offsetY + (north - lat) * scale,
+  };
+}
+
+/** The `d` of an SVG path for a flat ring `[lon, lat, lon, lat, ...]`, or `''` when no point of it falls in the box. */
+export function ringPath(ring, project, width, height) {
+  let inside = false;
+  let d = '';
+  for (let i = 0; i < ring.length; i += 2) {
+    const x = project.x(ring[i]);
+    const y = project.y(ring[i + 1]);
+    if (x >= 0 && x <= width && y >= 0 && y <= height) inside = true;
+    d += `${i === 0 ? 'M' : 'L'}${Math.round(x * 10) / 10} ${Math.round(y * 10) / 10}`;
+  }
+  return inside ? `${d}Z` : '';
+}
+
 /** The radius of a dot on the map, in pixels: the area grows with the number of detections it stands for, between a floor and a ceiling. */
 export function dotRadius(count, max, base) {
   const share = max > 0 ? Math.sqrt(count / max) : 0;
