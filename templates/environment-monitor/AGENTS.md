@@ -32,11 +32,11 @@ scripts/pack.mjs           <-- zips the Vite build output into template.zip
 - **Page time = media duration / number of pages** (`pageInterval` in `model.js`); do not add a page-time variable.
 - **Rain intensity comes from the service** (`light` ... `extreme`, from the last hour); the template only maps it to the card colour classes in `style.sass`.
 - Times in the answer are ISO 8601 UTC; the template draws them in the screen's own time zone.
-- The text is Brazilian Portuguese on purpose (Brazilian sources). The styles use `vw` units and were designed for 16:9; they are unchanged from cemaden.
+- **Text goes through `react-i18next`** as in the boilerplate: the key is the English text, `src/i18n.js` maps every key in en, pt, es, it, de and nl (`src/i18n.test.js` checks the languages have the same keys and placeholders, and that every `t()` key is defined and every key used), and the language is `dsplay_config.locale` split at `_`, set in an effect in `App`. `nsSeparator` is off because some keys end with a colon. What the answer carries (a warning's event, stations' names) is shown as the source wrote it. The styles use `vw` units and were designed for 16:9; they are unchanged from cemaden.
 
-## File and folder naming, Sass, components
+## File and folder naming, Sass, components, boilerplate
 
-The conventions of the other React templates apply (see `templates/weather-forecast/AGENTS.md`): kebab-case files, `.sass` (indented) for our own styles, one folder with an `index.jsx` per component, imported by folder.
+This template follows `boilerplates/react` (its `AGENTS.md` is the reference): kebab-case files, `.sass` (indented) for our own styles, one folder with an `index.jsx` per component imported by folder, the same `eslint.config.js`, `vite.config.js`, `scripts/pack.mjs`, `jsconfig.json`, `src/sanity.test.js` and dependency versions. What differs on purpose: the name and version, the page title and language, and no demo content. When the boilerplate changes (a dependency bump, a config), bring the same change here.
 
 ## Browser/WebView compatibility
 

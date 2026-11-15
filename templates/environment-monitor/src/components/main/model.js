@@ -26,12 +26,13 @@ export const SEVERITY_CLASS = {
   extreme: 'extrema',
 };
 
+/** The English text of each intensity, which is also its translation key (see i18n.js). */
 export const SEVERITY_LABELS = {
-  fraca: 'Fraca',
-  moderada: 'Moderada',
-  forte: 'Forte',
-  'muito-forte': 'Muito Forte',
-  extrema: 'Extrema',
+  fraca: 'Light',
+  moderada: 'Moderate',
+  forte: 'Heavy',
+  'muito-forte': 'Very heavy',
+  extrema: 'Extreme',
 };
 
 /** The stations that are raining right now (the last hour), in the order the service ranked them. */
@@ -43,30 +44,32 @@ const RIVER_STATUS_CLASS = { attention: 'pre-alerta', alert: 'alerta', flood: 'e
 
 /** The card's colour class for a river's status (`normal` has its own). */
 export const riverStatusClass = (status) => RIVER_STATUS_CLASS[status] || 'normal';
-const RIVER_STATUS_LABEL = { 'pre-alerta': 'Pré-Alerta', alerta: 'Alerta', enchente: 'Enchente' };
+
+/** The English text (and translation key) of each banner level. */
+export const BANNER_LABELS = { 'pre-alerta': 'Pre-alert', alerta: 'Alert', enchente: 'Flood' };
 const ALERT_SEVERITY_CLASS = {
   minor: 'pre-alerta', moderate: 'alerta', severe: 'enchente', extreme: 'enchente', unknown: 'pre-alerta',
 };
 
-/** The banner's items: the rivers above their attention level and the weather warnings in effect, most serious first. */
+/**
+ * The banner's items: the rivers above their attention level and the weather warnings in effect, most serious first. Each says what to write, not the
+ * words: a river is its level's label, its name and its level; a warning is the event as its source wrote it, its first place and how many more.
+ */
 export function bannerItems(rivers, alerts) {
   const order = { enchente: 3, alerta: 2, 'pre-alerta': 1 };
   const items = [
     ...(rivers || [])
       .filter((r) => RIVER_STATUS_CLASS[r.status])
-      .map((r) => {
-        const status = RIVER_STATUS_CLASS[r.status];
-        return {
-          key: `river-${r.id}`,
-          status,
-          text: `${RIVER_STATUS_LABEL[status]} — ${r.river || r.name} (${r.levelCm.toFixed(1)} cm)`,
-        };
-      }),
-    ...(alerts || []).map((a) => {
-      const status = ALERT_SEVERITY_CLASS[a.severity] || 'pre-alerta';
-      const where = a.areas && a.areas.length > 0 ? ` (${a.areas[0]}${a.areaCount > 1 ? ` e mais ${a.areaCount - 1}` : ''})` : '';
-      return { key: `alert-${a.id}`, status, text: `${a.event}${where}` };
-    }),
+      .map((r) => ({
+        key: `river-${r.id}`,
+        status: RIVER_STATUS_CLASS[r.status],
+        river: { name: r.river || r.name, levelCm: r.levelCm },
+      })),
+    ...(alerts || []).map((a) => ({
+      key: `alert-${a.id}`,
+      status: ALERT_SEVERITY_CLASS[a.severity] || 'pre-alerta',
+      alert: { event: a.event, area: a.areas && a.areas.length > 0 ? a.areas[0] : null, more: Math.max(0, (a.areaCount || 0) - 1) },
+    })),
   ];
   return items.sort((a, b) => order[b.status] - order[a.status]);
 }

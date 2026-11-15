@@ -45,7 +45,7 @@ describe('bannerItems', () => {
     id, name: `Station ${id}`, river: 'Capibaribe', status, levelCm,
   });
 
-  it('lists the rivers above their attention level and the warnings, most serious first', () => {
+  it('lists the rivers above their attention level and the warnings, most serious first, as what to write', () => {
     const items = bannerItems(
       [river('1', 'attention'), river('2', 'normal'), river('3', 'flood', 340.04)],
       [{
@@ -53,13 +53,18 @@ describe('bannerItems', () => {
       }],
     );
     expect(items.map((i) => i.key)).toEqual(['river-3', 'alert-w', 'river-1']);
-    expect(items[0]).toMatchObject({ status: 'enchente', text: 'Enchente — Capibaribe (340.0 cm)' });
-    expect(items[1]).toMatchObject({ status: 'alerta', text: 'Chuvas Intensas (Recife e mais 2)' });
+    expect(items[0]).toMatchObject({ status: 'enchente', river: { name: 'Capibaribe', levelCm: 340.04 } });
+    expect(items[1]).toMatchObject({ status: 'alerta', alert: { event: 'Chuvas Intensas', area: 'Recife', more: 2 } });
+    expect(items[2].status).toBe('pre-alerta');
   });
 
   it('is empty when nothing is above normal, or when the datasets are absent', () => {
     expect(bannerItems([river('1', 'normal')], [])).toEqual([]);
     expect(bannerItems(undefined, undefined)).toEqual([]);
+  });
+
+  it('a warning with no place has none to name', () => {
+    expect(bannerItems([], [{ id: 'x', event: 'Wind', severity: 'extreme', areas: [], areaCount: 0 }])[0]).toMatchObject({ status: 'enchente', alert: { area: null, more: 0 } });
   });
 });
 

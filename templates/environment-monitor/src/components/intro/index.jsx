@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScreenInfo, screen } from '@dsplay/react-template-utils';
 import './style.sass';
 
@@ -6,6 +7,7 @@ import './style.sass';
 
 function Intro(props) {
   const { w, h, screenFormat } = useScreenInfo();
+  const { t } = useTranslation();
 
   const dimension = useMemo(() => {
     const smaller = Math.min(w, h);
@@ -16,7 +18,7 @@ function Intro(props) {
 
   return (
     <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} role="img" aria-label="Carregando">
+      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} role="img" aria-label={t('Loading')}>
         <g className="intro__cloud">
           <path
             d="M34 70a18 18 0 0 1 3-35.7A26 26 0 0 1 87 38a16 16 0 0 1 1 32z"

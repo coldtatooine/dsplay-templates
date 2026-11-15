@@ -11,6 +11,8 @@ vi.mock('@dsplay/react-template-utils', () => ({
   useMedia: () => state.media,
 }));
 
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../../i18n';
 import Main from '.';
 
 const station = (id, name, last1hMm, intensity) => ({
@@ -37,11 +39,16 @@ const result = {
   alerts: [],
 };
 
+const renderMain = () => render(<I18nextProvider i18n={i18n}><Main /></I18nextProvider>);
+
 function setMedia(media) {
   state.media = media;
 }
 
-beforeEach(() => vi.useFakeTimers());
+beforeEach(async () => {
+  await i18n.changeLanguage('en');
+  vi.useFakeTimers();
+});
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
@@ -50,22 +57,22 @@ afterEach(() => {
 describe('Main', () => {
   it('draws what the answer holds and nothing it does not: the sections of absent datasets are left out', () => {
     setMedia({ duration: 30000, result });
-    render(<Main />);
-    expect(screen.getByText('Precipitação')).toBeInTheDocument();
+    renderMain();
+    expect(screen.getByText('Rainfall')).toBeInTheDocument();
     expect(screen.getByText('Ibura')).toBeInTheDocument();
     expect(screen.queryByText('Moreno')).not.toBeInTheDocument(); // no rain in the last hour
-    expect(screen.getByText('Nível dos Rios')).toBeInTheDocument();
+    expect(screen.getByText('River levels')).toBeInTheDocument();
     expect(screen.getByText('CEMADEN / APAC')).toBeInTheDocument();
-    expect(screen.getByText('Fonte: CEMADEN – Centro Nacional · APAC – Agência Pernambucana')).toBeInTheDocument();
-    expect(screen.getByText(/Alerta — Capibaribe/)).toBeInTheDocument(); // the banner
-    expect(screen.queryByText('Condições Meteorológicas')).not.toBeInTheDocument();
-    expect(screen.queryByText('Mesoregião')).not.toBeInTheDocument();
+    expect(screen.getByText('Source: CEMADEN – Centro Nacional · APAC – Agência Pernambucana')).toBeInTheDocument();
+    expect(screen.getByText(/Alert — Capibaribe/)).toBeInTheDocument(); // the banner
+    expect(screen.queryByText('Weather conditions')).not.toBeInTheDocument();
+    expect(screen.queryByText('Region')).not.toBeInTheDocument();
   });
 
   it('pages the rain cards by what the grid holds, each page for the media duration divided by the pages', () => {
     const many = Array.from({ length: 11 }, (_, i) => station(`s${i}`, `Station ${i}`, 20 - i, 'heavy'));
     setMedia({ duration: 20000, result: { ...result, rainfall: many } });
-    render(<Main />);
+    renderMain();
     expect(screen.getByText('Station 0')).toBeInTheDocument();
     expect(screen.getByText('Station 7')).toBeInTheDocument(); // 8 cards in the 2x4 grid
     expect(screen.queryByText('Station 8')).not.toBeInTheDocument();
@@ -79,11 +86,22 @@ describe('Main', () => {
 
   it('says so when a dataset failed, and survives an answer with nothing in it', () => {
     setMedia({ duration: 30000, result: { ...result, unavailable: ['alerts'] } });
-    render(<Main />);
-    expect(screen.getByText('Atualização parcial')).toBeInTheDocument();
+    renderMain();
+    expect(screen.getByText('Partial update')).toBeInTheDocument();
     cleanup();
     setMedia({ duration: 30000 });
-    render(<Main />);
-    expect(screen.getByText('Monitoramento Meteorológico')).toBeInTheDocument();
+    renderMain();
+    expect(screen.getByText('Weather monitoring')).toBeInTheDocument();
+  });
+
+  it('speaks the language the player is set to, and the dates in it', async () => {
+    setMedia({ duration: 30000, result });
+    vi.useRealTimers(); // i18next resolves a language change on a timer
+    await i18n.changeLanguage('pt');
+    renderMain();
+    expect(screen.getByText('Monitoramento meteorológico')).toBeInTheDocument();
+    expect(screen.getByText('Precipitação')).toBeInTheDocument();
+    expect(screen.getByText(/Alerta — Capibaribe/)).toBeInTheDocument();
+    expect(screen.getByText('Fonte: CEMADEN – Centro Nacional · APAC – Agência Pernambucana')).toBeInTheDocument();
   });
 });

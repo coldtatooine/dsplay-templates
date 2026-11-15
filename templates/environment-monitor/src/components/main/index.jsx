@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMedia } from '@dsplay/react-template-utils';
 import {
+  BANNER_LABELS,
   SEVERITY_CLASS,
   SEVERITY_LABELS,
   bannerItems,
@@ -15,16 +17,16 @@ import {
 } from './model';
 import './style.sass';
 
-function formatTime(date) {
-  return date.toLocaleTimeString('pt-BR', {
+function formatTime(date, lng) {
+  return date.toLocaleTimeString(lng, {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
   });
 }
 
-function formatDateTime(date) {
-  return date.toLocaleString('pt-BR', {
+function formatDateTime(date, lng) {
+  return date.toLocaleString(lng, {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
@@ -33,25 +35,29 @@ function formatDateTime(date) {
 }
 
 function Header({ clock, sources }) {
+  const { t, i18n } = useTranslation();
   return (
     <header className="dashboard__header">
       <div className="dashboard__title">
-        <span className="dashboard__title-main">Monitoramento Meteorológico</span>
+        <span className="dashboard__title-main">{t('Weather monitoring')}</span>
         <span className="dashboard__title-sub">{sourceNames(sources).join(' / ')}</span>
       </div>
-      <div className="dashboard__clock">{formatTime(clock)}</div>
+      <div className="dashboard__clock">{formatTime(clock, i18n.language)}</div>
     </header>
   );
 }
 
 function AlertBanner({ items }) {
+  const { t } = useTranslation();
   return (
     <div className="alert-banner">
       <span className="alert-banner__icon">⚠</span>
       <div className="alert-banner__list">
         {items.map((item) => (
           <span key={item.key} className={`alert-banner__item alert-banner__item--${item.status}`}>
-            {item.text}
+            {item.river
+              ? `${t(BANNER_LABELS[item.status])} — ${item.river.name} (${item.river.levelCm.toFixed(1)} cm)`
+              : `${item.alert.event}${item.alert.area ? ` (${item.alert.area}${item.alert.more > 0 ? ` ${t('and {{count}} more', { count: item.alert.more })}` : ''})` : ''}`}
           </span>
         ))}
       </div>
@@ -60,9 +66,10 @@ function AlertBanner({ items }) {
 }
 
 function StationCard({ station }) {
+  const { t, i18n } = useTranslation();
   const severity = SEVERITY_CLASS[station.intensity];
-  const label = SEVERITY_LABELS[severity];
-  const time = formatTime(new Date(station.observedAt)).slice(0, 5);
+  const label = t(SEVERITY_LABELS[severity]);
+  const time = formatTime(new Date(station.observedAt), i18n.language).slice(0, 5);
 
   return (
     <div className={`station-card station-card--${severity}`}>
@@ -87,22 +94,23 @@ function StationCard({ station }) {
 }
 
 function RainfallSection({ stations, summary }) {
+  const { t } = useTranslation();
   return (
     <div className="rain-section">
       <div className="section-header">
-        <span className="section-header__title">Precipitação</span>
+        <span className="section-header__title">{t('Rainfall')}</span>
         <span className="section-header__meta">
           {summary.stationsReporting}
           {' '}
-          estações ·
-          {' '}
-          {summary.maxLast1hMm > 0 ? `máx ${summary.maxLast1hMm.toFixed(1)} mm` : 'sem chuva'}
+          {t('stations')}
+          {' · '}
+          {summary.maxLast1hMm > 0 ? t('max {{value}} mm', { value: summary.maxLast1hMm.toFixed(1) }) : t('no rain')}
         </span>
       </div>
       <div className="rain-section__grid">
         {stations.length > 0
           ? stations.map((s) => <StationCard key={s.id} station={s} />)
-          : <div className="section-empty">Sem precipitação no momento</div>}
+          : <div className="section-empty">{t('No rain right now')}</div>}
       </div>
     </div>
   );
@@ -132,20 +140,21 @@ function RiverCard({ river }) {
 }
 
 function RiversSection({ rivers }) {
+  const { t } = useTranslation();
   return (
     <div className="rivers-section">
       <div className="section-header">
-        <span className="section-header__title">Nível dos Rios</span>
+        <span className="section-header__title">{t('River levels')}</span>
         <span className="section-header__meta">
           {rivers.length}
           {' '}
-          estações
+          {t('stations')}
         </span>
       </div>
       <div className="rivers-section__list">
         {rivers.length > 0
           ? rivers.map((r) => <RiverCard key={r.id} river={r} />)
-          : <div className="section-empty">Sem dados hidrológicos</div>}
+          : <div className="section-empty">{t('No hydrological data')}</div>}
       </div>
     </div>
   );
@@ -178,26 +187,28 @@ function ConditionCard({ item }) {
 }
 
 function ConditionsSection({ conditions, summary }) {
+  const { t } = useTranslation();
   return (
     <div className="meteo-section">
       <div className="section-header">
-        <span className="section-header__title">Condições Meteorológicas</span>
+        <span className="section-header__title">{t('Weather conditions')}</span>
         <span className="section-header__meta">
           {summary.stations}
           {' '}
-          estações
+          {t('stations')}
         </span>
       </div>
       <div className="meteo-section__grid">
         {conditions.length > 0
           ? conditions.map((c) => <ConditionCard key={c.id} item={c} />)
-          : <div className="section-empty">Sem dados meteorológicos</div>}
+          : <div className="section-empty">{t('No weather data')}</div>}
       </div>
     </div>
   );
 }
 
 function RegionCard({ region }) {
+  const { t } = useTranslation();
   const hasTempRange = region.temperatureMinC !== null && region.temperatureMaxC !== null;
   const hasRain = region.rainMm !== null && region.rainMm > 0.05;
   const hasEto = region.etoMm !== null && region.etoMm > 0.05;
@@ -209,7 +220,7 @@ function RegionCard({ region }) {
         <span className="meso-card__stations">
           {region.stations}
           {' '}
-          est.
+          {t('st.')}
         </span>
       </div>
       <div className="meso-card__temp">
@@ -227,8 +238,7 @@ function RegionCard({ region }) {
       <div className="meso-card__metrics">
         {region.humidityPct !== null && (
           <span className="meso-card__metric meso-card__metric--rh">
-            {Math.round(region.humidityPct)}
-            % UR
+            {t('{{value}}% RH', { value: Math.round(region.humidityPct) })}
           </span>
         )}
         {hasRain && (
@@ -249,10 +259,11 @@ function RegionCard({ region }) {
 }
 
 function ClimateBar({ climate }) {
+  const { t } = useTranslation();
   if (climate.length === 0) return null;
   return (
     <div className="climate-bar">
-      <span className="climate-bar__label">Mesoregião</span>
+      <span className="climate-bar__label">{t('Region')}</span>
       <div className="climate-bar__cards">
         {climate.map((r) => <RegionCard key={r.id} region={r} />)}
       </div>
@@ -263,32 +274,29 @@ function ClimateBar({ climate }) {
 function Footer({
   summary, generatedAt, partial, page, totalPages, credits,
 }) {
+  const { t, i18n } = useTranslation();
   return (
     <footer className="dashboard__footer">
       <div className="dashboard__legend">
         {Object.entries(SEVERITY_LABELS).map(([key, lbl]) => (
           <span key={key} className={`dashboard__legend-item dashboard__legend-item--${key}`}>
             <span className={`dashboard__legend-dot dashboard__legend-dot--${key}`} />
-            <span className="dashboard__legend-label">{lbl}</span>
+            <span className="dashboard__legend-label">{t(lbl)}</span>
           </span>
         ))}
       </div>
       <div className="dashboard__footer-center">
         <span className="dashboard__last-update">
-          {partial || !generatedAt ? 'Atualização parcial' : formatDateTime(new Date(generatedAt))}
+          {partial || !generatedAt ? t('Partial update') : formatDateTime(new Date(generatedAt), i18n.language)}
         </span>
         {summary.rainfall && (
           <span className="dashboard__stations-count">
-            {summary.rainfall.stationsRaining}
-            {' '}
-            com chuva de
-            {' '}
-            {summary.rainfall.stationsReporting}
+            {t('{{rain}} raining of {{total}}', { rain: summary.rainfall.stationsRaining, total: summary.rainfall.stationsReporting })}
           </span>
         )}
         {credits.length > 0 && (
           <span className="dashboard__attribution">
-            Fonte:
+            {t('Source:')}
             {' '}
             {credits.join(' · ')}
           </span>
