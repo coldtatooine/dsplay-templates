@@ -659,12 +659,12 @@ $accent: #1565c0
   background: rgba(165, 214, 167, 0.1)
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Portrait orientation
+// Stacked layout: a portrait or square screen, where the panels sit one under the other
 // vw em portrait ≈ 56% do vw em landscape (ex: 1080px vs 1920px de largura)
 // → fontes escaladas ~1.5× para compensar; grids ajustados para aproveitar
 //   a largura total disponível quando as colunas são empilhadas verticalmente
 // ─────────────────────────────────────────────────────────────────────────────
-@media (orientation: portrait)
+.dashboard--stacked
 
   // Empilha colunas verticalmente
   .dashboard__body
@@ -830,3 +830,338 @@ $accent: #1565c0
   .dashboard__dot
     width: 0.8vw
     height: 0.8vw
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Adaptive panels: only the information the answer brings has a panel, and a column
+// with nothing in it is not drawn, so the one that is takes the whole width (or height)
+// ─────────────────────────────────────────────────────────────────────────────
+.dashboard__left.dashboard__left--alone, .dashboard__right.dashboard__right--alone
+  -webkit-flex: 1 1 auto
+  flex: 1 1 auto
+
+.rain-section.rain-section--alone
+  -webkit-flex: 1 1 auto
+  flex: 1 1 auto
+
+.dashboard__body > .section-empty
+  flex: 1
+
+// Alerts panel: the warnings of a place whose only information is warnings
+.alerts-section
+  height: 100%
+  display: flex
+  flex-direction: column
+  background: rgba(255, 255, 255, 0.02)
+  border: 1px solid $border
+  border-radius: 4px
+  overflow: hidden
+
+.alerts-section__grid
+  flex: 1
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  grid-template-rows: repeat(2, 1fr)
+  gap: .5vw
+  padding: .5vw
+  overflow: hidden
+
+.alert-card
+  display: flex
+  min-height: 0
+  background: $bg-card
+  border: 1px solid $border
+  border-radius: 3px
+  overflow: hidden
+
+.alert-card__bar
+  flex: 0 0 .35vw
+  background: $c-pre-alerta
+
+.alert-card--alerta .alert-card__bar
+  background: $c-alerta
+
+.alert-card--enchente .alert-card__bar
+  background: $c-enchente
+
+.alert-card__body
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  gap: .25em
+  padding: .8vw 1vw
+
+.alert-card__event
+  font-family: 'Oswald', sans-serif
+  font-size: 1.6vw
+  letter-spacing: .03em
+  color: $text-primary
+
+.alert-card__places
+  font-size: 1.05vw
+  color: $text-secondary
+
+.alert-card__text
+  flex: 1
+  min-height: 0
+  overflow: hidden
+  font-size: 1vw
+  line-height: 1.35
+  color: $text-primary
+  opacity: .85
+
+.alert-card__until
+  font-size: .85vw
+  color: $text-secondary
+
+.dashboard--stacked
+  .alerts-section__grid
+    grid-template-columns: 1fr
+    grid-template-rows: repeat(4, 1fr)
+    gap: .8vw
+    padding: .8vw
+
+  .alert-card__bar
+    flex-basis: .6vw
+
+  .alert-card__event
+    font-size: 2.6vw
+
+  .alert-card__places
+    font-size: 1.8vw
+
+  .alert-card__text
+    font-size: 1.7vw
+
+  .alert-card__until
+    font-size: 1.4vw
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Banner formats: a thin strip (horizontal) and a narrow column (vertical) with the
+// most urgent items, a few at a time. Plain vh/vw units (no CSS variables: the WebView
+// of Android 4.4 has none).
+// ─────────────────────────────────────────────────────────────────────────────
+.banner
+  display: flex
+  width: 100%
+  height: 100%
+  box-sizing: border-box
+  overflow: hidden
+  background: $bg-body
+  color: $text-primary
+  font-family: 'Roboto Regular', sans-serif
+
+.banner__brand
+  display: flex
+  justify-content: center
+  flex-shrink: 0
+
+.banner__title
+  font-family: 'Oswald', sans-serif
+  text-transform: uppercase
+  letter-spacing: .06em
+  white-space: nowrap
+
+.banner__clock
+  color: #4fc3f7
+  font-family: 'Roboto Light', sans-serif
+
+.banner__items
+  display: flex
+  flex: 1
+  min-width: 0
+  min-height: 0
+
+.banner__none
+  align-self: center
+  color: $text-secondary
+
+.banner-item
+  display: flex
+  flex: 1
+  min-width: 0
+  min-height: 0
+  background: $bg-card
+  border: 1px solid $border
+  border-radius: 3px
+  overflow: hidden
+
+.banner-item__bar
+  background: $c-fraca
+  flex-shrink: 0
+
+.banner-item--moderada .banner-item__bar
+  background: $c-moderada
+
+.banner-item--forte .banner-item__bar
+  background: $c-forte
+
+.banner-item--muito-forte .banner-item__bar
+  background: $c-muito-forte
+
+.banner-item--extrema .banner-item__bar
+  background: $c-extrema
+
+.banner-item--pre-alerta .banner-item__bar
+  background: $c-pre-alerta
+
+.banner-item--alerta .banner-item__bar
+  background: $c-alerta
+
+.banner-item--enchente .banner-item__bar
+  background: $c-enchente
+
+.banner-item__text
+  display: flex
+  flex-direction: column
+  min-width: 0
+
+.banner-item__title
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.banner-item__detail
+  color: $text-secondary
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.banner-item__value
+  font-family: 'Oswald', sans-serif
+  color: $text-primary
+  white-space: nowrap
+
+.banner-item__unit
+  margin-left: .15em
+  color: $text-secondary
+  font-family: 'Roboto Light', sans-serif
+
+// Horizontal: one row, the brand on the left, the items side by side (1 unit = 1% of the height)
+$hb: 1vh
+
+.banner--h
+  flex-direction: row
+  align-items: stretch
+  padding: 8 * $hb 2 * $hb
+  gap: 6 * $hb
+  border-top: 2px solid $accent
+
+  .banner__brand
+    flex-direction: column
+    padding-left: 4 * $hb
+    padding-right: 2 * $hb
+
+  .banner__title
+    font-size: 20 * $hb
+
+  .banner__clock
+    font-size: 34 * $hb
+    line-height: 1.1
+
+  .banner__items
+    flex-direction: row
+    align-items: stretch
+    gap: 5 * $hb
+
+  .banner__none
+    font-size: 22 * $hb
+
+  .banner-item
+    flex: 1 1 auto
+    align-items: center
+    gap: 5 * $hb
+
+  .banner-item__text
+    flex: 1 1 auto
+
+  .banner-item__bar
+    align-self: stretch
+    width: 3 * $hb
+
+  .banner-item__title
+    font-size: 17 * $hb
+
+  .banner-item__detail
+    font-size: 13 * $hb
+
+  .banner-item__value
+    flex-shrink: 0
+    font-size: 30 * $hb
+    padding-right: 5 * $hb
+
+  .banner-item__unit
+    font-size: 15 * $hb
+
+// Vertical: one column, the brand on top, the items one under the other (1 unit = 1% of the width)
+$vb: 1vw
+
+.banner--v
+  flex-direction: column
+  padding: 6 * $vb
+  gap: 5 * $vb
+  border-left: 2px solid $accent
+
+  .banner__brand
+    flex-direction: column
+    align-items: center
+    text-align: center
+
+  .banner__title
+    font-size: 11 * $vb
+    white-space: normal
+
+  .banner__clock
+    font-size: 22 * $vb
+    line-height: 1.2
+
+  .banner__items
+    flex-direction: column
+    gap: 4 * $vb
+    justify-content: flex-start
+
+  .banner__none
+    font-size: 11 * $vb
+    text-align: center
+
+  .banner-item
+    flex: 0 0 auto
+    flex-direction: column
+    align-items: stretch
+    padding-bottom: 3 * $vb
+
+  .banner-item__bar
+    height: 2 * $vb
+    width: 100%
+
+  .banner-item__text
+    padding: 3 * $vb 4 * $vb 0
+
+  .banner-item__title
+    font-size: 10 * $vb
+
+  .banner-item__detail
+    font-size: 8.5 * $vb
+
+  .banner-item__value
+    font-size: 22 * $vb
+    padding: 0 4 * $vb
+
+  .banner-item__unit
+    font-size: 10 * $vb
+
+// Stacked: the conditions grid fills the room it is given, so a tall screen has no blank band under it
+.dashboard--stacked .meteo-section__grid
+  align-content: stretch
+  grid-auto-rows: 1fr
+
+// Square: less height than a portrait screen has for the same stack, so 6 rain cards (3 by 2) and a smaller banner
+.dashboard--square
+  .rain-section__grid
+    grid-template-rows: repeat(2, 1fr)
+
+  .alert-banner__item
+    font-size: 1.15vw
+
+  .alert-banner__icon
+    font-size: 1.6vw
