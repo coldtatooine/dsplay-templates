@@ -7,6 +7,9 @@ import { buildLabels, countryAnchor } from './labels';
 import './style.sass';
 
 const FALLBACK_SIZE = { width: 800, height: 450 };
+/** The map's width in pixels for each pixel of the biggest dot: the dots grow with the map, up to the cap the dashboard gives. */
+const WIDTH_PER_DOT_PX = 240;
+const MIN_DOT_PX = 2.5;
 
 /** The outlines are big: the world is drawn from the coarse set, a country or a radius from the fine one, loaded when it is needed. */
 function useOutlines(fine) {
@@ -63,6 +66,8 @@ function FireMap({ data, dot, language }) {
   // the weakest first, so that the strongest fires are drawn on top
   const points = [...(data.points || [])].sort((a, b) => intensityOf(a) - intensityOf(b) || a.count - b.count);
   const top = maxCount(points);
+  // the biggest dot is a fraction of the map's width (so a big screen does not get relatively smaller dots), never more than `dot`
+  const biggestDot = Math.max(MIN_DOT_PX, Math.min(dot, width / WIDTH_PER_DOT_PX));
   const labels = outlines ? buildLabels({
     outlines, project, width, height, scope, language,
   }) : [];
@@ -96,7 +101,7 @@ function FireMap({ data, dot, language }) {
             key={`${p.lat},${p.lon}`}
             cx={project.x(p.lon)}
             cy={project.y(p.lat)}
-            r={dotRadius(p.count, top, dot)}
+            r={dotRadius(p.count, top, biggestDot)}
             fill={INTENSITY_COLORS[intensityOf(p)]}
             fillOpacity={p.recent > 0 ? 0.85 : 0.4}
           />

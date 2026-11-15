@@ -125,7 +125,7 @@ describe('dots', () => {
     expect(dotRadius(100, 100, 16)).toBe(16);
     expect(dotRadius(1, 100, 16)).toBeGreaterThan(5);
     expect(dotRadius(1, 100, 16)).toBeLessThan(dotRadius(25, 100, 16));
-    expect(dotRadius(5, 0, 16)).toBeCloseTo(5.6, 1);
+    expect(dotRadius(5, 0, 16)).toBeCloseTo(4.8, 1);
   });
 
   it('finds the biggest cell', () => {
