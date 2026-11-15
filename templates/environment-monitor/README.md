@@ -10,13 +10,7 @@ It fetches nothing: DSPLAY's player gateway answers the media with the `environm
 
 ## Template variables
 
-| Key              | Type | Default | Description                                      |
-|------------------|------|---------|--------------------------------------------------|
-| `items_per_page` | int  | `8`     | How many rain cards each page shows.             |
-
-> Register it as a Template Var (same name and type) when configuring this template in the DSPLAY CMS.
-
-There is no page-time variable: the rain cards are paged and every page lasts **the media's duration divided by the number of pages**, so the pages together last as long as the media (at least one second each).
+None. Nothing is configured on the template: the rain cards are paged by what fits the grid (8 per page, 9 on a portrait screen), the number of pages comes from the answer (the stations raining in the last hour), and every page lasts **the media's duration divided by the number of pages** (at least one second each), so the pages together last as long as the media.
 
 ## Expected media data (`media.result`)
 

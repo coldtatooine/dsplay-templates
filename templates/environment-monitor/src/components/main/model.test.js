@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   FALLBACK_PAGE_MS,
   attributions,
   bannerItems,
+  cardsPerPage,
   pageInterval,
   rainingStations,
   riverProgress,
@@ -100,5 +101,21 @@ describe('attributions', () => {
     };
     expect(attributions(sources)).toEqual(['CEMADEN', 'APAC']);
     expect(attributions(undefined)).toEqual([]);
+  });
+});
+
+describe('cardsPerPage', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('is what the stylesheet grid holds: 8 (2x4) in landscape, 9 (3x3) in portrait', () => {
+    vi.stubGlobal('matchMedia', (query) => ({ matches: query === '(orientation: portrait)' }));
+    expect(cardsPerPage()).toBe(9);
+    vi.stubGlobal('matchMedia', () => ({ matches: false }));
+    expect(cardsPerPage()).toBe(8);
+  });
+
+  it('is the landscape grid where matchMedia is missing', () => {
+    vi.stubGlobal('matchMedia', undefined);
+    expect(cardsPerPage()).toBe(8);
   });
 });

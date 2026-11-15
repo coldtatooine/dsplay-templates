@@ -708,6 +708,5 @@ var dsplay_media = {
 };
 
 var dsplay_template = {
-    // rain cards per page
-    items_per_page: 8,
+    // this template has no variables
 };

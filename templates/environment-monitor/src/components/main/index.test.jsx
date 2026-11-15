@@ -5,11 +5,10 @@ import {
   render, screen, cleanup, act,
 } from '@testing-library/react';
 
-const state = { media: {}, template: {} };
+const state = { media: {} };
 
 vi.mock('@dsplay/react-template-utils', () => ({
   useMedia: () => state.media,
-  useTemplateIntVal: (name, fallback) => state.template[name] ?? fallback,
 }));
 
 import Main from '.';
@@ -38,9 +37,8 @@ const result = {
   alerts: [],
 };
 
-function setMedia(media, template = {}) {
+function setMedia(media) {
   state.media = media;
-  state.template = template;
 }
 
 beforeEach(() => vi.useFakeTimers());
@@ -64,16 +62,19 @@ describe('Main', () => {
     expect(screen.queryByText('Mesoregião')).not.toBeInTheDocument();
   });
 
-  it('pages the rain cards, each page for the media duration divided by the pages', () => {
-    setMedia({ duration: 20000, result }, { items_per_page: 2 });
+  it('pages the rain cards by what the grid holds, each page for the media duration divided by the pages', () => {
+    const many = Array.from({ length: 11 }, (_, i) => station(`s${i}`, `Station ${i}`, 20 - i, 'heavy'));
+    setMedia({ duration: 20000, result: { ...result, rainfall: many } });
     render(<Main />);
-    expect(screen.getByText('Ibura')).toBeInTheDocument();
-    expect(screen.queryByText('Muribeca')).not.toBeInTheDocument();
+    expect(screen.getByText('Station 0')).toBeInTheDocument();
+    expect(screen.getByText('Station 7')).toBeInTheDocument(); // 8 cards in the 2x4 grid
+    expect(screen.queryByText('Station 8')).not.toBeInTheDocument();
     act(() => vi.advanceTimersByTime(9999));
-    expect(screen.queryByText('Muribeca')).not.toBeInTheDocument(); // 3 raining stations at 2 a page: 2 pages of 10 s
+    expect(screen.queryByText('Station 8')).not.toBeInTheDocument(); // 11 raining stations: 2 pages of 10 s
     act(() => vi.advanceTimersByTime(1));
-    expect(screen.getByText('Muribeca')).toBeInTheDocument();
-    expect(screen.queryByText('Ibura')).not.toBeInTheDocument();
+    expect(screen.getByText('Station 8')).toBeInTheDocument();
+    expect(screen.getByText('Station 10')).toBeInTheDocument();
+    expect(screen.queryByText('Station 0')).not.toBeInTheDocument();
   });
 
   it('says so when a dataset failed, and survives an answer with nothing in it', () => {

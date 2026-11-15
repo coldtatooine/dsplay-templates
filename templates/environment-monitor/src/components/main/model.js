@@ -3,6 +3,15 @@
 /** Used when the media has no usable duration (it always has one in the player). */
 export const FALLBACK_PAGE_MS = 8000;
 
+/**
+ * How many rain cards one page holds: the cells of the grid the stylesheet draws (2 columns by 4 rows, or 3 by 3 on a portrait screen), so nothing has to be
+ * configured and a page is always full except the last. Where matchMedia is missing (a test) it is the landscape grid.
+ */
+export function cardsPerPage() {
+  const portrait = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(orientation: portrait)').matches;
+  return portrait ? 9 : 8;
+}
+
 /** The rain cards are paged; every page is shown for the same time, so that the pages together last as long as the media. */
 export function pageInterval(durationMs, totalPages) {
   if (!(durationMs > 0) || totalPages < 1) return FALLBACK_PAGE_MS;
