@@ -157,9 +157,20 @@ $accent: #1565c0
   align-items: center
   justify-content: center
   color: $text-secondary
-  font-size: 0.9vw
+  font-size: 1.2vw
   font-family: 'Roboto Light', sans-serif
   padding: 1em
+  text-align: center
+  -webkit-flex: 1
+  flex: 1
+
+// A panel with nothing to list: its message fills the panel and sits in the middle (inside a grid it would take the first cell, top left, and look like a
+// stray label). The panel is a flex box while it is empty; the doubled class beats the grid definitions further down the file.
+.rain-section__grid.rain-section__grid--empty, .rivers-section__list.rivers-section__list--empty, .meteo-section__grid.meteo-section__grid--empty, .alerts-section__grid.alerts-section__grid--empty
+  display: -webkit-flex
+  display: flex
+  -webkit-align-items: stretch
+  align-items: stretch
 
 // Rainfall section
 .rain-section
