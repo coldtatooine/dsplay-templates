@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,38 @@
   display: flex
   justify-content: center
   align-items: center
+  background-color: #080f1a
+
+.intro__icon
+  overflow: visible
+
+.intro__cloud
+  +animation(intro-rock 2.4s ease-in-out infinite)
+
+.intro__drop
+  opacity: 0
+  +animation(intro-fall 1.2s ease-in infinite)
+
+.intro__drop--2
+  +animation-delay(0.4s)
+
+.intro__drop--3
+  +animation-delay(0.8s)
+
++keyframes(intro-rock)
+  0%
+    +transform(translateY(0))
+  50%
+    +transform(translateY(-3px))
+  100%
+    +transform(translateY(0))
+
++keyframes(intro-fall)
+  0%
+    opacity: 0
+    +transform(translateY(-4px))
+  20%
+    opacity: 1
+  100%
+    opacity: 0
+    +transform(translateY(26px))
