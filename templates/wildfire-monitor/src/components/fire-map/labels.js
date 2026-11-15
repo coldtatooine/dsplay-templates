@@ -92,7 +92,7 @@ export function placeLabels(candidates, width, height) {
  * only subdivisions the service ranks today). `project` is the map's projection (`projection()` of the model).
  */
 export function buildLabels({
-  outlines, project, width, height, scope, language,
+  outlines, project, width, height, scope, language, cities = [], place = null,
 }) {
   const base = baseFontSize(width);
   const candidates = [];
@@ -128,6 +128,38 @@ export function buildLabels({
         priority: 2000,
       });
     });
+  }
+  if (scope && scope.type !== 'world') {
+    // a city is a dot with its name above it; the place the media is about is written first, bigger and bright
+    const pin = Math.max(3, Math.round(base * 0.3));
+    cities.forEach((city) => {
+      if (!place || city.name !== place.name) {
+        candidates.push({
+          key: `t-${city.name}`,
+          text: city.name,
+          x: project.x(city.lon),
+          y: project.y(city.lat) - base * 0.9,
+          dotX: project.x(city.lon),
+          dotY: project.y(city.lat),
+          size: Math.round(base * 0.85),
+          kind: 'city',
+          priority: 3000 + Math.min(city.population / 10000, 900),
+        });
+      }
+    });
+    if (place) {
+      candidates.push({
+        key: 'p-place',
+        text: place.name,
+        x: project.x(place.lon),
+        y: project.y(place.lat) - base * 1.2 - pin,
+        dotX: project.x(place.lon),
+        dotY: project.y(place.lat),
+        size: Math.round(base * 1.1),
+        kind: 'place',
+        priority: 9000,
+      });
+    }
   }
   return placeLabels(candidates, width, height);
 }

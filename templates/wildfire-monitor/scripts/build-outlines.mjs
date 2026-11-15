@@ -2,7 +2,7 @@
 // admin-0 countries (public domain, https://www.naturalearthdata.com). No tiles and no key: the map is drawn from these.
 // Usage: node scripts/build-outlines.mjs <ne_50m_admin_0_countries.geojson>
 // Each file is `{ "BR": [[lon, lat, lon, lat, ...], ...], ... }`: the outer ring of every part of the country, flattened, simplified and rounded.
-// The coarse one draws the world (about 10 km, 2 decimals); the fine one draws a country or a radius (about 2 km, 3 decimals). Parts smaller than
+// The coarse one draws the world (about 10 km, 2 decimals); the fine one draws a country or a radius (about 4 km, 2 decimals). Parts smaller than
 // the limit are dropped, but a country always keeps its largest part.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '../src/components/fire-map');
 const LEVELS = [
   { file: 'outlines-coarse.json', tolerance: 0.1, decimals: 2, minArea: 0.25 },
-  { file: 'outlines-fine.json', tolerance: 0.02, decimals: 3, minArea: 0.01 },
+  { file: 'outlines-fine.json', tolerance: 0.04, decimals: 2, minArea: 0.05 },
 ];
 
 const source = JSON.parse(readFileSync(process.argv[2], 'utf8'));
