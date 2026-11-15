@@ -7,6 +7,8 @@ import i18n from '../../i18n';
 import { INTENSITY_COLORS } from '../main/model';
 import FireMap from '.';
 
+// The outlines are big dynamic imports: a slow CI runner needs more than waitFor's default second.
+const SLOW_IMPORT = { timeout: 8000 };
 const renderMap = (props) => render(<I18nextProvider i18n={i18n}><FireMap dot={7} {...props} /></I18nextProvider>);
 
 afterEach(cleanup);
@@ -35,20 +37,28 @@ describe('FireMap', () => {
     expect(container.querySelector('.fire-map__radius')).not.toBeNull();
   });
 
-  it('draws the countries once their outlines have loaded, lighting the scope country', async () => {
+  it('draws the countries once their outlines have loaded, lighting the scope country', { timeout: 15000 }, async () => {
     const { container } = renderMap({ data: { scope: { type: 'country', country: 'BR', lat: -8, lon: -35 }, points } });
-    await waitFor(() => expect(container.querySelectorAll('.fire-map__land').length).toBeGreaterThan(0));
+    await waitFor(() => expect(container.querySelectorAll('.fire-map__land').length).toBeGreaterThan(0), SLOW_IMPORT);
     expect(container.querySelector('.fire-map__land--scope')).not.toBeNull();
   });
 
+  it('draws the lines of the states for a country or radius scope, not for the world', { timeout: 15000 }, async () => {
+    const { container } = renderMap({ data: { scope: { type: 'country', country: 'BR', lat: -8, lon: -35 }, points } });
+    await waitFor(() => expect(container.querySelectorAll('.fire-map__state').length).toBeGreaterThan(0), SLOW_IMPORT);
+    const world = renderMap({ data: { scope: { type: 'world' }, points } });
+    await waitFor(() => expect(world.container.querySelectorAll('.fire-map__land').length).toBeGreaterThan(0), SLOW_IMPORT);
+    expect(world.container.querySelector('.fire-map__state')).toBeNull();
+  });
+
   it('draws small dots: the biggest is a fraction of the map width, never past the cap', () => {
-    // jsdom has no layout, so the map is the 800 px fallback: 800 / 240 = 3.3 px for the biggest dot
+    // jsdom has no layout, so the map is the 800 px fallback: 800 / 190 = 4.2 px for the biggest dot
     const { container } = renderMap({ data: { scope: { type: 'world' }, points } });
     const radii = [...container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r')));
-    expect(Math.max(...radii)).toBeCloseTo(3.3, 1);
+    expect(Math.max(...radii)).toBeCloseTo(4.2, 1);
     expect(Math.min(...radii)).toBeGreaterThanOrEqual(0.9);
-    const capped = renderMap({ data: { scope: { type: 'world' }, points }, dot: 2.5 });
-    expect(Math.max(...[...capped.container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r'))))).toBeLessThanOrEqual(2.5);
+    const capped = renderMap({ data: { scope: { type: 'world' }, points }, dot: 3.5 });
+    expect(Math.max(...[...capped.container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r'))))).toBeLessThanOrEqual(3.5);
   });
 
   it('says what the colours mean', () => {

@@ -8,8 +8,8 @@ import './style.sass';
 
 const FALLBACK_SIZE = { width: 800, height: 450 };
 /** The map's width in pixels for each pixel of the biggest dot: the dots grow with the map, up to the cap the dashboard gives. */
-const WIDTH_PER_DOT_PX = 240;
-const MIN_DOT_PX = 2.5;
+const WIDTH_PER_DOT_PX = 190;
+const MIN_DOT_PX = 3;
 
 /** The outlines are big: the world is drawn from the coarse set, a country or a radius from the fine one, loaded when it is needed. */
 function useOutlines(fine) {
@@ -23,6 +23,21 @@ function useOutlines(fine) {
     };
   }, [fine]);
   return outlines;
+}
+
+/** The subdivisions' lines (states, provinces) are only drawn when the map is a country or a radius, and loaded then. */
+function useStates(enabled) {
+  const [states, setStates] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    if (enabled) {
+      import('./states.json').then((module) => alive && setStates(module.default || module)).catch(() => alive && setStates({}));
+    }
+    return () => {
+      alive = false;
+    };
+  }, [enabled]);
+  return states;
 }
 
 /** The size of the box in pixels, measured after the first paint (the loader fades out first) and when the window changes. */
@@ -50,6 +65,7 @@ function useBoxSize(box) {
  * and a dot per cell of the answer: bigger for more detections, coloured by the strongest fire in it (yellow, orange, deep orange, red), faint when it has
  * no detection in the last 24 hours.
  * No tiles and no key, so it works with no connection. A radius scope also draws its circle and marks the place chosen, and a country scope lights its country.
+ * A country or radius scope also draws the lines of the states and provinces (`states.json`, no names but Brazil's).
  * The map also writes names, the ones that fit at the zoom it has: countries, and Brazil's states in a close view (`labels.js`).
  */
 function FireMap({ data, dot, language }) {
@@ -58,6 +74,7 @@ function FireMap({ data, dot, language }) {
   const { width, height } = useBoxSize(box);
   const scope = data.scope || { type: 'world' };
   const outlines = useOutlines(scope.type !== 'world');
+  const states = useStates(scope.type !== 'world');
 
   // a country scope shows the whole country (its biggest part, so that overseas islands do not stretch the map), whatever the cells are
   const anchor = scope.type === 'country' && outlines && outlines[scope.country] ? countryAnchor(outlines[scope.country]) : null;
@@ -87,6 +104,9 @@ function FireMap({ data, dot, language }) {
             className={`fire-map__land${scope.type === 'country' && scope.country === code ? ' fire-map__land--scope' : ''}`}
             d={rings.map((ring) => ringPath(ring, project, width, height)).join('')}
           />
+        ))}
+        {scope.type !== 'world' && states && Object.entries(states).map(([code, rings]) => (
+          <path key={`s-${code}`} className="fire-map__state" d={rings.map((ring) => ringPath(ring, project, width, height)).join('')} />
         ))}
         {scope.type === 'radius' && (
           <circle
