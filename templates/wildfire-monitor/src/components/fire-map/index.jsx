@@ -8,8 +8,8 @@ import './style.sass';
 
 const FALLBACK_SIZE = { width: 800, height: 450 };
 /** The map's width in pixels for each pixel of the biggest dot: the dots grow with the map, up to the cap the dashboard gives. */
-const WIDTH_PER_DOT_PX = 240;
-const MIN_DOT_PX = 2.5;
+const WIDTH_PER_DOT_PX = 190;
+const MIN_DOT_PX = 3;
 
 /** The outlines are big: the world is drawn from the coarse set, a country or a radius from the fine one, loaded when it is needed. */
 function useOutlines(fine) {

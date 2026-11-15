@@ -50,13 +50,13 @@ describe('FireMap', () => {
   });
 
   it('draws small dots: the biggest is a fraction of the map width, never past the cap', () => {
-    // jsdom has no layout, so the map is the 800 px fallback: 800 / 240 = 3.3 px for the biggest dot
+    // jsdom has no layout, so the map is the 800 px fallback: 800 / 190 = 4.2 px for the biggest dot
     const { container } = renderMap({ data: { scope: { type: 'world' }, points } });
     const radii = [...container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r')));
-    expect(Math.max(...radii)).toBeCloseTo(3.3, 1);
+    expect(Math.max(...radii)).toBeCloseTo(4.2, 1);
     expect(Math.min(...radii)).toBeGreaterThanOrEqual(0.9);
-    const capped = renderMap({ data: { scope: { type: 'world' }, points }, dot: 2.5 });
-    expect(Math.max(...[...capped.container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r'))))).toBeLessThanOrEqual(2.5);
+    const capped = renderMap({ data: { scope: { type: 'world' }, points }, dot: 3.5 });
+    expect(Math.max(...[...capped.container.querySelectorAll('svg circle')].map((d) => Number(d.getAttribute('r'))))).toBeLessThanOrEqual(3.5);
   });
 
   it('says what the colours mean', () => {
