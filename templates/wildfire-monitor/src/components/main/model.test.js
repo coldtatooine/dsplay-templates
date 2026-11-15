@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  attributions, countryName, dotRadius, formatCount, mapBounds, maxCount, panelsOf, projection, regionName, regionsShown, ringPath, scopeLabel, trend,
+  attributions, countryName, dotRadius, INTENSITY_COLORS, intensityOf, formatCount, mapBounds, maxCount, panelsOf, projection, regionName, regionsShown, ringPath, scopeLabel, trend,
 } from './model';
 
 describe('regionsShown', () => {
@@ -105,6 +105,18 @@ describe('ringPath', () => {
 
   it('writes nothing for a ring wholly outside the box', () => {
     expect(ringPath([500, 500, 600, 500, 600, 600], project, 100, 100)).toBe('');
+  });
+});
+
+describe('intensity', () => {
+  it('goes from yellow to red with the strongest fire in the cell', () => {
+    expect([2, 5, 19.9, 20, 59, 60, 400].map((frpMw) => intensityOf({ frpMw, count: 1 }))).toEqual([0, 1, 1, 2, 2, 3, 3]);
+    expect(INTENSITY_COLORS).toHaveLength(4);
+  });
+
+  it('falls back to the number of detections when the sensor gave no power', () => {
+    expect([1, 5, 19, 20, 300].map((count) => intensityOf({ frpMw: null, count }))).toEqual([0, 1, 1, 2, 2]);
+    expect(intensityOf(undefined)).toBe(0);
   });
 });
 

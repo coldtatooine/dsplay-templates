@@ -28,12 +28,12 @@ Nothing is configured here: the place and the area (a radius around it, the coun
 |----------------|-----------|
 | `summary` | The number of detections in the last 24 hours, the change against the 24 hours before (up, down, same, or none before), and the time of the last detection |
 | `regions[]` | The ranking: countries (a radius or the world) or states (a country scope that has them, Brazil today), with a bar and the trend of each row |
-| `points[]`, `scope` | The map: the countries' outlines, the area fitted to the box, and a dot per cell, bigger for more detections, orange for cells with detections in the last 24 hours and amber for older ones. A radius scope also draws its circle |
+| `points[]`, `scope` | The map: the countries' outlines with their names, the area fitted to the box (a country scope shows the whole country) and a small dot per cell, bigger for more detections and coloured by the strongest fire in it (yellow, orange, deep orange, red, with a legend), faint when it has nothing in the last 24 hours. A radius scope also draws its circle and marks the place; Brazil's states are named in a close view |
 | `sources[]` | The credit in the footer |
 
 A detection is a satellite hotspot, **not a confirmed fire**; the footer says so. Counts of different sources are never added up.
 
-The map is drawn here from the countries' outlines (Natural Earth, public domain), so it needs no tiles, no key and no connection. The names of countries come from the browser in the screen's language; a WebView that cannot give them uses the English table in `src/components/main/country-names.js`.
+The map is drawn here from the countries' outlines (Natural Earth, public domain), so it needs no tiles, no key and no connection. The names written on it are the ones that fit at the zoom it has: a world view names its larger countries, a close view the country, its neighbours and Brazil's states (`src/components/fire-map/labels.js`). The names of countries come from the browser in the screen's language; a WebView that cannot give them uses the English table in `src/components/main/country-names.js`.
 
 The template's own text is in English, Portuguese, Spanish, Italian, German and Dutch, picked from the player's language (`dsplay_config.locale`).
 

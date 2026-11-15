@@ -142,6 +142,27 @@ export function ringPath(ring, project, width, height) {
   return inside ? `${d}Z` : '';
 }
 
+/** The four tones of a fire's intensity on the map, from the weakest (yellow) to the strongest (red). */
+export const INTENSITY_COLORS = ['#ffd84d', '#ffa726', '#ff6a1a', '#e0301f'];
+
+/**
+ * How intense the fire of a map cell is, 0 (yellow) to 3 (red): by the strongest fire radiative power in the cell (megawatts: under 5, 5 to 20, 20 to 60, 60 and
+ * more), or, when the sensor gave none, by how many detections the cell holds (under 5, 5 to 19, 20 and more).
+ */
+export function intensityOf(point) {
+  const frp = point && point.frpMw;
+  if (typeof frp === 'number') {
+    if (frp >= 60) return 3;
+    if (frp >= 20) return 2;
+    if (frp >= 5) return 1;
+    return 0;
+  }
+  const count = (point && point.count) || 0;
+  if (count >= 20) return 2;
+  if (count >= 5) return 1;
+  return 0;
+}
+
 /** The radius of a dot on the map, in pixels: the area grows with the number of detections it stands for, between a floor and a ceiling. */
 export function dotRadius(count, max, base) {
   const share = max > 0 ? Math.sqrt(count / max) : 0;

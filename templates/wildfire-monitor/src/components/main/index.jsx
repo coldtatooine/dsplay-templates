@@ -162,12 +162,12 @@ function Banner({ data, vertical }) {
 }
 
 function Dashboard({ data, format }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const clock = useClock();
   const panels = panelsOf(data);
   const stacked = format === 'portrait' || format === 'square';
-  // the map's dots scale with the screen: bigger on a big screen
-  const dot = format === 'square' ? 12 : 16;
+  // the biggest dot of the map, in pixels: small, so that a world full of detections is not a world on fire
+  const dot = format === 'square' ? 6 : 7;
 
   return (
     <div className={`dashboard${stacked ? ' dashboard--stacked' : ''}${format === 'square' ? ' dashboard--square' : ''}`}>
@@ -176,7 +176,7 @@ function Dashboard({ data, format }) {
         <div className="dashboard__body">
           {panels.map && (
             <div className="dashboard__map">
-              <FireMap data={data} dot={dot} />
+              <FireMap data={data} dot={dot} language={i18n.language} />
             </div>
           )}
           <div className="dashboard__side">
