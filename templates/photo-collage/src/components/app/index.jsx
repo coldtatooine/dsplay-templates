@@ -54,6 +54,9 @@ function App() {
 
   const imagesToShow = [...images, ...allMediaImages];
 
+  // Pictures of an image media get the collage loader. Pictures of social posts (Instagram) come with no loader at all, like the Instagram templates, whose content just fades in.
+  const fromPosts = images.length === 0 && allMediaImages.length > 0;
+
   // images to preload
   const imagesToLoad = [
     ...imagesToShow,
@@ -80,7 +83,7 @@ function App() {
 
   return (
     <Loader
-      placeholder={<Intro />}
+      placeholder={fromPosts ? null : <Intro />}
       images={imagesToLoad}
       minDuration={MIN_LOADING_DURATION}
       tasks={imageTasks}
