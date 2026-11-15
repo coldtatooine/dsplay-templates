@@ -26,7 +26,7 @@ None. Nothing is configured on the template: the rain cards are paged by what fi
 | `climate[]` | The region bar: temperatures now and extremes, humidity, rain and ETo accumulated since `windowStart` |
 | `generatedAt`, `unavailable[]` | The footer's last update, or "Atualização parcial" when a dataset failed this time |
 
-On-screen text is Brazilian Portuguese by design: the sources are Brazilian agencies.
+The template's own text is in English, Portuguese, Spanish, Italian, German and Dutch, picked from the player's language (`dsplay_config.locale`); what the answer carries (a warning's event, the stations' names) is shown as the source wrote it.
 
 ## Local development
 
@@ -38,13 +38,30 @@ npm start
 
 `public/dsplay-data.js` defines the `dsplay_config`/`dsplay_media`/`dsplay_template` mock globals used only outside the DSPLAY app; edit `dsplay_media.result` to try other answers (an absent dataset, a failed one). The DSPLAY Player App replaces the file with the real content at runtime.
 
-## Generating the template package
+## For developers
+
+| To change | Edit |
+|-----------|------|
+| The loader animation (a cloud and falling drops, inline SVG) | `src/components/intro` |
+| Text and translations (every key is its English text; all six languages must map all keys, a test checks it) | `src/i18n.js` |
+| Colours and the rain intensity classes | `src/components/main/style.sass` |
+| What an answer becomes on screen (paging, banner, river bars) | `src/components/main/model.js` |
+
+### Test assets
+
+To use test assets (images, videos, etc) during development, put them in the `public/test-assets` folder and reference them in `public/dsplay-data.js`; the folder is excluded from the release build.
+
+### Packing (release build)
 
 ```sh
 npm run zip
 ```
 
-Builds, then zips `build/` into `template.zip` (the template's variables are scanned into the manifest by `@dsplay/template-manifest`'s Vite plugin). Upload it to the [DSPLAY Web Manager](https://manager.dsplay.tv/template/create) as a template of type `EnvironmentMonitor`.
+Builds with Vite (which also writes `template-variables.json` and `template-example-data.json` through [@dsplay/template-manifest](https://www.npmjs.com/package/@dsplay/template-manifest)'s plugin) and zips `build/` into `template.zip`. Upload it to the [DSPLAY Web Manager](https://manager.dsplay.tv/template/create) as a template of type `EnvironmentMonitor`.
+
+### Maintaining dependencies
+
+Dependencies are pinned to exact versions; see [AGENTS.md](AGENTS.md).
 
 ## More
 
