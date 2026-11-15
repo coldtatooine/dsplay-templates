@@ -1,0 +1,86 @@
+// Pure helpers for the Main component: what the `environment/1` answer (`media.result`) becomes on screen.
+
+/** Used when the media has no usable duration (it always has one in the player). */
+export const FALLBACK_PAGE_MS = 8000;
+
+/** The rain cards are paged; every page is shown for the same time, so that the pages together last as long as the media. */
+export function pageInterval(durationMs, totalPages) {
+  if (!(durationMs > 0) || totalPages < 1) return FALLBACK_PAGE_MS;
+  return Math.max(1000, Math.floor(durationMs / totalPages));
+}
+
+export const SEVERITY_CLASS = {
+  light: 'fraca',
+  moderate: 'moderada',
+  heavy: 'forte',
+  very_heavy: 'muito-forte',
+  extreme: 'extrema',
+};
+
+export const SEVERITY_LABELS = {
+  fraca: 'Fraca',
+  moderada: 'Moderada',
+  forte: 'Forte',
+  'muito-forte': 'Muito Forte',
+  extrema: 'Extrema',
+};
+
+/** The stations that are raining right now (the last hour), in the order the service ranked them. */
+export function rainingStations(rainfall) {
+  return (rainfall || []).filter((s) => s.last1hMm > 0 && SEVERITY_CLASS[s.intensity]);
+}
+
+const RIVER_STATUS_CLASS = { attention: 'pre-alerta', alert: 'alerta', flood: 'enchente' };
+
+/** The card's colour class for a river's status (`normal` has its own). */
+export const riverStatusClass = (status) => RIVER_STATUS_CLASS[status] || 'normal';
+const RIVER_STATUS_LABEL = { 'pre-alerta': 'Pré-Alerta', alerta: 'Alerta', enchente: 'Enchente' };
+const ALERT_SEVERITY_CLASS = {
+  minor: 'pre-alerta', moderate: 'alerta', severe: 'enchente', extreme: 'enchente', unknown: 'pre-alerta',
+};
+
+/** The banner's items: the rivers above their attention level and the weather warnings in effect, most serious first. */
+export function bannerItems(rivers, alerts) {
+  const order = { enchente: 3, alerta: 2, 'pre-alerta': 1 };
+  const items = [
+    ...(rivers || [])
+      .filter((r) => RIVER_STATUS_CLASS[r.status])
+      .map((r) => {
+        const status = RIVER_STATUS_CLASS[r.status];
+        return {
+          key: `river-${r.id}`,
+          status,
+          text: `${RIVER_STATUS_LABEL[status]} — ${r.river || r.name} (${r.levelCm.toFixed(1)} cm)`,
+        };
+      }),
+    ...(alerts || []).map((a) => {
+      const status = ALERT_SEVERITY_CLASS[a.severity] || 'pre-alerta';
+      const where = a.areas && a.areas.length > 0 ? ` (${a.areas[0]}${a.areaCount > 1 ? ` e mais ${a.areaCount - 1}` : ''})` : '';
+      return { key: `alert-${a.id}`, status, text: `${a.event}${where}` };
+    }),
+  ];
+  return items.sort((a, b) => order[b.status] - order[a.status]);
+}
+
+/** How full the river's bar is: the level against the highest stage the state sets for it. */
+export function riverProgress(river) {
+  const { attention, alert, flood } = river.thresholds || {};
+  const ref = flood || alert || attention;
+  if (!ref || ref <= 0) return river.levelCm > 0 ? 50 : 0;
+  return Math.min(100, (river.levelCm / ref) * 100);
+}
+
+const SHORT_NAMES = {
+  'Agreste Pernambucano': 'Agreste',
+  'Mata Pernambucana': 'Mata PE',
+  'Metropolitana de Recife': 'RMR',
+  'Sertão Pernambucano': 'Sertão',
+  'São Francisco Pernambucano': 'S. Francisco',
+};
+
+export const shortRegionName = (name) => SHORT_NAMES[name] || name;
+
+/** The names of the sources that served this answer, once each, in the order of the datasets. */
+export function sourceNames(sources) {
+  return [...new Set(Object.values(sources || {}).map((s) => s.name))];
+}

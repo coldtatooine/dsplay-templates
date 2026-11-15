@@ -20,7 +20,7 @@ Requires Node.js 22.22.2+, 24.15.0+ or 26+ (see `.nvmrc`). It is an [npm workspa
 | [`packages/template-manifest`](packages/template-manifest/) | [`@dsplay/template-manifest`](https://www.npmjs.com/package/@dsplay/template-manifest): scans a template's variables for the CMS |
 | [`boilerplates/react`](boilerplates/react/), [`javascript`](boilerplates/javascript/), [`jquery`](boilerplates/jquery/) | starting points: copy one with `npx degit dsplay/dsplay-templates/boilerplates/<name> my-template` |
 
-The 30 templates (each has its own README with its variables and screen formats):
+The 31 templates (each has its own README with its variables and screen formats):
 
 | Template | |
 |---|---|
@@ -32,6 +32,7 @@ The 30 templates (each has its own README with its variables and screen formats)
 | [`count-up`](templates/count-up/) | Count Up Template |
 | [`countdown`](templates/countdown/) | Countdown Template |
 | [`digital-clock-basic`](templates/digital-clock-basic/) | Digital Clock |
+| [`environment-monitor`](templates/environment-monitor/) | Environment Monitor Template |
 | [`facebook-posts`](templates/facebook-posts/) | Facebook Posts Template |
 | [`flight-information`](templates/flight-information/) | Flight Information Template |
 | [`horizontal-info-bar`](templates/horizontal-info-bar/) | Horizontal Information Bar |
