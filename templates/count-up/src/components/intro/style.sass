@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,27 @@
   display: flex
   justify-content: center
   align-items: center
+  background: #000
+
+.intro__icon
+  overflow: visible
+
+.intro__ring
+  +animation(intro-ring 3s linear infinite)
+
+.intro__hand
+  -webkit-transform-origin: 60px 68px
+  transform-origin: 60px 68px
+  +animation(intro-hand 3s linear infinite)
+
++keyframes(intro-ring)
+  0%
+    stroke-dashoffset: 239
+  100%
+    stroke-dashoffset: 0
+
++keyframes(intro-hand)
+  0%
+    +transform(rotate(0deg))
+  100%
+    +transform(rotate(360deg))

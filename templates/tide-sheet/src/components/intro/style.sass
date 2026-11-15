@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,36 @@
   display: flex
   justify-content: center
   align-items: center
+  background: linear-gradient(180deg, rgb(16, 29, 69) 0%, rgb(95, 77, 99) 100%)
+
+.intro__icon
+  overflow: visible
+
+.intro__wave--back
+  +animation(intro-wave-back 3.6s linear infinite)
+
+.intro__wave--front
+  +animation(intro-wave-front 2.4s linear infinite)
+
+.intro__moon
+  +animation(intro-moon 3.6s ease-in-out infinite)
+
++keyframes(intro-wave-back)
+  0%
+    +transform(translateX(0))
+  100%
+    +transform(translateX(40px))
+
++keyframes(intro-wave-front)
+  0%
+    +transform(translateX(0))
+  100%
+    +transform(translateX(-40px))
+
++keyframes(intro-moon)
+  0%
+    opacity: 0.7
+  50%
+    opacity: 1
+  100%
+    opacity: 0.7

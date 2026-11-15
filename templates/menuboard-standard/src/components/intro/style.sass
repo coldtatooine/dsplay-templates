@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,27 @@
   display: flex
   justify-content: center
   align-items: center
+  background: #000
+
+.intro__icon
+  overflow: visible
+
+.intro__steam
+  opacity: 0
+  +animation(intro-steam 2.4s ease-in-out infinite)
+
+.intro__steam--2
+  +animation-delay(0.4s)
+
+.intro__steam--3
+  +animation-delay(0.8s)
+
++keyframes(intro-steam)
+  0%
+    opacity: 0
+    +transform(translateY(8px))
+  30%
+    opacity: 0.9
+  100%
+    opacity: 0
+    +transform(translateY(-10px))

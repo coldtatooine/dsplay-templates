@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,29 @@
   display: flex
   justify-content: center
   align-items: center
+  background: #000
+
+.intro__icon
+  overflow: visible
+
+.intro__sun
+  -webkit-transform-origin: 38px 48px
+  transform-origin: 38px 48px
+  +animation(intro-sun 2.4s ease-in-out infinite)
+
+.intro__sweep
+  +animation(intro-sweep 2.4s ease-in-out infinite)
+
++keyframes(intro-sun)
+  0%
+    +transform(scale(1))
+  50%
+    +transform(scale(1.18))
+  100%
+    +transform(scale(1))
+
++keyframes(intro-sweep)
+  0%
+    +transform(translateX(0))
+  100%
+    +transform(translateX(190px))

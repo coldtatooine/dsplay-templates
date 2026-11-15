@@ -1,3 +1,5 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
@@ -5,3 +7,52 @@
   display: flex
   justify-content: center
   align-items: center
+  background: #000
+
+.intro__icon
+  overflow: visible
+
+.intro__sand-top
+  -webkit-transform-origin: 60px 54px
+  transform-origin: 60px 54px
+  +animation(intro-drain 3.2s linear infinite)
+
+.intro__sand-bottom
+  -webkit-transform-origin: 60px 102px
+  transform-origin: 60px 102px
+  +animation(intro-fill 3.2s linear infinite)
+
+.intro__stream
+  +animation(intro-stream 0.6s linear infinite)
+
++keyframes(intro-drain)
+  0%
+    opacity: 0
+    +transform(scaleY(1))
+  6%
+    opacity: 1
+  88%
+    opacity: 1
+    +transform(scaleY(0.02))
+  100%
+    opacity: 0
+    +transform(scaleY(0.02))
+
++keyframes(intro-fill)
+  0%
+    opacity: 0
+    +transform(scaleY(0.02))
+  6%
+    opacity: 1
+  88%
+    opacity: 1
+    +transform(scaleY(1))
+  100%
+    opacity: 0
+    +transform(scaleY(1))
+
++keyframes(intro-stream)
+  0%
+    stroke-dashoffset: 0
+  100%
+    stroke-dashoffset: -10
