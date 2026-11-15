@@ -1,0 +1,104 @@
+import { describe, it, expect } from 'vitest';
+import {
+  attributions, countryName, dotRadius, formatCount, mapBounds, maxCount, panelsOf, regionName, regionsShown, scopeLabel, trend,
+} from './model';
+
+describe('regionsShown', () => {
+  it('fits the ranking to the format', () => {
+    expect(regionsShown('landscape')).toBe(8);
+    expect(regionsShown('portrait')).toBe(10);
+    expect(regionsShown('square')).toBe(5);
+  });
+});
+
+describe('panelsOf', () => {
+  it('draws a panel only for what the answer has', () => {
+    expect(panelsOf({}).any).toBe(false);
+    expect(panelsOf({ summary: { last24h: 0 } })).toMatchObject({ stats: true, regions: false, map: false, any: true });
+    expect(panelsOf({ summary: {}, regions: [{ code: 'BR' }], points: [{}] })).toMatchObject({ regions: true, map: true });
+    expect(panelsOf({ summary: {}, scope: { type: 'world' } }).map).toBe(true);
+  });
+});
+
+describe('trend', () => {
+  it('says the direction and the whole percent against the 24 hours before', () => {
+    expect(trend({ last24h: 150, previous24h: 100 })).toEqual({ direction: 'up', percent: 50 });
+    expect(trend({ last24h: 40, previous24h: 100 })).toEqual({ direction: 'down', percent: 60 });
+    expect(trend({ last24h: 100, previous24h: 100 })).toEqual({ direction: 'flat', percent: 0 });
+  });
+
+  it('has no percent when nothing came before', () => {
+    expect(trend({ last24h: 5, previous24h: 0 })).toEqual({ direction: 'new', percent: null });
+    expect(trend({ last24h: 0, previous24h: 0 })).toEqual({ direction: 'flat', percent: null });
+    expect(trend(undefined)).toEqual({ direction: 'flat', percent: null });
+  });
+});
+
+describe('names', () => {
+  it('names a country, falling back to the English table and then the code', () => {
+    expect(countryName('BR', 'en')).toBe('Brazil');
+    expect(countryName('QQ', 'en')).toBe('QQ');
+    expect(countryName('AU', 'xx-invalid-language-tag-!!')).toBe('Australia');
+  });
+
+  it('names a Brazilian state from its code and leaves other subdivisions as their code', () => {
+    expect(regionName('BR-PE', 'pt')).toBe('Pernambuco');
+    expect(regionName('BR-SP', 'en')).toBe('São Paulo');
+    expect(regionName('AU-NSW', 'en')).toBe('NSW');
+    expect(regionName('AR', 'en')).toBe('Argentina');
+  });
+});
+
+describe('mapBounds', () => {
+  it('shows the world for the world scope', () => {
+    expect(mapBounds({ scope: { type: 'world' } })).toEqual([[-58, -170], [75, 170]]);
+    expect(mapBounds({})).toEqual([[-58, -170], [75, 170]]);
+  });
+
+  it('shows the circle of a radius scope', () => {
+    const [[south, west], [north, east]] = mapBounds({ scope: { type: 'radius', lat: -8, lon: -35, radiusKm: 300 } });
+    expect(north - south).toBeCloseTo(5.39, 1);
+    expect(east).toBeGreaterThan(-35);
+    expect(west).toBeLessThan(-35);
+  });
+
+  it('shows the points of a country, or a box around its place when it has none', () => {
+    expect(mapBounds({ scope: { type: 'country', lat: 0, lon: 0 }, points: [{ lat: -3, lon: 10 }, { lat: 4, lon: 20 }] })).toEqual([[-3, 10], [4, 20]]);
+    expect(mapBounds({ scope: { type: 'country', lat: 10, lon: 20 }, points: [] })).toEqual([[5, 15], [15, 25]]);
+  });
+});
+
+describe('dots', () => {
+  it('grows the area with the count, between a floor and the base', () => {
+    expect(dotRadius(100, 100, 16)).toBe(16);
+    expect(dotRadius(1, 100, 16)).toBeGreaterThan(5);
+    expect(dotRadius(1, 100, 16)).toBeLessThan(dotRadius(25, 100, 16));
+    expect(dotRadius(5, 0, 16)).toBeCloseTo(5.6, 1);
+  });
+
+  it('finds the biggest cell', () => {
+    expect(maxCount([{ count: 3 }, { count: 9 }, { count: 1 }])).toBe(9);
+    expect(maxCount(undefined)).toBe(0);
+  });
+});
+
+describe('labels', () => {
+  const t = (key, values) => (values ? key.replace('{{km}}', values.km) : key);
+
+  it('titles the area the answer is about', () => {
+    expect(scopeLabel({ type: 'world' }, 'en', t)).toBe('The whole world');
+    expect(scopeLabel(undefined, 'en', t)).toBe('The whole world');
+    expect(scopeLabel({ type: 'country', country: 'AU' }, 'en', t)).toBe('Australia');
+    expect(scopeLabel({ type: 'radius', radiusKm: 300 }, 'en', t)).toBe('300 km around the place');
+  });
+
+  it('lists each source once and skips the ones without a text', () => {
+    expect(attributions([{ text: 'NASA FIRMS' }, { text: 'NASA FIRMS' }, { url: 'x' }, null])).toEqual(['NASA FIRMS']);
+    expect(attributions(undefined)).toEqual([]);
+  });
+
+  it('writes whole numbers in the screen language', () => {
+    expect(formatCount(12345, 'en')).toBe('12,345');
+    expect(formatCount(undefined, 'en')).toBe('0');
+  });
+});
