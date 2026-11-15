@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   FALLBACK_PAGE_MS,
+  attributions,
   bannerItems,
   pageInterval,
   rainingStations,
@@ -86,5 +87,18 @@ describe('names', () => {
   it('names each source once', () => {
     expect(sourceNames({ rainfall: { name: 'CEMADEN' }, rivers: { name: 'APAC' }, climate: { name: 'APAC' } })).toEqual(['CEMADEN', 'APAC']);
     expect(sourceNames(undefined)).toEqual([]);
+  });
+});
+
+describe('attributions', () => {
+  it('credits each source once, as the source words it, and skips a source with none', () => {
+    const sources = {
+      rainfall: { attribution: { text: 'CEMADEN' } },
+      rivers: { attribution: { text: 'APAC' } },
+      climate: { attribution: { text: 'APAC' } },
+      alerts: {},
+    };
+    expect(attributions(sources)).toEqual(['CEMADEN', 'APAC']);
+    expect(attributions(undefined)).toEqual([]);
   });
 });

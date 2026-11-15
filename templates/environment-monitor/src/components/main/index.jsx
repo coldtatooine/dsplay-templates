@@ -7,6 +7,7 @@ import {
   pageInterval,
   rainingStations,
   riverProgress,
+  attributions,
   riverStatusClass,
   shortRegionName,
   sourceNames,
@@ -259,7 +260,7 @@ function ClimateBar({ climate }) {
 }
 
 function Footer({
-  summary, generatedAt, partial, page, totalPages,
+  summary, generatedAt, partial, page, totalPages, credits,
 }) {
   return (
     <footer className="dashboard__footer">
@@ -282,6 +283,13 @@ function Footer({
             com chuva de
             {' '}
             {summary.rainfall.stationsReporting}
+          </span>
+        )}
+        {credits.length > 0 && (
+          <span className="dashboard__attribution">
+            Fonte:
+            {' '}
+            {credits.join(' · ')}
           </span>
         )}
       </div>
@@ -355,6 +363,7 @@ function Main() {
         partial={(data.unavailable || []).length > 0}
         page={Math.min(page, totalPages - 1)}
         totalPages={totalPages}
+        credits={attributions(data.sources)}
       />
     </div>
   );
