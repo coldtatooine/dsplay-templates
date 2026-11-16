@@ -8,7 +8,7 @@ import './style.sass';
 import ThemeContextParent from '../../contexts/theme-context';
 import { useFlightsInfoPromise } from '../../hooks/use-flights-info';
 
-const MIN_LOADING_DURATION = 2800;
+const MIN_LOADING_DURATION = 1500;
 
 // fonts to preload
 // @font-face's must be defined in fonts.sass or another in-use style file

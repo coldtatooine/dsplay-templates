@@ -9,8 +9,11 @@
   "dependencies": {
     "@dsplay/react-template-utils": "5.2.3",
     "colorthief": "3.5.0",
+    "i18next": "26.4.2",
+    "i18next-browser-languagedetector": "8.2.1",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-i18next": "17.0.16"
   },
   "scripts": {
     "start": "vite",

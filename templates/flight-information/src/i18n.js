@@ -11,6 +11,7 @@ i18n
     resources: {
       en: {
         translations: {
+          Loading: 'Loading',
           destination: 'Destination',
           origin: 'Origin',
           arrivals: 'Arrivals',
@@ -25,6 +26,7 @@ i18n
       },
       pt: {
         translations: {
+          Loading: 'Carregando',
           destination: 'Destino',
           origin: 'Origem',
           departures: 'Saídas',
@@ -39,6 +41,7 @@ i18n
       },
       fr: {
         translations: {
+          Loading: 'Chargement',
           destination: 'Destination',
           origin: 'Origine',
           flight: 'Vol',
@@ -53,6 +56,7 @@ i18n
       },
       de: {
         translations: {
+          Loading: 'Laden',
           destination: 'Reiseziele',
           origin: 'Herkunft',
           flight: 'Flüge',
@@ -67,6 +71,7 @@ i18n
       },
       es: {
         translations: {
+          Loading: 'Cargando',
           destination: 'Destino',
           origin: 'Origen',
           flight: 'Vuelo',
@@ -81,6 +86,7 @@ i18n
       },
       it: {
         translations: {
+          Loading: 'Caricamento',
           destination: 'Destinazioni',
           origin: 'Origine',
           flight: 'Voli',
@@ -95,6 +101,7 @@ i18n
       },
       nl: {
         translations: {
+          Loading: 'Laden',
           destination: 'Bestemmingen',
           origin: 'Herkomst',
           flight: 'Vluchten',

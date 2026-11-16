@@ -11,6 +11,7 @@ i18n
     resources: {
       en: {
         translations: {
+          Loading: 'Loading',
           'Tide Chart': 'Tide Chart',
           'Loading...': 'Loading...',
           'Error fetching data': 'Error fetching data',
@@ -22,6 +23,7 @@ i18n
       },
       pt: {
         translations: {
+          Loading: 'Carregando',
           'Tide Chart': 'Tábua de Marés',
           'Loading...': 'Carregando...',
           'Error fetching data': 'Erro ao buscar dados',
@@ -33,6 +35,7 @@ i18n
       },
       es: {
         translations: {
+          Loading: 'Cargando',
           'Tide Chart': 'Tabla de Mareas',
           'Loading...': 'Cargando...',
           'Error fetching data': 'Error al obtener datos',
@@ -44,6 +47,7 @@ i18n
       },
       it: {
         translations: {
+          Loading: 'Caricamento',
           'Tide Chart': 'Tabella delle Maree',
           'Loading...': 'Caricamento...',
           'Error fetching data': 'Errore nel recupero dei dati',
@@ -55,6 +59,7 @@ i18n
       },
       de: {
         translations: {
+          Loading: 'Laden',
           'Tide Chart': 'Gezeitentafel',
           'Loading...': 'Wird geladen...',
           'Error fetching data': 'Fehler beim Abrufen der Daten',
@@ -66,6 +71,7 @@ i18n
       },
       nl: {
         translations: {
+          Loading: 'Laden',
           'Tide Chart': 'Getijdentabel',
           'Loading...': 'Laden...',
           'Error fetching data': 'Fout bij het ophalen van gegevens',

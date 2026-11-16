@@ -1,8 +1,133 @@
-.loader
+@import ../../styles/mixins
+
+.intro
+  position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  position: absolute
   overflow: hidden
+  background: #2493cf
+  background: linear-gradient(180deg, #70d7ff 0%, #2493cf 100%)
+  font-family: 'Roboto Light', sans-serif
+
+// the measures are in em of the size the component sets
+.intro__sky
+  display: block
+  position: relative
+  width: 12em
+  height: 7em
+
+.intro__sun
+  display: block
+  position: absolute
+  left: 1.5em
+  top: 0.2em
+  width: 5em
+  height: 5em
+
+.intro__rays
+  display: block
+  position: absolute
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
+  +animation(intro-rays 3s linear infinite)
+
+// every ray is a box as high as the sun, turned about its centre, with a bar at its top
+.intro__ray-holder
+  display: block
+  position: absolute
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
+
+.intro__ray
+  display: block
+  position: absolute
+  left: 50%
+  top: 0
+  width: 0.3em
+  height: 1em
+  margin-left: -0.15em
+  border-radius: 0.15em
+  background: #ffe27a
+
+.intro__core
+  display: block
+  position: absolute
+  left: 1em
+  top: 1em
+  width: 3em
+  height: 3em
+  border-radius: 50%
+  background: #ffd84a
+  box-shadow: 0 0 1em rgba(255, 216, 74, 0.7)
+
+.intro__cloud
+  display: block
+  position: absolute
+  left: 4.5em
+  top: 2.6em
+  width: 6.5em
+  height: 3.6em
+  +animation(intro-drift 3s ease-in-out infinite)
+
+.intro__puff
+  display: block
+  position: absolute
+  border-radius: 50%
+  background: #fff
+
+.intro__puff--left
+  left: 1em
+  top: 0.4em
+  width: 2.4em
+  height: 2.4em
+
+.intro__puff--right
+  left: 2.7em
+  top: 0
+  width: 3em
+  height: 3em
+
+.intro__base
+  display: block
+  position: absolute
+  left: 0
+  bottom: 0
+  width: 100%
+  height: 1.8em
+  border-radius: 0.9em
+  background: #fff
+
+.intro__text
+  display: block
+  color: #fff
+  letter-spacing: 0.3em
+  text-transform: uppercase
+  text-shadow: 0 1px 4px rgba(20, 90, 140, 0.55)
+
++keyframes(intro-rays)
+  from
+    +transform(rotate(0deg))
+  to
+    +transform(rotate(45deg))
+
++keyframes(intro-drift)
+  0%
+    +transform(translateX(-0.5em))
+  50%
+    +transform(translateX(0.5em))
+  100%
+    +transform(translateX(-0.5em))
+
+// no motion for those who ask for none: the sun and the cloud stand still
+@media (prefers-reduced-motion: reduce)
+  .intro__rays, .intro__cloud
+    -webkit-animation: none
+    animation: none

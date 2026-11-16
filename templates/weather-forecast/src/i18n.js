@@ -11,6 +11,7 @@ i18n
     resources: {
       en: {
         translations: {
+          Loading: 'Loading',
           Today: 'Today',
           Min: 'Min',
           Max: 'Max',
@@ -18,6 +19,7 @@ i18n
       },
       pt: {
         translations: {
+          Loading: 'Carregando',
           Today: 'Hoje',
           Min: 'Min',
           Max: 'Máx',
@@ -25,6 +27,7 @@ i18n
       },
       fr: {
         translations: {
+          Loading: 'Chargement',
           Today: 'Aujourd\'hui',
           Min: 'Min',
           Max: 'Max',
@@ -32,6 +35,7 @@ i18n
       },
       es: {
         translations: {
+          Loading: 'Cargando',
           Today: 'Hoy',
           Min: 'Min',
           Max: 'Max',
@@ -39,6 +43,7 @@ i18n
       },
       de: {
         translations: {
+          Loading: 'Laden',
           Today: 'Heute',
           Min: 'Min',
           Max: 'Max',
@@ -46,6 +51,7 @@ i18n
       },
       nl: {
         translations: {
+          Loading: 'Laden',
           Today: 'Vandaag',
           Min: 'Min',
           Max: 'Max',
@@ -53,6 +59,7 @@ i18n
       },
       it: {
         translations: {
+          Loading: 'Caricamento',
           Today: 'Oggi',
           Min: 'Min',
           Max: 'Max',

@@ -1,10 +1,16 @@
-import { useTemplateVal } from '@dsplay/react-template-utils';
+import { useEffect } from 'react';
+import { I18nextProvider } from 'react-i18next';
+import { Loader, useTemplateVal, useConfig } from '@dsplay/react-template-utils';
+import Intro from '../intro';
+import i18n from '../../i18n';
 import Clock from '../clock';
 import Quotes from '../quotes';
 import News from '../news';
 import Weather from '../weather';
 import Sponsor from '../sponsor';
 import './style.sass';
+
+const MIN_LOADING_DURATION = 1500;
 
 // c - clock
 // w - weather
@@ -41,6 +47,13 @@ const filterWidgetsSequence = (sequence) => {
 };
 
 function App() {
+  const { locale } = useConfig();
+  const [lng] = (locale || 'en').split('_');
+
+  useEffect(() => {
+    i18n.changeLanguage(lng);
+  }, [lng]);
+
   const backgroundColor = useTemplateVal('bg_color', 'white');
   const bgImage = useTemplateVal('bg_image');
   const color = useTemplateVal('text_color', 'black');
@@ -58,9 +71,16 @@ function App() {
   const widgets = widgetsSequence.map((element) => mapWidgets[element]);
 
   return (
-    <div className="App block" style={style}>
-      {widgets}
-    </div>
+    <I18nextProvider i18n={i18n}>
+      <Loader
+        placeholder={<Intro />}
+        minDuration={MIN_LOADING_DURATION}
+      >
+        <div className="App block" style={style}>
+          {widgets}
+        </div>
+      </Loader>
+    </I18nextProvider>
   );
 }
 
