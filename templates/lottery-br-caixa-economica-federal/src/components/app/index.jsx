@@ -1,4 +1,8 @@
-import { useMedia } from '@dsplay/react-template-utils';
+import { useEffect } from 'react';
+import { I18nextProvider } from 'react-i18next';
+import { useMedia, useConfig, Loader } from '@dsplay/react-template-utils';
+import i18n from '../../i18n';
+import Intro from '../intro';
 import MegaSena from '../games/mega-sena';
 import DuplaSena from '../games/dupla-sena';
 import Quina from '../games/quina';
@@ -10,6 +14,8 @@ import Federal from '../games/federal';
 import SuperSete from '../games/super-sete';
 import Loteca from '../games/loteca';
 import './style.sass';
+
+const MIN_LOADING_DURATION = 1500;
 
 const gameMap = {
   federal: Federal,
@@ -26,6 +32,12 @@ const gameMap = {
 
 function App() {
   const media = useMedia();
+  const { locale } = useConfig();
+  const [lng] = (locale || 'en').split('_');
+
+  useEffect(() => {
+    i18n.changeLanguage(lng);
+  }, [lng]);
 
   const {
     iteration = 0,
@@ -44,9 +56,16 @@ function App() {
   const Component = validComponents[iteration % validComponents.length];
 
   return (
-    <div className="App grow flex v">
-      <Component />
-    </div>
+    <I18nextProvider i18n={i18n}>
+      <Loader
+        placeholder={<Intro />}
+        minDuration={MIN_LOADING_DURATION}
+      >
+        <div className="App grow flex v">
+          <Component />
+        </div>
+      </Loader>
+    </I18nextProvider>
   );
 }
 
