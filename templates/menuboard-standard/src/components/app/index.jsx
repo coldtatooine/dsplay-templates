@@ -10,7 +10,7 @@ import './style.sass';
 
 import backgroundImageFixed from '../../assets/image/raw-meat-with-herbs-and-spices-space.png';
 
-const MIN_LOADING_DURATION = 2000;
+const MIN_LOADING_DURATION = 1500;
 
 // fonts to preload
 // @font-face's must be defined in fonts.sass or another in-use style file

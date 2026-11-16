@@ -1,30 +1,63 @@
 import { useMemo } from 'react';
-import { useScreenInfo, screen } from '@dsplay/react-template-utils';
+import { useTranslation } from 'react-i18next';
+import { useScreenInfo } from '@dsplay/react-template-utils';
 import './style.sass';
 
-// The loader draws what the template is about: a plate with a fork and a knife and the steam of a hot dish.
+// The loader draws what the template is about: the chalkboard menu. The round logo on the left, a title banner
+// and the lines of products and prices written in chalk one after the other. Only HTML boxes are animated: the old
+// Android WebViews cannot animate SVG.
+
+const LOOP = 2.8;
+
+// the chalk lines: how long the product name is (in % of the row) and when it is written (in s)
+const ROWS = [
+  { name: 62, at: 0.5 },
+  { name: 46, at: 0.9 },
+  { name: 70, at: 1.3 },
+  { name: 54, at: 1.7 },
+];
+
+const px = (value) => `${Math.round(value)}px`;
+// a negative delay puts each line in its own phase from the first frame
+const phase = (at) => `${(at - LOOP).toFixed(2)}s`;
+const delayed = (at) => ({ animationDelay: phase(at), WebkitAnimationDelay: phase(at) });
 
 function Intro(props) {
-  const { w, h, screenFormat } = useScreenInfo();
+  const { w, h } = useScreenInfo();
+  const { t } = useTranslation();
 
-  const dimension = useMemo(() => {
-    const smaller = Math.min(w, h);
-    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 2 : smaller / 6;
-  }, [w, h, screenFormat]);
-
+  const unit = useMemo(() => Math.max(40, Math.min(Math.round(Math.min(w, h) / 3), Math.round(w * 0.28))), [w, h]);
   const { className } = props;
 
+  const frame = Math.max(3, Math.round(unit * 0.05));
+  const chalk = Math.max(2, Math.round(unit * 0.018));
+  const bar = Math.max(3, Math.round(unit * 0.07));
+
   return (
-    <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} aria-hidden="true" focusable="false">
-        <circle cx="60" cy="72" r="34" fill="#1b2430" stroke="#e8edf4" strokeWidth="4" />
-        <circle cx="60" cy="72" r="22" fill="none" stroke="#2b3441" strokeWidth="3" />
-        <path d="M20 52v26M16 52v14a4 4 0 0 0 8 0V52M20 78v22" fill="none" stroke="#ffb74d" strokeWidth="3" strokeLinecap="round" />
-        <path d="M100 52c-6 6-6 20 0 26M100 52v48" fill="none" stroke="#ffb74d" strokeWidth="3" strokeLinecap="round" />
-        <path className="intro__steam intro__steam--1" d="M46 36c-6-6 6-10 0-18" fill="none" stroke="#e8edf4" strokeWidth="3" strokeLinecap="round" />
-        <path className="intro__steam intro__steam--2" d="M60 34c-6-6 6-10 0-18" fill="none" stroke="#e8edf4" strokeWidth="3" strokeLinecap="round" />
-        <path className="intro__steam intro__steam--3" d="M74 36c-6-6 6-10 0-18" fill="none" stroke="#e8edf4" strokeWidth="3" strokeLinecap="round" />
-      </svg>
+    <div {...props} className={`intro ${className || ''}`} role="status">
+      <div
+        className="intro__board"
+        style={{
+          width: px(unit * 3), height: px(unit * 1.75), padding: px(unit * 0.1), borderWidth: px(frame), borderRadius: px(unit * 0.1),
+        }}
+      >
+        <div className="intro__logo" aria-hidden="true" style={{ width: px(unit * 0.7), height: px(unit * 0.7), borderWidth: px(chalk * 2), marginRight: px(unit * 0.14) }}>
+          <span className="intro__plate" style={{ width: px(unit * 0.42), height: px(unit * 0.42), borderWidth: px(chalk) }} />
+        </div>
+        <div className="intro__lines" aria-hidden="true">
+          <div className="intro__banner" style={{ height: px(unit * 0.3), borderWidth: px(chalk), borderRadius: px(unit * 0.07) }}>
+            <span className="intro__chalk intro__chalk--title" style={{ width: '64%', height: px(bar), ...delayed(0.1) }} />
+          </div>
+          {ROWS.map(({ name, at }) => (
+            <div key={at} className="intro__row" style={{ height: px(unit * 0.2) }}>
+              <span className="intro__chalk" style={{ width: `${name}%`, height: px(bar), ...delayed(at) }} />
+              <span className="intro__leader" style={{ borderBottomWidth: px(chalk), marginLeft: px(unit * 0.06), marginRight: px(unit * 0.06) }} />
+              <span className="intro__chalk intro__chalk--price" style={{ width: px(unit * 0.3), height: px(bar), ...delayed(at + 0.2) }} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <span className="intro__text" style={{ fontSize: px(Math.max(14, unit * 0.2)), marginTop: px(unit * 0.3) }}>{t('Loading')}</span>
     </div>
   );
 }
