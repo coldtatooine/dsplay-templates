@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Stage from '../../components/stage';
 import usePlate from '../../components/stage/use-plate';
 import FittedText from '../../components/fitted-text';
+import { isBanner } from '../../lib/layout';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -23,7 +25,7 @@ const BOX = {
 const BITS = ['#ff7ab8', '#2dd4bf', '#ffd84d', '#ffffff', '#ff9f43'];
 
 /** A quiz stage: the question on a white card, then the answer on a yellow card with confetti while the question shrinks to a corner. */
-function GameShow({ joke, revealed }) {
+function ShowPlate({ joke, revealed }) {
   const { t } = useTranslation();
   const plate = usePlate();
   const { kind } = plate;
@@ -75,6 +77,12 @@ function GameShow({ joke, revealed }) {
       )}
     </Stage>
   );
+}
+
+/** The strip formats get their own design (`./banner`); the others one plate. */
+function GameShow(props) {
+  const { kind } = usePlate();
+  return isBanner(kind) ? <Banner {...props} /> : <ShowPlate {...props} />;
 }
 
 export default GameShow;

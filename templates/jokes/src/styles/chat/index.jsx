@@ -2,6 +2,10 @@ import { useTranslation } from 'react-i18next';
 import Stage from '../../components/stage';
 import usePlate from '../../components/stage/use-plate';
 import FittedText from '../../components/fitted-text';
+import { isBanner } from '../../lib/layout';
+import Avatar from './avatar';
+import Banner from './banner';
+import Laugh from './laugh';
 import './fonts.sass';
 import './style.sass';
 
@@ -19,29 +23,8 @@ const BOX = {
   },
 };
 
-function Avatar() {
-  return (
-    <svg className="chat__avatar" viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="20" r="20" fill="#ffb347" />
-      <circle cx="14" cy="17" r="3" fill="#3a2a00" />
-      <circle cx="26" cy="17" r="3" fill="#3a2a00" />
-      <path d="M12 25 Q20 32 28 25" stroke="#3a2a00" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function Laugh() {
-  return (
-    <svg className="chat__laugh" viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="20" r="19" fill="#ffd84d" />
-      <path d="M9 16 Q13 12 17 16 M23 16 Q27 12 31 16" stroke="#3a2a00" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <path d="M10 24 Q20 38 30 24Z" fill="#3a2a00" />
-    </svg>
-  );
-}
-
 /** A chat: the question arrives as a message while the other side is "typing"; then the answer comes back in a green reply with a laugh reaction. */
-function Chat({ joke, revealed }) {
+function ChatPlate({ joke, revealed }) {
   const { t } = useTranslation();
   const { kind } = usePlate();
   const box = BOX[kind];
@@ -83,6 +66,12 @@ function Chat({ joke, revealed }) {
       </div>
     </Stage>
   );
+}
+
+/** The strip formats get their own design (`./banner`); the others one plate. */
+function Chat(props) {
+  const { kind } = usePlate();
+  return isBanner(kind) ? <Banner {...props} /> : <ChatPlate {...props} />;
 }
 
 export default Chat;

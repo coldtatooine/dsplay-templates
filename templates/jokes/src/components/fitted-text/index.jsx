@@ -5,10 +5,10 @@ import { fitFont, rem } from '../../lib/layout';
  * `min` is too much, the box clips instead of letting the text run over its neighbours.
  */
 function FittedText({
-  as: Tag = 'p', text, width, height, max, min, lineHeight = 1.4, charWidth, className = '',
+  as: Tag = 'p', text, width, height, max, min, lineHeight = 1.4, charWidth, wholeWords = false, className = '',
 }) {
   const size = fitFont({
-    text, width, height, max, min, lineHeight, charWidth,
+    text, width, height, max, min, lineHeight, charWidth, wholeWords,
   });
   return (
     <Tag

@@ -10,15 +10,22 @@ import i18n from '../i18n';
 import { player } from '../test-support/mock-utils';
 import { exampleResult } from '../test-support/fixture';
 import { readJokes } from '../lib/model';
-import { PLATES } from '../lib/layout';
+import { plateOf } from '../lib/layout';
 import { STYLES, CMS_TYPE, DEFAULT_STYLE } from '../styles';
 
 // every style is imported by its folder, whichever one the build bundles
 const MODULES = import.meta.glob('./*/index.jsx', { eager: true });
 
 const SIZES = {
-  landscape: [1920, 1080], portrait: [1080, 1920], square: [1080, 1080],
+  landscape: [1920, 1080],
+  portrait: [1080, 1920],
+  square: [1080, 1080],
+  'h-banner': [1920, 300],
+  'v-banner': [300, 1920],
 };
+
+// the screens a banner is tried on, from the shortest strip (4:1) to a very long one
+const BANNER_SIZES = [[1920, 480], [1920, 300], [3000, 300], [480, 1920], [300, 1920], [300, 3000]];
 
 const [joke] = readJokes(exampleResult());
 const draw = (module, props) => render(
@@ -66,9 +73,11 @@ STYLES.forEach(({ id }) => {
         expect(screen.getByText(joke.setup)).toBeInTheDocument();
         expect(screen.queryByText(joke.punchline)).toBeNull();
         const plate = container.querySelector('.stage__plate');
-        expect(plate.style.width).toBe(`${PLATES[format].w / 10}rem`);
-        expect(plate.style.height).toBe(`${PLATES[format].h / 10}rem`);
-        expect(document.documentElement.style.fontSize).toBe(`${Math.min(w / PLATES[format].w, h / PLATES[format].h) * 10}px`);
+        const expected = plateOf(format, w, h);
+        expect(expected.kind).toBe(format);
+        expect(plate.style.width).toBe(`${expected.w / 10}rem`);
+        expect(plate.style.height).toBe(`${expected.h / 10}rem`);
+        expect(document.documentElement.style.fontSize).toBe(`${Math.min(w / expected.w, h / expected.h) * 10}px`);
       });
 
       it(`reveals the answer and keeps the question on a ${format} screen`, () => {
@@ -78,6 +87,27 @@ STYLES.forEach(({ id }) => {
         draw(module, { revealed: true });
         expect(screen.getByText(joke.punchline)).toBeInTheDocument();
         expect(screen.getAllByText(joke.setup).length).toBeGreaterThan(0);
+      });
+    });
+
+    BANNER_SIZES.forEach(([w, h]) => {
+      it(`fills a ${w} x ${h} strip with a plate of its own shape, with the question alone and with the answer`, () => {
+        player.format = w > h ? 'h-banner' : 'v-banner';
+        player.w = w;
+        player.h = h;
+        [false, true].forEach((revealed) => {
+          const { container, unmount } = draw(module, { revealed });
+          const plate = container.querySelector('.stage__plate');
+          const expected = plateOf(player.format, w, h);
+          expect(plate.style.width).toBe(`${expected.w / 10}rem`);
+          expect(plate.style.height).toBe(`${expected.h / 10}rem`);
+          expect(container.querySelector('.stage').className).toContain(`stage--${player.format}`);
+          expect(screen.getAllByText(joke.setup).length).toBeGreaterThan(0);
+          if (revealed) expect(screen.getByText(joke.punchline)).toBeInTheDocument();
+          else expect(screen.queryByText(joke.punchline)).toBeNull();
+          expect(container.textContent).not.toMatch(/undefined|null|NaN|{{/);
+          unmount();
+        });
       });
     });
 

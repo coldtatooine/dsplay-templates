@@ -31,7 +31,7 @@ function Card({ sign, plate }) {
         </div>
       </div>
       <div className="duob__body">
-        <FittedText text={view.text} width={box.w} height={box.h} max={vertical ? 28 : 30} min={12} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.36} className="duo__text" />
+        <FittedText text={view.text} width={box.w} height={box.h} max={vertical ? 28 : 30} min={12} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.36} wholeWords className="duo__text" />
       </div>
     </section>
   );

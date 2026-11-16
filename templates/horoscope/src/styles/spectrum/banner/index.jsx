@@ -31,7 +31,7 @@ function SpectrumBanner({ sign }) {
           <div className="specb__range">{view.range}{view.keyword && <span className="spectrum__chip specb__chip">{view.keyword}</span>}</div>
         </div>
         <div className="specb__body">
-          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.3} className="spectrum__text" />
+          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.3} wholeWords className="spectrum__text" />
           <p className="specb__notice">{t(DISCLAIMER)}</p>
         </div>
         {withSide && (

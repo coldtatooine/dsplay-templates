@@ -45,7 +45,7 @@ function NeonBanner({ sign }) {
           {view.keyword && <span className="neon__chip neonb__chip">{view.keyword}</span>}
         </div>
         <div className="neonb__body">
-          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.66 : 0.6} lineHeight={1.34} className="neon__text" />
+          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.66 : 0.6} lineHeight={1.34} wholeWords className="neon__text" />
           <p className="neonb__notice">{t(DISCLAIMER)}</p>
         </div>
         {withSide && (

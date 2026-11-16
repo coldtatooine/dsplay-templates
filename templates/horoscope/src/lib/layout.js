@@ -78,9 +78,12 @@ export function countLines(text, width, size, charWidth) {
  */
 const SAFETY = 0.94;
 export function fitFont({
-  text, width, height, max, min, lineHeight = 1.4, charWidth = 0.52,
+  text, width, height, max, min, lineHeight = 1.4, charWidth = 0.52, wholeWords = false,
 }) {
+  // `wholeWords`: a word is never cut into lines, so it must fit the width by itself (the banners, whose columns are narrow)
+  const longest = wholeWords ? Math.max(...String(text).split(/\s+/).map((word) => word.length), 1) : 0;
   for (let size = max; size > min; size -= 1) {
+    if (wholeWords && longest * size * charWidth > width * SAFETY) continue;
     if (countLines(text, width * SAFETY, size, charWidth) * size * lineHeight <= height) return size;
   }
   return min;

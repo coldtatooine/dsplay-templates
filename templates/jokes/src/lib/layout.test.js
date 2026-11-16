@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  PLATES, countLines, fitFont, fitLine, isBanner, plateOf, rem, scaleOf,
+  PLATES, bannerSplit, countLines, fitFont, fitLine, isBanner, plateOf, rem, scaleOf,
 } from './layout';
 
 describe('plateOf', () => {
@@ -75,6 +75,14 @@ describe('fitFont', () => {
     expect(countLines(text, 500, size, 0.5) * size * 1.4).toBeLessThanOrEqual(200);
   });
 
+  it('keeps a word whole when asked: the longest word has to fit the width by itself', () => {
+    const text = 'a supercalifragilistic day';
+    const cut = fitFont({ ...base, width: 300, height: 400, text });
+    const whole = fitFont({ ...base, width: 300, height: 400, text, wholeWords: true });
+    expect(whole).toBeLessThan(cut);
+    expect('supercalifragilistic'.length * whole * 0.5).toBeLessThanOrEqual(300);
+  });
+
   it('never goes under the minimum', () => {
     expect(fitFont({ ...base, text: 'word '.repeat(5000) })).toBe(12);
   });
@@ -98,5 +106,23 @@ describe('fitLine', () => {
     expect(fitLine({
       text: 'x'.repeat(100), width: 500, max: 96, min: 40,
     })).toBe(40);
+  });
+});
+
+describe('bannerSplit', () => {
+  const wide = plateOf('h-banner', 1920, 300);
+  const tall = plateOf('v-banner', 300, 1920);
+
+  it('gives the question the whole strip until the answer is out', () => {
+    expect(bannerSplit(wide, false, { lead: 150 })).toEqual({ q: { w: 1536 - 56 - 150, h: 204 }, a: { w: 0, h: 204 } });
+    expect(bannerSplit(tall, false, { lead: 100 })).toEqual({ q: { w: 208, h: 1536 - 36 - 100 }, a: { w: 208, h: 0 } });
+  });
+
+  it('then shares it, the question getting the asked share', () => {
+    const { q, a } = bannerSplit(wide, true, { lead: 150, share: 0.4, gap: 24 });
+    expect(q.w + a.w).toBe(1536 - 56 - 150 - 24);
+    expect(q.w).toBeLessThan(a.w);
+    const column = bannerSplit(tall, true, { lead: 100, share: 0.3, gap: 16 });
+    expect(column.q.h + column.a.h).toBe(1536 - 36 - 100 - 16);
   });
 });

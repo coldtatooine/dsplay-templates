@@ -37,7 +37,7 @@ function CandyBanner({ sign }) {
         </div>
         <div className="candyb__body">
           <div className="candyb__panel">
-            <FittedText text={view.text} width={text.w - 36} height={text.h - 24} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.34} className="candy__text" />
+            <FittedText text={view.text} width={text.w - 36} height={text.h - 24} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.34} wholeWords className="candy__text" />
           </div>
           <p className="candyb__notice">{t(DISCLAIMER)}</p>
         </div>

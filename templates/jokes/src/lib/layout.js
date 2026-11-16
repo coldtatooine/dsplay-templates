@@ -46,6 +46,23 @@ export function bannerText(plate, {
   return { w: plate.w - left - right - pad * 2, h: height, max, min };
 }
 
+/**
+ * How a banner shares its plate between the question and the answer, in design px. Horizontal: `lead` is a fixed column before them (a face, an avatar) and the
+ * question and the answer sit side by side; vertical: `lead` is the height of what is on top and they are one above the other. The question has the whole room until the
+ * answer is revealed, then `share` of it.
+ */
+export function bannerSplit(plate, revealed, {
+  lead = 0, padX = 28, padY = 18, gap = 24, share = 0.4,
+}) {
+  const vertical = plate.kind === 'v-banner';
+  const room = vertical ? plate.h - padY * 2 - lead : plate.w - padX * 2 - lead;
+  const across = vertical ? plate.w - 32 : plate.h - padY * 2;
+  const pair = (long) => (vertical ? { w: across, h: long } : { w: long, h: across });
+  if (!revealed) return { q: pair(room), a: pair(0) };
+  const free = room - gap;
+  return { q: pair(Math.round(free * share)), a: pair(Math.round(free * (1 - share))) };
+}
+
 /** How many real pixels one design pixel is on a screen of `width` x `height`. */
 export const scaleOf = (plate, width, height) => Math.min(width / plate.w, height / plate.h);
 
@@ -78,9 +95,12 @@ export function countLines(text, width, size, charWidth) {
  */
 const SAFETY = 0.94;
 export function fitFont({
-  text, width, height, max, min, lineHeight = 1.4, charWidth = 0.52,
+  text, width, height, max, min, lineHeight = 1.4, charWidth = 0.52, wholeWords = false,
 }) {
+  // `wholeWords`: a word is never cut into lines, so it must fit the width by itself (the banners, whose columns are narrow)
+  const longest = wholeWords ? Math.max(...String(text).split(/\s+/).map((word) => word.length), 1) : 0;
   for (let size = max; size > min; size -= 1) {
+    if (wholeWords && longest * size * charWidth > width * SAFETY) continue;
     if (countLines(text, width * SAFETY, size, charWidth) * size * lineHeight <= height) return size;
   }
   return min;

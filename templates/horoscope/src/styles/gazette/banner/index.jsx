@@ -46,7 +46,7 @@ function GazetteBanner({ sign, today }) {
             {view.keyword && <div className="gazette__keyword gazb__keyword">{view.keyword}</div>}
           </div>
           <div className="gazb__body">
-            <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.58 : 0.52} lineHeight={1.3} className="gazette__text" />
+            <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.58 : 0.52} lineHeight={1.3} wholeWords className="gazette__text" />
           </div>
           {withSide && (
             <div className="gazb__side">

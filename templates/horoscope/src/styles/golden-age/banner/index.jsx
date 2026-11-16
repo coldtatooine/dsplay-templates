@@ -64,7 +64,7 @@ function GoldenBanner({ sign }) {
           {view.keyword && <div className="golden__keyword goldb__keyword">{view.keyword}</div>}
         </div>
         <div className="goldb__body">
-          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.52 : 0.46} lineHeight={1.3} className="golden__text" />
+          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.52 : 0.46} lineHeight={1.3} wholeWords className="golden__text" />
           <p className="goldb__notice">{t(DISCLAIMER)}</p>
         </div>
         {withSide && (

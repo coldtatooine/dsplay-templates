@@ -35,7 +35,7 @@ function DaylightBanner({ sign }) {
           {view.keyword && <span className="dayb__chip" style={{ backgroundColor: accent }}>{view.keyword}</span>}
         </div>
         <div className="dayb__body">
-          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.36} className="daylight__text" />
+          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.36} wholeWords className="daylight__text" />
           <p className="dayb__notice">{t(DISCLAIMER)}</p>
         </div>
         {withSide && (

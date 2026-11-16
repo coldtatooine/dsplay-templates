@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Stage from '../../components/stage';
 import usePlate from '../../components/stage/use-plate';
 import FittedText from '../../components/fitted-text';
+import { isBanner } from '../../lib/layout';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -21,7 +23,7 @@ const BOX = {
 };
 
 /** A comic page: halftone dots, the question in a boxed panel, then the answer in an outlined burst with a "HA HA!". */
-function Comic({ joke, revealed }) {
+function ComicPlate({ joke, revealed }) {
   const { t } = useTranslation();
   const plate = usePlate();
   const { kind } = plate;
@@ -61,6 +63,12 @@ function Comic({ joke, revealed }) {
       )}
     </Stage>
   );
+}
+
+/** The strip formats get their own design (`./banner`); the others one plate. */
+function Comic(props) {
+  const { kind } = usePlate();
+  return isBanner(kind) ? <Banner {...props} /> : <ComicPlate {...props} />;
 }
 
 export default Comic;

@@ -69,7 +69,7 @@ function StarryBanner({ sign, today }) {
           {view.keyword && <span className="starry__chip starry-b__chip" style={{ color: accent, borderColor: accent }}>{view.keyword}</span>}
         </div>
         <div className="starry-b__body">
-          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.38} className="starry__text" />
+          <FittedText text={view.text} width={text.w} height={text.h} max={text.max} min={text.min} charWidth={vertical ? 0.64 : 0.58} lineHeight={1.38} wholeWords className="starry__text" />
           {!vertical && <p className="starry__disclaimer starry-b__notice">{t(DISCLAIMER)}</p>}
         </div>
         {withMeters && (
