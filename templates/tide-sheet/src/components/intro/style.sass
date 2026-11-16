@@ -5,38 +5,116 @@
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  background: #0d2241
+  background: linear-gradient(180deg, rgb(13, 34, 65) 0%, rgb(45, 136, 155) 100%)
+
+// the card is the template's own (.ds-card), the measures are in em of the size the component sets
+.intro__chart
+  display: block
+  position: relative
+  overflow: hidden
+  width: 18em
+  height: 9em
+  border-radius: 0.5em
+  background: #101d45
   background: linear-gradient(180deg, rgb(16, 29, 69) 0%, rgb(95, 77, 99) 100%)
+  box-shadow: 0 0 0.6em rgba(0, 0, 0, 0.45)
 
-.intro__icon
-  overflow: visible
-
-.intro__wave--back
-  +animation(intro-wave-back 3.6s linear infinite)
-
-.intro__wave--front
-  +animation(intro-wave-front 2.4s linear infinite)
-
+// the moon, glowing a little
 .intro__moon
-  +animation(intro-moon 3.6s ease-in-out infinite)
+  display: block
+  position: absolute
+  right: 1.4em
+  top: 0.9em
+  width: 1.6em
+  height: 1.6em
+  border-radius: 50%
+  background: #ffe9a8
+  box-shadow: 0 0 1em rgba(255, 233, 168, 0.55)
+  +animation(intro-glow 3s ease-in-out infinite)
 
-+keyframes(intro-wave-back)
+.intro__crater
+  display: block
+  position: absolute
+  border-radius: 50%
+  background: rgba(190, 160, 90, 0.35)
+
+.intro__crater--big
+  left: 0.3em
+  top: 0.4em
+  width: 0.5em
+  height: 0.5em
+
+.intro__crater--small
+  left: 0.95em
+  top: 0.95em
+  width: 0.3em
+  height: 0.3em
+
+// the mean water level
+.intro__level
+  display: block
+  position: absolute
+  left: 0
+  right: 0
+  top: 4.6em
+  border-top: 1px dashed rgba(255, 255, 255, 0.35)
+
+// the columns grow from the bottom of the chart
+.intro__water
+  display: flex
+  align-items: flex-end
+  justify-content: center
+  position: absolute
+  left: 0
+  right: 0
+  bottom: 0
+  height: 7em
+  padding: 0 0.4em
+
+.intro__column
+  display: block
+  width: 0.7em
+  height: 100%
+  margin: 0 0.15em
+  border-radius: 0.2em 0.2em 0 0
+  background: #2d889b
+  background: linear-gradient(180deg, #5fb4ff 0%, #2d889b 40%)
+  -webkit-transform-origin: 50% 100%
+  transform-origin: 50% 100%
+  +animation(intro-tide 3s ease-in-out infinite)
+
+.intro__text
+  display: block
+  color: #fff
+  font-family: 'Gidolinya Regular', sans-serif
+  letter-spacing: 0.1em
+  text-shadow: 0 0 10px rgba(0, 0, 0, 1)
+
++keyframes(intro-tide)
   0%
-    +transform(translateX(0))
+    +transform(scaleY(0.25))
+  50%
+    +transform(scaleY(1))
   100%
-    +transform(translateX(40px))
+    +transform(scaleY(0.25))
 
-+keyframes(intro-wave-front)
++keyframes(intro-glow)
   0%
-    +transform(translateX(0))
-  100%
-    +transform(translateX(-40px))
-
-+keyframes(intro-moon)
-  0%
-    opacity: 0.7
+    opacity: 0.75
   50%
     opacity: 1
   100%
-    opacity: 0.7
+    opacity: 0.75
+
+// no motion for those who ask for none: a calm sea under the moon
+@media (prefers-reduced-motion: reduce)
+  .intro__column, .intro__moon
+    -webkit-animation: none
+    animation: none
+  .intro__column
+    +transform(scaleY(0.6))
