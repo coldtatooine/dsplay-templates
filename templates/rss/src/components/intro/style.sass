@@ -1,25 +1,98 @@
 @import ../../styles/mixins
 
-.loader
+// the template's page is black (its default background), its title band dark orange; the feed symbol is the RSS orange
+.intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  color: #fff
+  background: #000
+  background: radial-gradient(ellipse at 50% 45%, #232323 0%, #000 85%)
 
-// the template can have any picture behind it: a soft shadow keeps the light strokes readable
-.intro__icon
-  overflow: visible
-  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
+.intro__card
+  position: relative
+  overflow: hidden
+  border-radius: 4px
+  background: #2b2b2b
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.8)
+
+.intro__picture
+  position: relative
+  width: 100%
+
+// the symbol sits in the middle of the picture; its pieces grow from the bottom-left corner
+.intro__symbol
+  position: absolute
+  left: 50%
+  top: 25%
+  display: block
+
+.intro__dot
+  position: absolute
+  left: 0
+  bottom: 0
+  border-radius: 50%
+  background: #f78422
 
 .intro__wave
+  position: absolute
+  left: 0
+  bottom: 0
+  box-sizing: border-box
+  border-style: solid
+  border-color: #f78422
+  border-left-width: 0
+  border-bottom-width: 0
+  border-top-right-radius: 100%
   opacity: 0.2
   +animation(intro-wave 1.8s ease-in-out infinite)
 
 .intro__wave--2
   +animation-delay(0.4s)
+
+.intro__title
+  position: absolute
+  left: 0
+  bottom: 30%
+  width: 62%
+  height: 20%
+  box-sizing: border-box
+  padding: 3% 4%
+  background: #ff8c00
+  opacity: 0.9
+
+.intro__description
+  position: absolute
+  left: 0
+  bottom: 0
+  width: 100%
+  height: 30%
+  box-sizing: border-box
+  padding: 1.5% 4%
+  background: rgba(0, 0, 0, 0.75)
+
+.intro__line
+  display: block
+  height: 22%
+  margin-bottom: 4%
+  border-radius: 2px
+  background: rgba(255, 255, 255, 0.85)
+
+.intro__description .intro__line
+  height: 18%
+  background: rgba(255, 255, 255, 0.4)
+
+.intro__text
+  display: block
+  font-family: 'Oswald', 'Roboto Condensed', sans-serif
+  text-transform: uppercase
+  letter-spacing: 0.3em
+  +animation(intro-breathe 1.5s ease-in-out infinite)
 
 +keyframes(intro-wave)
   0%
@@ -30,3 +103,18 @@
     opacity: 0.2
   100%
     opacity: 0.2
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.55
+  50%
+    opacity: 1
+  100%
+    opacity: 0.55
+
+@media (prefers-reduced-motion: reduce)
+  .intro__wave
+    +animation(none)
+    opacity: 1
+  .intro__text
+    +animation(none)
