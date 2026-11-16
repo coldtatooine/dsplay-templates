@@ -1,7 +1,143 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  background: #06173f
+  background: radial-gradient(ellipse at 50% 45%, #0d2a73 0%, #06173f 75%)
+  font-family: 'Oswald', sans-serif
+
+// the colours are the template's own blues, the measures are in em of the size the component sets
+.intro__board
+  display: flex
+  position: relative
+  overflow: hidden
+  width: 24em
+  height: 13.5em
+  border-radius: 0.4em
+  background: #0a57fe
+  box-shadow: 0 0 0.8em rgba(0, 0, 0, 0.5)
+
+.intro__left
+  display: block
+  width: 70%
+  padding: 1em
+
+.intro__right
+  display: flex
+  flex-direction: column
+  width: 30%
+
+// the time line: the hours step one line high at a time
+.intro__time
+  display: block
+  overflow: hidden
+  height: 1.4em
+  font-size: 1em
+
+.intro__strip
+  display: block
+  +animation(intro-hours 3s steps(4) infinite)
+
+.intro__hours
+  display: block
+  height: 1.4em
+  line-height: 1.4em
+  color: #fff
+  font-size: 1em
+  text-transform: uppercase
+
+.intro__title
+  display: block
+  height: 0.9em
+  margin-top: 0.5em
+  border-radius: 0.45em
+  background: #fff
+
+.intro__title--long
+  width: 85%
+
+.intro__title--short
+  width: 55%
+
+.intro__logo
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  background: #fff
+  border-radius: 0.5em
+
+.intro__left .intro__logo
+  height: 5em
+  margin-top: 1em
+
+.intro__mark
+  display: block
+  width: 2em
+  height: 2em
+  border-radius: 50%
+  background: #d8e3fb
+
+.intro__host
+  display: flex
+  -webkit-box-flex: 1
+  flex: 1
+  align-items: center
+  justify-content: center
+  background: #006cfd
+
+.intro__place
+  display: flex
+  -webkit-box-flex: 1
+  flex: 1
+  align-items: center
+  justify-content: center
+  background: #025efd
+
+.intro__logo--host
+  width: 3.6em
+  height: 3.6em
+
+.intro__logo--info
+  width: 5em
+  height: 3.4em
+
+.intro__line
+  display: block
+  height: 0.5em
+  border-radius: 0.25em
+
+.intro__line--city
+  width: 3em
+  background: #9aa0a6
+
+.intro__line--date
+  width: 2.2em
+  margin-top: 0.5em
+  background: #c9cdd2
+
+.intro__text
+  display: block
+  color: #fff
+  letter-spacing: 0.3em
+  text-transform: uppercase
+  opacity: 0.85
+
++keyframes(intro-hours)
+  from
+    +transform(translateY(0))
+  to
+    +transform(translateY(-100%))
+
+// no motion for those who ask for none: the first hour stays
+@media (prefers-reduced-motion: reduce)
+  .intro__strip
+    -webkit-animation: none
+    animation: none
