@@ -12,7 +12,7 @@ import defaultLogo from '../../assets/image/dsplay-logo.png';
 import noneBackground from '../../assets/image/noneBackground.png';
 import './style.sass';
 
-const MIN_LOADING_DURATION = 2800;
+const MIN_LOADING_DURATION = 1500;
 
 function App() {
   const media = useMedia();
