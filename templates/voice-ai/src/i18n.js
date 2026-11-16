@@ -11,7 +11,6 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           'Alert: Microphone permission is required.': 'Alert: Microphone permission is required.',
           'Waiting for microphone activation...': 'Waiting for microphone activation...',
           'Speak loudly to test the audio... {{timer}}': 'Speak loudly to test the audio... {{timer}}',
@@ -20,7 +19,6 @@ i18n
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           'Alert: Microphone permission is required.': 'Alerta: é necessária permissão para usar o microfone.',
           'Waiting for microphone activation...': 'Aguardando ativação do microfone...',
           'Speak loudly to test the audio... {{timer}}': 'Fale alto para testar o áudio... {{timer}}',
@@ -29,7 +27,6 @@ i18n
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           'Alert: Microphone permission is required.': 'Alerta: se requiere permiso para usar el micrófono.',
           'Waiting for microphone activation...': 'Esperando la activación del micrófono...',
           'Speak loudly to test the audio... {{timer}}': 'Habla alto para probar el audio... {{timer}}',
@@ -38,7 +35,6 @@ i18n
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           'Alert: Microphone permission is required.': 'Avviso: è richiesto il permesso per usare il microfono.',
           'Waiting for microphone activation...': "In attesa dell'attivazione del microfono...",
           'Speak loudly to test the audio... {{timer}}': "Parla ad alta voce per testare l'audio... {{timer}}",
@@ -47,7 +43,6 @@ i18n
       },
       de: {
         translations: {
-          Loading: 'Laden',
           'Alert: Microphone permission is required.': 'Achtung: Die Mikrofonberechtigung ist erforderlich.',
           'Waiting for microphone activation...': 'Warten auf Aktivierung des Mikrofons...',
           'Speak loudly to test the audio... {{timer}}': 'Sprechen Sie laut, um den Ton zu testen... {{timer}}',
@@ -56,7 +51,6 @@ i18n
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           'Alert: Microphone permission is required.': 'Waarschuwing: microfoontoestemming is vereist.',
           'Waiting for microphone activation...': 'Wachten op activering van de microfoon...',
           'Speak loudly to test the audio... {{timer}}': 'Spreek luid om de audio te testen... {{timer}}',
