@@ -1,8 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
-// the template can have any picture behind it: the loader paints the menu's own gold board and dark red top bar
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,135 +12,22 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  background: #ffca08
-  background: linear-gradient(to bottom, #ffd23a 0%, #ffca08 55%, #e6b200 100%)
+  background: #000
 
-.intro__top
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  background: #8b0000
-
-.intro__menu
-  display: flex
-  flex-direction: column
-  align-items: stretch
-
-// the brand box: a dashed border and the white and dark red rings round it
-.intro__brand
-  display: block
-  align-self: center
-  box-sizing: border-box
-  background: #fff
-  border: 1px dashed #8b0000
-  box-shadow: 0 0 0 3px #fff, 0 0 0 5px #8b0000, 0 0 0 8px #fff
-
-// the section flag: a dark red ribbon with notched ends
-.intro__flag
-  display: flex
-  flex-direction: row
-  justify-content: center
-  align-items: center
-
-.intro__tail
-  display: block
-  width: 0
-  height: 0
-  border-style: solid
-  border-color: #8b0000
-  border-left-color: transparent
-  border-right-color: transparent
-  border-right-width: 0
-  border-left-width: 0
-
-.intro__flag-body
-  display: flex
-  justify-content: center
-  align-items: center
-  background: #8b0000
-
-.intro__flag-title
-  display: block
-  width: 58%
-  border-radius: 3px
-  background: #ffca08
-
-.intro__line
-  display: flex
-  flex-direction: row
-  align-items: center
-
-.intro__number
-  display: block
-  background: #8b0000
-
-.intro__names
-  display: block
-  flex: 1
-
-.intro__name
-  display: block
-  border-radius: 3px
-  background: #111
-
-.intro__desc
-  display: block
-  border-radius: 2px
-  background: #8b0000
-  opacity: 0.8
-
-// the price tag, with a shine sweeping over it
-.intro__price
-  position: relative
-  display: block
-  overflow: hidden
-  background: #111
-
-.intro__shine
-  position: absolute
-  top: 0
-  left: 0
-  height: 100%
-  background: rgba(255, 255, 255, 0.55)
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%)
-  +transform(translateX(-150%))
-  +animation(intro-shine 2.4s ease-in-out infinite)
-
-.intro__rule
-  display: block
-  height: 0
-  width: 92%
-  margin: 5px 0 5px auto
-  border-top: 1px solid rgba(255, 255, 255, 0.8)
-
-.intro__text
-  display: block
-  color: #8b0000
-  font-family: 'Hamburguer', 'Impact', 'Helvetica Neue', Helvetica, Arial, sans-serif
-  letter-spacing: 0.2em
-  text-transform: uppercase
-  +animation(intro-breathe 2.4s ease-in-out infinite)
-
-// the shine crosses the price in the first half of the loop and rests in the second
-+keyframes(intro-shine)
-  0%
-    +transform(translateX(-150%))
-  45%
-    +transform(translateX(400%))
-  100%
-    +transform(translateX(400%))
-
-+keyframes(intro-breathe)
-  0%
-    opacity: 0.65
+@-webkit-keyframes intro-lift
+  0%, 100%
+    -webkit-transform: translateY(0)
   50%
-    opacity: 1
-  100%
-    opacity: 0.65
+    -webkit-transform: translateY(-24%)
 
-// no motion for those who ask for none
+@keyframes intro-lift
+  0%, 100%
+    transform: translateY(0)
+  50%
+    transform: translateY(-24%)
+
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__shine, .intro__text
-    -webkit-animation: none
-    animation: none
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

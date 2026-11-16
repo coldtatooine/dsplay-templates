@@ -1,8 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
-// the template's own look: a black page, the yellow message card with its red outline, Oswald
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,141 +12,26 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  color: #ffe739
-  background: #000
-  background: radial-gradient(ellipse at 50% 45%, #2b2406 0%, #000 80%)
-
-.intro__alert
-  position: relative
-
-.intro__card
-  position: absolute
-  left: 0
-  top: 0
-  width: 100%
-  height: 100%
-  box-sizing: border-box
-  overflow: hidden
-  border-style: solid
-  border-color: #f00
-  background: #ffe739
-
-// a red ring leaves the card and fades, like the outline of the alert card growing
-.intro__ring
-  position: absolute
-  left: 0
-  top: 0
-  width: 100%
-  height: 100%
-  box-sizing: border-box
-  border-style: solid
-  border-color: #f00
-  opacity: 0
-  +animation(intro-ring 1.8s ease-out infinite)
-
-.intro__sign
-  position: absolute
-  left: 50%
-  +animation(intro-sign 1.8s ease-in-out infinite)
-
-// a triangle is a box with no size and three borders: the outer one black, the inner one the card's yellow
-.intro__triangle
-  position: absolute
-  left: 0
-  top: 0
-  width: 0
-  height: 0
-  border-style: solid
-  border-left-color: transparent
-  border-right-color: transparent
-  border-top-width: 0
-  border-bottom-color: #000
-
-.intro__triangle--inner
-  border-bottom-color: #ffe739
-
-.intro__bar,
-.intro__dot
-  position: absolute
   background: #000
 
-.intro__dot
-  +animation(intro-blink 1.8s ease-in-out infinite)
-
-// the strip of message lines: black, the lines (yellow) scroll along it
-.intro__strip
-  position: absolute
-  left: 0
-  bottom: 0
-  width: 100%
-  overflow: hidden
-  background: #000
-
-.intro__track
-  display: inline-block
-  white-space: nowrap
-  font-size: 0
-  +animation(intro-scroll 2.4s linear infinite)
-
-.intro__message
-  display: inline-block
-  background: #ffe739
-
-.intro__text
-  display: block
-  font-family: 'Oswald', 'Roboto Condensed', sans-serif
-  text-transform: uppercase
-  letter-spacing: 0.3em
-  +animation(intro-breathe 1.8s ease-in-out infinite)
-
-+keyframes(intro-ring)
-  0%
-    opacity: 0.9
-    +transform(scale(1))
-  100%
-    opacity: 0
-    +transform(scale(1.14))
-
-+keyframes(intro-sign)
-  0%
-    +transform(scale(1))
+@-webkit-keyframes intro-pulse
+  0%, 100%
+    -webkit-transform: scale(.88)
+    opacity: .75
   50%
-    +transform(scale(1.05))
-  100%
-    +transform(scale(1))
-
-+keyframes(intro-blink)
-  0%
-    opacity: 1
-  45%
-    opacity: 1
-  55%
-    opacity: 0.15
-  90%
-    opacity: 1
-  100%
+    -webkit-transform: scale(1.08)
     opacity: 1
 
-+keyframes(intro-scroll)
-  0%
-    +transform(translateX(0))
-  100%
-    +transform(translateX(-50%))
-
-+keyframes(intro-breathe)
-  0%
-    opacity: 0.55
+@keyframes intro-pulse
+  0%, 100%
+    transform: scale(.88)
+    opacity: .75
   50%
+    transform: scale(1.08)
     opacity: 1
-  100%
-    opacity: 0.55
 
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__ring
-    +animation(none)
-    opacity: 0.5
-  .intro__sign,
-  .intro__dot,
-  .intro__track,
-  .intro__text
-    +animation(none)
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

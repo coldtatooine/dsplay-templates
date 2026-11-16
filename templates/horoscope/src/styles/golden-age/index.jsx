@@ -14,6 +14,7 @@ import './style.sass';
 
 export const PER_SCREEN = 1;
 export const FONTS = ['Cinzel', 'Cormorant Garamond', 'Inter'];
+export { default as LOADER } from './loader';
 
 const GOLD = '#c9a24c';
 const LIGHT_GOLD = '#e7c673';

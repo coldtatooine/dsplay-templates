@@ -20,142 +20,47 @@ html, body {
   width: 100%;
 }
 
-/* The loader: the template's own bar and time, on the pastel of its default background. */
+/* The loader: one small mark centred on a black page, no text (docs/loader-style.md). Plain CSS for the old Android WebViews: prefixed flex and animations. */
 #overlay {
-  background-color: #c9ccf5;
-  background-image: -webkit-linear-gradient(top left, #c3c8f2, #e3d6f4);
-  background-image: linear-gradient(to bottom right, #c3c8f2, #e3d6f4);
-  width: 100%;
-  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  overflow: hidden;
-}
-
-.loader {
-  position: absolute;
-  width: 80%;
-  height: 40%;
-  left: 10%;
-  top: 28%;
-}
-
-.loader__bar {
-  position: absolute;
-  opacity: 0.6;
   width: 100%;
   height: 100%;
-  border-radius: 1.5em;
-  background-color: #FFFFFF;
-}
-
-.loader__info {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  font-family: Roboto, arial;
-  color: #000;
-}
-
-.loader__label {
-  position: absolute;
-  width: 100%;
-  top: 8%;
-  text-align: center;
-  font-size: 1.5em;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  -webkit-animation: loader-breathe 1.5s ease-in-out infinite;
-  animation: loader-breathe 1.5s ease-in-out infinite;
-}
-
-.loader__time {
-  position: absolute;
-  width: 100%;
-  bottom: 5%;
-  text-align: center;
-  font-size: 6em;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.loader__digit,
-.loader__colon {
-  display: inline-block;
-  vertical-align: top;
-  height: 1.2em;
-  line-height: 1.2em;
-  text-align: center;
-}
-
-.loader__digit {
-  width: 0.6em;
-}
-
-.loader__colon {
-  width: 0.3em;
-  -webkit-animation: loader-blink 1s steps(1) infinite;
-  animation: loader-blink 1s steps(1) infinite;
-}
-
-/* the last digit counts the seconds: a strip of digits moved one at a time */
-.loader__reel {
   overflow: hidden;
+  z-index: 10;
+  background: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 }
 
-.loader__strip {
-  display: block;
-  -webkit-animation: loader-reel 10s steps(10) infinite;
-  animation: loader-reel 10s steps(10) infinite;
+@-webkit-keyframes intro-spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
-.loader__number {
-  display: block;
-  height: 1.2em;
+@keyframes intro-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@-webkit-keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@-webkit-keyframes loader-blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
-}
-
-@keyframes loader-blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
-}
-
-@-webkit-keyframes loader-breathe {
-  0% { opacity: 0.55; }
-  50% { opacity: 1; }
-  100% { opacity: 0.55; }
-}
-
-@keyframes loader-breathe {
-  0% { opacity: 0.55; }
-  50% { opacity: 1; }
-  100% { opacity: 0.55; }
-}
-
-/* no motion for those who ask for none */
+/* no motion for those who ask for none: the mark stays as a still picture */
 @media (prefers-reduced-motion: reduce) {
-  .loader__label,
-  .loader__colon,
-  .loader__strip {
-    -webkit-animation: none;
-    animation: none;
+  #overlay * {
+    -webkit-animation: none !important;
+    animation: none !important;
   }
 }
 
@@ -169,7 +74,6 @@ html, body {
   background-size: cover;
   background-position: center;
 }
-
 
 #wrapper {
   position: absolute;
@@ -247,24 +151,5 @@ html, body {
     top: 8%;
     width: 100%;
     color: #000;
-  }
-
-  .loader {
-    height: 20%;
-    width: 92%;
-    left: 4%;
-    top: 38%;
-  }
-
-  .loader__bar {
-    border-radius: .5em;
-  }
-
-  .loader__label {
-    font-size: 1.1em;
-  }
-
-  .loader__time {
-    font-size: 4.5em;
   }
 }

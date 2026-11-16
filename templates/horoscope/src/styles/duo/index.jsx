@@ -15,6 +15,7 @@ import './style.sass';
 
 export const PER_SCREEN = 2;
 export const FONTS = ['Cormorant Garamond', 'Inter'];
+export { default as LOADER } from './loader';
 
 const ELEMENT_COLOR = {
   fire: '#ff8a4c', earth: '#86c76b', air: '#6ec3ff', water: '#7a9cff',

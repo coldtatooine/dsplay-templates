@@ -11,37 +11,31 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           'Wi-Fi': 'Wi-Fi',
         },
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           'Wi-Fi': 'Wi-Fi',
         },
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           'Wi-Fi': 'Wi-Fi',
         },
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           'Wi-Fi': 'Wi-Fi',
         },
       },
       de: {
         translations: {
-          Loading: 'Laden',
           'Wi-Fi': 'WLAN',
         },
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           'Wi-Fi': 'Wifi',
         },
       },

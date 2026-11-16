@@ -1,8 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
-// the template's own look: the grey bevelled frame with a light face, a navy code, Roboto Light
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,90 +12,22 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  color: #e5e4df
-  background: #2f2d2d
-  background: radial-gradient(ellipse at 50% 45%, #403d3d 0%, #141313 85%)
-
-.intro__frame
-  position: relative
-  box-sizing: border-box
-  border-style: solid
-  border-color: #2f2d2d #434040 #4f4c4c #434040
-  background: #e5e4df
-  background: -webkit-linear-gradient(#e5e4df, #cdcdc6)
-  background: linear-gradient(#e5e4df, #cdcdc6)
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), 0 10px 20px rgba(0, 0, 0, 0.8)
-
-.intro__finder
-  position: absolute
-  box-sizing: border-box
-  background: #101a33
-
-.intro__finder-hole
-  position: absolute
   background: #e5e4df
 
-.intro__finder-dot
-  position: absolute
-  background: #101a33
-
-// a data cell goes dark, then light, one diagonal after the other
-.intro__cell
-  position: absolute
-  background: #101a33
-  +animation(intro-cell 2.4s ease-in-out infinite)
-
-// the Wi-Fi logo in the middle of the code: a teal tile with three white signal bars
-.intro__logo
-  position: absolute
-  background: #0d9488
-
-.intro__signal
-  position: absolute
-  background: #fff
-  opacity: 0.2
-  +animation(intro-signal 2.4s ease-in-out infinite)
-
-.intro__text
-  display: block
-  font-family: 'Roboto Light', Roboto, sans-serif
-  font-weight: 300
-  text-transform: uppercase
-  letter-spacing: 0.3em
-  +animation(intro-breathe 1.8s ease-in-out infinite)
-
-+keyframes(intro-cell)
-  0%
-    opacity: 1
-  35%
-    opacity: 0.1
-  70%
-    opacity: 1
-  100%
+@-webkit-keyframes intro-light
+  0%, 100%
+    opacity: .25
+  40%
     opacity: 1
 
-+keyframes(intro-signal)
-  0%
-    opacity: 0.2
-  25%
+@keyframes intro-light
+  0%, 100%
+    opacity: .25
+  40%
     opacity: 1
-  60%
-    opacity: 0.2
-  100%
-    opacity: 0.2
 
-+keyframes(intro-breathe)
-  0%
-    opacity: 0.55
-  50%
-    opacity: 1
-  100%
-    opacity: 0.55
-
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__cell,
-  .intro__text
-    +animation(none)
-  .intro__signal
-    +animation(none)
-    opacity: 1
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

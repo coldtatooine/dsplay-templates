@@ -11,42 +11,36 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           Dollar: 'Dollar',
           Euro: 'Euro',
         },
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           Dollar: 'Dólar',
           Euro: 'Euro',
         },
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           Dollar: 'Dólar',
           Euro: 'Euro',
         },
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           Dollar: 'Dollaro',
           Euro: 'Euro',
         },
       },
       de: {
         translations: {
-          Loading: 'Laden',
           Dollar: 'Dollar',
           Euro: 'Euro',
         },
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           Dollar: 'Dollar',
           Euro: 'Euro',
         },

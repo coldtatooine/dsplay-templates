@@ -11,43 +11,36 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           'Local Time': 'Local Time',
         },
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           'Local Time': 'Hora Local',
         },
       },
       fr: {
         translations: {
-          Loading: 'Chargement',
           'Local Time': 'Heure Locale',
         },
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           'Local Time': 'Hora Local',
         },
       },
       de: {
         translations: {
-          Loading: 'Laden',
           'Local Time': 'Ortszeit',
         },
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           'Local Time': 'Lokale Tijd',
         },
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           'Local Time': 'Ora Locale',
         },
       },

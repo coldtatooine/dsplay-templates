@@ -1,8 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
-// the template can have any picture behind it: the loader paints its own wood, planks included
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -11,193 +13,37 @@
   align-items: center
   overflow: hidden
   background: #5a3a1d
-  background: repeating-linear-gradient(90deg, #5e3d1f 0, #5e3d1f 11%, #553519 11%, #553519 12%), radial-gradient(ellipse at 50% 45%, #7a5230 0%, #3a2312 100%)
 
-.intro__boards
-  display: flex
-  flex-direction: row
-  align-items: stretch
-
-.intro__panel
-  display: flex
-  flex-direction: column
-  box-sizing: border-box
-  background: #1c211e
-  background: radial-gradient(ellipse at 40% 30%, #2a312d 0%, #161a17 100%)
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55)
-
-.intro__panel--promo
-  flex: 2
-
-.intro__panel--menu
-  flex: 3
-  justify-content: space-between
-
-// the logo banner, with the round logo ringed in black
-.intro__logo-banner
-  display: flex
-  justify-content: center
-  align-items: center
-  background: #e67e22
-
-.intro__logo
-  display: block
-  box-sizing: border-box
-  border-style: solid
-  border-color: #000
-  border-radius: 50%
-  background: #c0392b
-
-.intro__window
-  position: relative
-  flex: 1
-  overflow: hidden
-
-// a strip of the featured photos, one card wide each, slid one card at a time
-.intro__slides
-  display: flex
-  flex-direction: row
-  width: 400%
-  height: 100%
-  +animation(intro-slide 3s ease-in-out infinite)
-
-.intro__photo
-  display: flex
-  justify-content: center
-  align-items: center
-  flex: 1
-  height: 100%
-
-.intro__photo--orange
-  background: #e67e22
-
-.intro__photo--red
-  background: #c0392b
-
-.intro__photo--yellow
-  background: #f1c40f
-
-// a plate with its dish, drawn in boxes
-.intro__dish
-  display: block
-  box-sizing: border-box
-  border-style: solid
-  border-color: #f4f1e8
-  border-radius: 50%
-  background: #f6d98f
-
-.intro__dots
-  display: flex
-  justify-content: center
-  align-items: flex-end
-
-.intro__dot
-  display: block
-  border-radius: 50%
-  background: #f4f1e8
-  opacity: 0.35
-  +animation(intro-dot 3s ease-in-out infinite)
-
-.intro__banner
-  display: flex
-  justify-content: center
-  align-items: center
-  box-sizing: border-box
-  border-style: solid
-  border-color: rgba(244, 241, 232, 0.85)
-
-.intro__row
-  display: flex
-  flex-direction: row
-  justify-content: space-between
-  align-items: center
-
-// a stroke of chalk, written from the left
-.intro__chalk
-  display: block
-  align-self: center
-  border-radius: 4px
-  background: #f4f1e8
-  opacity: 0
-  -webkit-transform-origin: 0 50%
-  transform-origin: 0 50%
-  +animation(intro-write 3s linear infinite)
-
-.intro__chalk--price
-  background: #ffd54f
-  -webkit-transform-origin: 100% 50%
-  transform-origin: 100% 50%
-
-.intro__text
-  display: block
-  color: #f4f1e8
-  font-family: 'Chalkboard', 'Helvetica Neue', Helvetica, Arial, sans-serif
-  letter-spacing: 0.2em
-  text-transform: uppercase
-  +animation(intro-breathe 2.4s ease-in-out infinite)
-
-+keyframes(intro-write)
+@-webkit-keyframes intro-spin
   0%
-    opacity: 0.9
-    +transform(scaleX(0))
-  28%
-    opacity: 0.9
-    +transform(scaleX(1))
-  82%
-    opacity: 0.9
-    +transform(scaleX(1))
-  96%
-    opacity: 0
-    +transform(scaleX(1))
+    -webkit-transform: rotate(0deg)
   100%
-    opacity: 0
-    +transform(scaleX(0))
+    -webkit-transform: rotate(360deg)
 
-// the strip holds a photo, slides to the next, and the last one is the first again
-+keyframes(intro-slide)
+@keyframes intro-spin
   0%
-    +transform(translateX(0))
-  22%
-    +transform(translateX(0))
-  33%
-    +transform(translateX(-25%))
-  55%
-    +transform(translateX(-25%))
-  66%
-    +transform(translateX(-50%))
-  88%
-    +transform(translateX(-50%))
+    transform: rotate(0deg)
   100%
-    +transform(translateX(-75%))
+    transform: rotate(360deg)
 
-+keyframes(intro-dot)
-  0%
-    opacity: 1
-  30%
-    opacity: 1
-  36%
-    opacity: 0.35
-  100%
-    opacity: 0.35
-
-+keyframes(intro-breathe)
-  0%
-    opacity: 0.6
+@-webkit-keyframes intro-pulse
+  0%, 100%
+    -webkit-transform: scale(.88)
+    opacity: .75
   50%
+    -webkit-transform: scale(1.08)
     opacity: 1
-  100%
-    opacity: 0.6
 
-// no motion for those who ask for none: the lines stay written, the first photo shows
-@media (prefers-reduced-motion: reduce)
-  .intro__chalk
-    -webkit-animation: none
-    animation: none
-    opacity: 0.9
-    -webkit-transform: none
-    transform: none
-  .intro__slides, .intro__dot, .intro__text
-    -webkit-animation: none
-    animation: none
-  .intro__dot:first-child
+@keyframes intro-pulse
+  0%, 100%
+    transform: scale(.88)
+    opacity: .75
+  50%
+    transform: scale(1.08)
     opacity: 1
+
+// no motion for those who ask for none: the mark stays as a still picture
+@media (prefers-reduced-motion: reduce)
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

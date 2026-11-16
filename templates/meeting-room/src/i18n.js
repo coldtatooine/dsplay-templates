@@ -10,13 +10,13 @@ i18n
   .use(LanguageDetector)
   .init({
     resources: {
-      en: { translations: { Loading: 'Loading' } },
-      pt: { translations: { Loading: 'Carregando' } },
-      fr: { translations: { Loading: 'Chargement' } },
-      es: { translations: { Loading: 'Cargando' } },
-      de: { translations: { Loading: 'Laden' } },
-      nl: { translations: { Loading: 'Laden' } },
-      it: { translations: { Loading: 'Caricamento' } },
+      en: { translations: {} },
+      pt: { translations: {} },
+      fr: { translations: {} },
+      es: { translations: {} },
+      de: { translations: {} },
+      nl: { translations: {} },
+      it: { translations: {} },
     },
     fallbackLng: 'en',
     debug: false,

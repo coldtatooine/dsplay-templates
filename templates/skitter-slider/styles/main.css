@@ -9,7 +9,7 @@ html, body, #root {
   max-width: initial;
 }
 
-/* The loader: the slider itself, as the template draws it on its black page: a framed picture that slides to the next one, with the dots under it that show which one is on. Plain CSS for the old Android WebViews: floats and inline blocks, prefixed animations. */
+/* The loader: one small mark centred on a black page, no text (docs/loader-style.md). Plain CSS for the old Android WebViews: prefixed flex and animations. */
 #overlay {
   position: absolute;
   top: 0;
@@ -17,170 +17,63 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* above everything Skitter draws (its highest layer is 10000) */
   z-index: 100000;
-  background-color: #000;
-  background-image: -webkit-radial-gradient(center, circle farthest-corner, #1d2128, #000);
-  background-image: radial-gradient(circle farthest-corner at center, #1d2128, #000);
+  background: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 }
 
-.loader {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  margin-top: -9em;
-  font-size: 2.6vmin;
-  text-align: center;
-  color: #e8edf4;
-}
-
-.loader__frame {
-  position: relative;
-  width: 20em;
-  height: 12.4em;
-  margin: 0 auto;
-  overflow: hidden;
-  border: 0.3em solid #e8edf4;
-  border-radius: 0.5em;
-  background-color: #1b2430;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-}
-
-/* four slides side by side (the last is the first again, so the loop has no jump) */
-.loader__strip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 400%;
-  height: 100%;
-  -webkit-animation: loader-slide 3s ease-in-out infinite;
-  animation: loader-slide 3s ease-in-out infinite;
-}
-
-.loader__slide {
-  position: relative;
-  float: left;
-  width: 25%;
-  height: 100%;
-}
-
-.loader__slide--sky {
-  background-color: #2f6fa8;
-  background-image: -webkit-linear-gradient(top, #4d8fc9, #1f4c78);
-  background-image: linear-gradient(to bottom, #4d8fc9, #1f4c78);
-}
-
-.loader__slide--dusk {
-  background-color: #b5532b;
-  background-image: -webkit-linear-gradient(top, #e8914a, #7c2f2f);
-  background-image: linear-gradient(to bottom, #e8914a, #7c2f2f);
-}
-
-.loader__slide--grass {
-  background-color: #2f7d4a;
-  background-image: -webkit-linear-gradient(top, #58b37a, #1d4d33);
-  background-image: linear-gradient(to bottom, #58b37a, #1d4d33);
-}
-
-.loader__sun {
-  position: absolute;
-  top: 2.2em;
-  left: 4.4em;
-  width: 3.4em;
-  height: 3.4em;
-  border-radius: 50%;
-  background-color: #ffd54f;
-}
-
-.loader__dots {
-  margin-top: 1.4em;
-  line-height: 0;
-}
-
-.loader__dot {
-  display: inline-block;
-  width: 0.9em;
-  height: 0.9em;
-  margin: 0 0.4em;
-  border-radius: 50%;
-  background-color: #e8edf4;
-  opacity: 0.3;
-  -webkit-animation: loader-dot 3s ease-in-out infinite;
-  animation: loader-dot 3s ease-in-out infinite;
-}
-
-.loader__dot--b {
-  -webkit-animation-delay: 1s;
-  animation-delay: 1s;
-}
-
-.loader__dot--c {
-  -webkit-animation-delay: 2s;
-  animation-delay: 2s;
-}
-
-.loader__text {
-  margin-top: 1.6em;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.1em;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  -webkit-animation: loader-breathe 1.8s ease-in-out infinite;
-  animation: loader-breathe 1.8s ease-in-out infinite;
-}
-
-@-webkit-keyframes loader-slide {
-  0%, 25% { -webkit-transform: translateX(0); transform: translateX(0); }
-  33%, 58% { -webkit-transform: translateX(-25%); transform: translateX(-25%); }
-  66%, 91% { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
-  100% { -webkit-transform: translateX(-75%); transform: translateX(-75%); }
-}
-
-@keyframes loader-slide {
-  0%, 25% { -webkit-transform: translateX(0); transform: translateX(0); }
-  33%, 58% { -webkit-transform: translateX(-25%); transform: translateX(-25%); }
-  66%, 91% { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
-  100% { -webkit-transform: translateX(-75%); transform: translateX(-75%); }
-}
-
-@-webkit-keyframes loader-dot {
-  0% { opacity: 1; }
-  28% { opacity: 1; }
-  36% { opacity: 0.3; }
-  100% { opacity: 0.3; }
-}
-
-@keyframes loader-dot {
-  0% { opacity: 1; }
-  28% { opacity: 1; }
-  36% { opacity: 0.3; }
-  100% { opacity: 0.3; }
-}
-
-@-webkit-keyframes loader-breathe {
-  0% { opacity: 0.55; }
-  50% { opacity: 1; }
-  100% { opacity: 0.55; }
-}
-
-@keyframes loader-breathe {
-  0% { opacity: 0.55; }
-  50% { opacity: 1; }
-  100% { opacity: 0.55; }
-}
-
-/* no motion for those who ask for none */
-@media (prefers-reduced-motion: reduce) {
-  .loader__strip,
-  .loader__dot,
-  .loader__text {
-    -webkit-animation: none;
-    animation: none;
+@-webkit-keyframes intro-light {
+  0%, 100% {
+    opacity: .25;
   }
-
-  .loader__dot--a {
+  40% {
     opacity: 1;
   }
 }
+
+@keyframes intro-light {
+  0%, 100% {
+    opacity: .25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* no motion for those who ask for none: the mark stays as a still picture */
+@media (prefers-reduced-motion: reduce) {
+  #overlay * {
+    -webkit-animation: none !important;
+    animation: none !important;
+  }
+}
+
+@-webkit-keyframes intro-light {
+  0%, 100% {
+    opacity: .25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-light {
+  0%, 100% {
+    opacity: .25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+

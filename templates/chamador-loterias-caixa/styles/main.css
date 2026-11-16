@@ -33,7 +33,6 @@ body {
   font-size: 5em;
 }
 
-
 #numero {
   position: absolute;
   left: 0;
@@ -61,7 +60,7 @@ body {
   }
 }
 
-/* The loader: the template's own look, the big yellow number in Futura on the light blue of its background, counting. */
+/* The loader: one small mark centred on a black page, no text (docs/loader-style.md). Plain CSS for the old Android WebViews: prefixed flex and animations. */
 #overlay {
   position: absolute;
   top: 0;
@@ -70,131 +69,51 @@ body {
   height: 100%;
   overflow: hidden;
   z-index: 10;
-  background-color: #63b8d5;
-  background-image: -webkit-linear-gradient(top, #5eafd2, #74c0da);
-  background-image: linear-gradient(to bottom, #5eafd2, #74c0da);
+  background: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
   opacity: 1;
   -webkit-transition: opacity 0.5s ease-out;
   transition: opacity 0.5s ease-out;
+}
+
+@-webkit-keyframes intro-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .15;
+  }
+}
+
+@keyframes intro-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .15;
+  }
 }
 
 #overlay.is-hidden {
   opacity: 0;
 }
 
-.loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 40vh;
-  text-align: center;
-}
-
-.loader__label {
-  position: absolute;
-  top: 5%;
-  width: 100%;
-  font-size: 0.3em;
-  line-height: 1.2em;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.95;
-  -webkit-animation: loader-breathe 1.5s ease-in-out infinite;
-  animation: loader-breathe 1.5s ease-in-out infinite;
-}
-
-.loader__digits {
-  position: absolute;
-  left: 0;
-  bottom: 6%;
-  width: 100%;
-  height: 1.2em;
-  white-space: nowrap;
-  color: #fee105;
-}
-
-.loader__digit {
-  display: inline-block;
-  vertical-align: top;
-  width: 0.55em;
-  height: 1.2em;
-  line-height: 1.2em;
-  overflow: hidden;
-}
-
-.loader__strip {
-  display: block;
-  -webkit-animation: loader-reel 2s steps(10) infinite;
-  animation: loader-reel 2s steps(10) infinite;
-}
-
-.loader__strip--tens {
-  -webkit-animation-duration: 3s;
-  animation-duration: 3s;
-}
-
-.loader__number {
-  display: block;
-  height: 1.2em;
-}
-
-@-webkit-keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@-webkit-keyframes loader-breathe {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes loader-breathe {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-/* a portrait or square screen is sized by its width, a banner by its height */
-@media (orientation: portrait) {
-  .loader {
-    font-size: 40vw;
-  }
-}
-
-@media (min-aspect-ratio: 3/1) {
-  .loader {
-    font-size: 42vh;
-  }
-
-  .loader__label {
-    top: 2%;
-  }
-
-  .loader__digits {
-    bottom: 0;
-  }
-}
-
-@media (max-width: 400px) {
-  .loader {
-    font-size: 32vw;
-  }
-}
-
-/* no motion for those who ask for none */
+/* no motion for those who ask for none: the mark stays as a still picture */
 @media (prefers-reduced-motion: reduce) {
-  .loader__label,
-  .loader__strip {
-    -webkit-animation: none;
-    animation: none;
+  #overlay * {
+    -webkit-animation: none !important;
+    animation: none !important;
   }
 
   #overlay {
@@ -202,3 +121,22 @@ body {
     transition: none;
   }
 }
+
+@-webkit-keyframes intro-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .15;
+  }
+}
+
+@keyframes intro-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .15;
+  }
+}
+

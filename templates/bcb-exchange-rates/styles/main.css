@@ -173,7 +173,7 @@ body {
   }
 }
 
-/* The loader: the template's own currency boxes (dark cards, the BCB blue and red of the badges) with the rates counting, on the dark page. */
+/* The loader: one small mark centred on a black page, no text (docs/loader-style.md). Plain CSS for the old Android WebViews: prefixed flex and animations. */
 #overlay {
   position: absolute;
   top: 0;
@@ -182,209 +182,62 @@ body {
   height: 100%;
   overflow: hidden;
   z-index: 10;
-  background-color: #0b0c11;
-  background-image: -webkit-radial-gradient(center, circle farthest-corner, #1c1e29, #0b0c11);
-  background-image: radial-gradient(circle farthest-corner at center, #1c1e29, #0b0c11);
+  background: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 }
 
-.loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 3.6vh;
-  text-align: center;
-  color: #fff;
-}
-
-.loader__cards {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  top: 50%;
-  height: 5.4em;
-  margin-top: -3.4em;
-  white-space: nowrap;
-}
-
-.loader__card {
-  display: inline-block;
-  vertical-align: top;
-  height: 5.4em;
-  margin: 0 0.6em;
-  padding: 0.8em 1em;
-  box-sizing: border-box;
-  border-radius: 0.35em;
-  background-color: #20222e;
-  text-align: left;
-}
-
-.loader__badge {
-  display: inline-block;
-  vertical-align: middle;
-  width: 3.4em;
-  height: 3.4em;
-  line-height: 3.4em;
-  border-radius: 50%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 1em;
-  letter-spacing: 0.05em;
-  -webkit-animation: loader-breathe 2s ease-in-out infinite;
-  animation: loader-breathe 2s ease-in-out infinite;
-}
-
-.loader__badge--eur {
-  background-color: #039;
-  color: #fff;
-}
-
-.loader__badge--usd {
-  background-color: #fff;
-  color: #b22234;
-  -webkit-animation-delay: -1s;
-  animation-delay: -1s;
-}
-
-.loader__rows {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 1em;
-}
-
-.loader__row {
-  display: block;
-  white-space: nowrap;
-}
-
-.loader__label {
-  display: block;
-  font-size: 0.45em;
-  letter-spacing: 0.05em;
-  opacity: 0.75;
-}
-
-.loader__value {
-  display: block;
-  height: 1.2em;
-  line-height: 1.2em;
-  font-weight: bold;
-  font-size: 1em;
-  margin-bottom: 0.15em;
-}
-
-/* the last two digits of each rate count: a strip of digits moved one at a time */
-.loader__reel {
-  display: inline-block;
-  vertical-align: top;
-  height: 1.2em;
-  width: 0.6em;
-  overflow: hidden;
-}
-
-.loader__strip {
-  display: block;
-  -webkit-animation: loader-reel 2s steps(10) infinite;
-  animation: loader-reel 2s steps(10) infinite;
-}
-
-.loader__strip--b {
-  -webkit-animation-duration: 1.5s;
-  animation-duration: 1.5s;
-}
-
-.loader__strip--c {
-  -webkit-animation-duration: 2.5s;
-  animation-duration: 2.5s;
-}
-
-.loader__number {
-  display: block;
-  height: 1.2em;
-}
-
-.loader__text {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  top: 50%;
-  margin-top: 4.7em;
-  font-size: 0.6em;
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  -webkit-animation: loader-breathe 1.5s ease-in-out infinite;
-  animation: loader-breathe 1.5s ease-in-out infinite;
-}
-
-@-webkit-keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@keyframes loader-reel {
-  from { -webkit-transform: translateY(0); transform: translateY(0); }
-  to { -webkit-transform: translateY(-100%); transform: translateY(-100%); }
-}
-
-@-webkit-keyframes loader-breathe {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes loader-breathe {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-/* the cards side by side need about 30em: a squarer screen gets a smaller type, a banner a bigger one, a portrait stacks the cards */
-@media (min-aspect-ratio: 1/1) and (max-aspect-ratio: 4/3) {
-  .loader {
-    font-size: 3vw;
+@-webkit-keyframes intro-coin {
+  0%, 100% {
+    -webkit-transform: scaleX(1);
+  }
+  50% {
+    -webkit-transform: scaleX(.1);
   }
 }
 
-@media (min-aspect-ratio: 3/1) {
-  .loader {
-    font-size: 7vh;
+@keyframes intro-coin {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(.1);
   }
 }
 
-@media (orientation: portrait) {
-  .loader {
-    font-size: 4.2vw;
-  }
-
-  .loader__cards {
-    margin-top: -7.4em;
-    height: 11.8em;
-  }
-
-  .loader__card {
-    display: block;
-    width: 15em;
-    margin: 0 auto 1em;
-  }
-
-  .loader__text {
-    margin-top: 8.7em;
-  }
-}
-
-@media (max-width: 400px) {
-  .loader {
-    font-size: 6vw;
-  }
-}
-
-/* no motion for those who ask for none */
+/* no motion for those who ask for none: the mark stays as a still picture */
 @media (prefers-reduced-motion: reduce) {
-  .loader__badge,
-  .loader__text,
-  .loader__strip {
-    -webkit-animation: none;
-    animation: none;
+  #overlay * {
+    -webkit-animation: none !important;
+    animation: none !important;
   }
 }
+
+@-webkit-keyframes intro-coin {
+  0%, 100% {
+    -webkit-transform: scaleX(1);
+  }
+  50% {
+    -webkit-transform: scaleX(.1);
+  }
+}
+
+@keyframes intro-coin {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(.1);
+  }
+}
+
