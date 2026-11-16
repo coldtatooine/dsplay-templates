@@ -15,8 +15,8 @@ function svgI(m, vb, inner) {
 }
 function mark(m) {
   return box('position:relative;width:' + m + 'px;height:' + m + 'px;',
-    box('position:absolute;left:0;top:0;width:100%;height:100%;' + an('lift', 1.6, 'ease-in-out'), svgI(m, 24, '<path d="M3 16.5a9 9 0 0 1 18 0z" fill="#8b0000"/><circle cx="12" cy="5.4" r="1.7" fill="#8b0000"/>')) +
-    svgI(m, 24, '<rect x="1.6" y="18" width="20.8" height="2.4" rx="1.2" fill="#8b0000"/>'));
+    box('position:absolute;left:0;top:0;width:100%;height:100%;' + an('lift', 1.6, 'ease-in-out'), svgI(m, 24, '<path d="M3 16.5a9 9 0 0 1 18 0z" fill="#ffca08"/><circle cx="12" cy="5.4" r="1.7" fill="#ffca08"/>')) +
+    svgI(m, 24, '<rect x="1.6" y="18" width="20.8" height="2.4" rx="1.2" fill="#ffca08"/>'));
 }
 
 // The one mark is small and centred: 13 % of the short side, 42 % on a banner (3:1 or more), in whole px.
