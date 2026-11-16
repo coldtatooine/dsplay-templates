@@ -13,6 +13,7 @@ import './style.sass';
 
 export const PER_SCREEN = 1;
 export const FONTS = ['Nunito', 'Fredoka'];
+export { default as LOADER } from './loader';
 
 const BOX = {
   landscape: { text: { w: 676, h: 215 }, name: 676, nameMax: 100, max: 33, min: 16 },

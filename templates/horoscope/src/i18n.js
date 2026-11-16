@@ -5,7 +5,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // The sign names, elements, colours, month names and the order of a short date are ours; the keyword and the text of each sign come from the answer, in its own language.
 // Each row is [key, pt, es, fr, de, it]; the English text is the key.
 const ROWS = [
-  ['Loading', 'Carregando', 'Cargando', 'Chargement', 'Laden', 'Caricamento'],
   ['Daily horoscope', 'Horóscopo do dia', 'Horóscopo del día', 'Horoscope du jour', 'Tageshoroskop', 'Oroscopo del giorno'],
   ['Love', 'Amor', 'Amor', 'Amour', 'Liebe', 'Amore'],
   ['Work', 'Trabalho', 'Trabajo', 'Travail', 'Arbeit', 'Lavoro'],

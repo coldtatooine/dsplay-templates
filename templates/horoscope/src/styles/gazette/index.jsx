@@ -16,6 +16,7 @@ import './style.sass';
 
 export const PER_SCREEN = 1;
 export const FONTS = ['Playfair Display', 'Inter'];
+export { default as LOADER } from './loader';
 
 const INK = '#1c1a17';
 const RED = '#c8442b';

@@ -13,6 +13,7 @@ import './style.sass';
 
 export const PER_SCREEN = 1;
 export const FONTS = ['Poppins'];
+export { default as LOADER } from './loader';
 
 const BOX = {
   landscape: { text: { w: 900, h: 215 }, name: 1136, nameMax: 150, max: 35, min: 16 },

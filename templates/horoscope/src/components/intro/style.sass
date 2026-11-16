@@ -1,75 +1,118 @@
-@import ../../styles/mixins
+// The loader paints its own full background (set by the bundled style) and centres one small mark.
+// Keyframes of every style's mark are written out with their -webkit- twin for Android 4.4 WebViews.
 
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  background: #0b0e1d
-  background: radial-gradient(ellipse at 50% 45%, #2a1d63 0%, #121233 55%, #070b18 100%)
   overflow: hidden
 
-.intro__wheel
-  position: absolute
-  left: 50%
-  top: 50%
-  +animation(intro-turn 28s linear infinite)
-
-.intro__sign
-  position: absolute
-  display: block
-  color: #aab2d5
-  +animation(intro-upright 28s linear infinite)
-
-.intro__glyph
-  width: 100%
-  height: 100%
-
-.intro__core
-  position: relative
-  display: block
-  border-radius: 50%
-  background: #f6c451
-  box-shadow: 0 0 40px 12px rgba(246, 196, 81, 0.45)
-  +animation(intro-pulse 1.8s ease-in-out infinite)
-
-.intro__twinkle
-  position: absolute
-  display: block
-  border-radius: 50%
-  background: #ffffff
-  opacity: 0.2
-  +animation(intro-twinkle 2.1s ease-in-out infinite)
-
-+keyframes(intro-turn)
-  from
-    +transform(rotate(0deg))
-  to
-    +transform(rotate(360deg))
-
-+keyframes(intro-upright)
-  from
-    +transform(rotate(0deg))
-  to
-    +transform(rotate(-360deg))
-
-+keyframes(intro-pulse)
-  0%
-    +transform(scale(1))
-    opacity: 0.85
+@-webkit-keyframes intro-pulse
+  0%, 100%
+    -webkit-transform: scale(.88)
+    opacity: .75
   50%
-    +transform(scale(1.18))
+    -webkit-transform: scale(1.08)
+    opacity: 1
+
+@keyframes intro-pulse
+  0%, 100%
+    transform: scale(.88)
+    opacity: .75
+  50%
+    transform: scale(1.08)
+    opacity: 1
+
+@-webkit-keyframes intro-light
+  0%, 100%
+    opacity: .25
+  40%
+    opacity: 1
+
+@keyframes intro-light
+  0%, 100%
+    opacity: .25
+  40%
+    opacity: 1
+
+@-webkit-keyframes intro-spin
+  0%
+    -webkit-transform: rotate(0deg)
+  100%
+    -webkit-transform: rotate(360deg)
+
+@keyframes intro-spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)
+
+@-webkit-keyframes intro-dua
+  0%, 100%
+    -webkit-transform: translateX(-14%)
+  50%
+    -webkit-transform: translateX(14%)
+
+@keyframes intro-dua
+  0%, 100%
+    transform: translateX(-14%)
+  50%
+    transform: translateX(14%)
+
+@-webkit-keyframes intro-dub
+  0%, 100%
+    -webkit-transform: translateX(14%)
+  50%
+    -webkit-transform: translateX(-14%)
+
+@keyframes intro-dub
+  0%, 100%
+    transform: translateX(14%)
+  50%
+    transform: translateX(-14%)
+
+@-webkit-keyframes intro-fill
+  0%
+    -webkit-transform: scaleX(0)
+    opacity: 1
+  70%
+    -webkit-transform: scaleX(1)
     opacity: 1
   100%
-    +transform(scale(1))
-    opacity: 0.85
+    -webkit-transform: scaleX(1)
+    opacity: 0
 
-+keyframes(intro-twinkle)
+@keyframes intro-fill
   0%
-    opacity: 0.15
-  50%
+    transform: scaleX(0)
+    opacity: 1
+  70%
+    transform: scaleX(1)
     opacity: 1
   100%
-    opacity: 0.15
+    transform: scaleX(1)
+    opacity: 0
+
+@-webkit-keyframes intro-bar
+  0%, 100%
+    -webkit-transform: scaleY(.3)
+  50%
+    -webkit-transform: scaleY(1)
+
+@keyframes intro-bar
+  0%, 100%
+    transform: scaleY(.3)
+  50%
+    transform: scaleY(1)
+
+// no motion for those who ask for none: the mark stays as a still picture
+@media (prefers-reduced-motion: reduce)
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

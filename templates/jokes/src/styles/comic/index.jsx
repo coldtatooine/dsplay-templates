@@ -9,6 +9,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const FONTS = ['Bangers', 'Fredoka'];
+export { default as LOADER } from './loader';
 
 const BOX = {
   landscape: {

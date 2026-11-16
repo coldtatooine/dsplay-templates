@@ -10,6 +10,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const FONTS = ['Fredoka', 'Inter'];
+export { default as LOADER } from './loader';
 
 // Boxes in design px: the text of the question bubble, the text of the answer bubble and the small question above it
 const BOX = {

@@ -10,6 +10,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const FONTS = ['Inter'];
+export { default as LOADER } from './loader';
 
 const BOX = {
   landscape: {

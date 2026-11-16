@@ -5,7 +5,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // The question and the answer of a joke come from the answer of the gateway, in its own language; these are only the words around them.
 // Each row is [key, pt, es, fr, de, it]; the English text is the key.
 const ROWS = [
-  ['Loading', 'Carregando', 'Cargando', 'Chargement', 'Laden', 'Caricamento'],
   ['Joke of the day', 'Piada do dia', 'Chiste del día', 'Blague du jour', 'Witz des Tages', 'Barzelletta del giorno'],
   ['Question', 'Pergunta', 'Pregunta', 'Question', 'Frage', 'Domanda'],
   ['Answer', 'Resposta', 'Respuesta', 'Réponse', 'Antwort', 'Risposta'],
