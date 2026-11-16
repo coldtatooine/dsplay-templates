@@ -11,37 +11,31 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           'Icon not found': 'Icon not found',
         },
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           'Icon not found': 'Ícone não encontrado',
         },
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           'Icon not found': 'Icono no encontrado',
         },
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           'Icon not found': 'Icona non trovata',
         },
       },
       de: {
         translations: {
-          Loading: 'Laden',
           'Icon not found': 'Symbol nicht gefunden',
         },
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           'Icon not found': 'Pictogram niet gevonden',
         },
       },

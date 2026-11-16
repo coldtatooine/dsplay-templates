@@ -11,42 +11,36 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           Logo: 'Logo',
           Direction: 'Direction',
         },
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           Logo: 'Logo',
           Direction: 'Direção',
         },
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           Logo: 'Logo',
           Direction: 'Dirección',
         },
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           Logo: 'Logo',
           Direction: 'Direzione',
         },
       },
       de: {
         translations: {
-          Loading: 'Laden',
           Logo: 'Logo',
           Direction: 'Richtung',
         },
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           Logo: 'Logo',
           Direction: 'Richting',
         },

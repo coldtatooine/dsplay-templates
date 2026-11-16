@@ -1,7 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,212 +13,21 @@
   align-items: center
   overflow: hidden
   background: #1d2230
-  background: radial-gradient(ellipse at 50% 45%, #2e3650 0%, #1d2230 80%)
-  font-family: 'Helvetica Neue', arial, helvetica, helve, sans-serif
 
-// the template's default bar: white, dark text; the measures are in em of the size the component sets
-.intro__bar
-  display: flex
-  justify-content: space-between
-  align-items: center
-  padding: 0 1em
-  border-radius: 0.5em
-  background: #fff
-  box-shadow: 0 0 0.8em rgba(0, 0, 0, 0.45)
+@-webkit-keyframes intro-sweep
+  0%
+    -webkit-transform: translateX(-110%)
+  100%
+    -webkit-transform: translateX(300%)
 
-.intro__clock
-  display: block
-  -webkit-box-flex: 0
-  flex: none
-  width: 7em
-  height: 1.6em
-  border-radius: 0.8em
-  background: #222
+@keyframes intro-sweep
+  0%
+    transform: translateX(-110%)
+  100%
+    transform: translateX(300%)
 
-.intro__weather
-  display: flex
-  -webkit-box-flex: 0
-  flex: none
-  align-items: center
-  margin: 0 1.4em
-
-.intro__sun
-  display: block
-  width: 3.6em
-  height: 3.6em
-  border-radius: 50%
-  background: #f5b942
-
-.intro__temp
-  display: block
-  width: 2.6em
-  height: 1.4em
-  margin-left: 0.7em
-  border-radius: 0.7em
-  background: #222
-
-.intro__quotes
-  display: block
-  -webkit-box-flex: 0
-  flex: none
-  margin: 0 0.4em 0 0
-
-.intro__quote
-  display: block
-  width: 5em
-  height: 1.1em
-  border-radius: 0.55em
-  background: #222
-
-.intro__quote--short
-  width: 3.6em
-  margin-top: 0.8em
-  opacity: 0.55
-
-.intro__news
-  display: flex
-  -webkit-box-flex: 1
-  flex: 1
-  align-items: center
-  min-width: 0
-  margin: 0 1.4em
-
-.intro__channel
-  display: block
-  -webkit-box-flex: 0
-  flex: none
-  width: 5em
-  height: 4em
-  margin-right: 1em
-  border-radius: 0.5em
-  background: #dde0e8
-
-// the news title: pieces of text running along the strip
-.intro__ticker
-  display: block
-  position: relative
-  overflow: hidden
-  -webkit-box-flex: 1
-  flex: 1
-  height: 2em
-  min-width: 0
-
-.intro__strip
-  display: flex
-  position: absolute
-  left: 0
-  top: 0
-  height: 2em
-  +animation(intro-ticker 3s linear infinite)
-
-.intro__group
-  display: flex
-  -webkit-box-flex: 0
-  flex: none
-  align-items: center
-  width: 15em
-  height: 2em
-
-.intro__piece
-  display: block
-  height: 1em
-  margin-right: 1em
-  border-radius: 0.5em
-  background: #222
-  opacity: 0.8
-
-.intro__piece--0
-  width: 3em
-
-.intro__piece--1
-  width: 5em
-
-.intro__piece--2
-  width: 4em
-
-.intro__sponsor
-  display: block
-  -webkit-box-flex: 0
-  flex: none
-  width: 9em
-  height: 4.4em
-  border-radius: 0.5em
-  background: #dde0e8
-
-.intro__text
-  display: block
-  color: #fff
-  letter-spacing: 0.3em
-  text-transform: uppercase
-  opacity: 0.85
-
-// standing up, as the template does in a portrait screen
-.intro--vertical
-  .intro__bar
-    -webkit-box-orient: vertical
-    flex-direction: column
-    padding: 1em 0
-  .intro__clock
-    width: 5em
-  .intro__weather
-    -webkit-box-orient: vertical
-    flex-direction: column
-    margin: 0
-  .intro__temp
-    margin: 0.6em 0 0 0
-  .intro__quotes
-    margin: 0
-  .intro__news
-    -webkit-box-orient: vertical
-    flex-direction: column
-    margin: 0
-    width: 100%
-  .intro__channel
-    margin: 0 0 1em 0
-  .intro__ticker
-    -webkit-box-flex: 1
-    flex: 1
-    width: 2em
-    height: auto
-    min-height: 0
-  .intro__strip
-    -webkit-box-orient: vertical
-    flex-direction: column
-    width: 2em
-    height: auto
-    +animation(intro-ticker-up 3s linear infinite)
-  .intro__group
-    -webkit-box-orient: vertical
-    flex-direction: column
-    width: 2em
-    height: 15em
-  .intro__piece
-    width: 1em
-    margin: 0 0 1em 0
-  .intro__piece--0
-    height: 3em
-  .intro__piece--1
-    height: 5em
-  .intro__piece--2
-    height: 4em
-  .intro__sponsor
-    width: 6.5em
-    height: 3.4em
-
-+keyframes(intro-ticker)
-  from
-    +transform(translateX(0))
-  to
-    +transform(translateX(-15em))
-
-+keyframes(intro-ticker-up)
-  from
-    +transform(translateY(0))
-  to
-    +transform(translateY(-15em))
-
-// no motion for those who ask for none: the title stays still
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__strip
-    -webkit-animation: none
-    animation: none
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important
