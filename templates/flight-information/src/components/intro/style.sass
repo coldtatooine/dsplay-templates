@@ -1,34 +1,108 @@
+@import ../../styles/mixins
+
 .intro
   position: absolute
-  width: 100%
-  height: 100%
-  display: flex
-  justify-content: center
-  align-items: center
-
-.loader
   width: 100%
   height: 100%
   display: flex
   flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  background: #005f6b
+  background: radial-gradient(ellipse at 50% 45%, #00808f 0%, #003f48 75%)
+  font-family: 'Roboto Condensed', sans-serif
+
+// the measures are the template's own table, in em of the tile size the component sets
+.intro__board
+  display: block
+  width: 7.2em
+  border-radius: 0.14em
+  overflow: hidden
+  background: #fff
+  box-shadow: 0 0 0.4em rgba(0, 0, 0, 0.45)
+
+.intro__header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  height: 0.62em
+  padding: 0 0.3em
+  background: #008c9e
+
+.intro__title
+  display: block
+  width: 2.2em
+  height: 0.2em
+  border-radius: 0.1em
+  background: #fff
+
+.intro__clock
+  display: block
+  width: 0.9em
+  height: 0.2em
+  border-radius: 0.1em
+  background: #fff
+  opacity: 0.7
+
+.intro__row
+  display: flex
+  justify-content: center
+  padding: 0.16em 0
+  background: #fff
+
+  &:nth-child(odd)
+    background: #cecece
+
+.intro__tile
+  display: block
+  position: relative
+  overflow: hidden
+  width: 0.8em
+  height: 1em
+  margin: 0 0.05em
+  border-radius: 0.08em
+  background: #005f6b
+
+// the strip of letters moves one tile high at a time
+.intro__strip
+  display: block
+  +animation(intro-flap 2.5s steps(5) infinite)
+
+.intro__letter
+  display: block
+  height: 1.4286em
+  line-height: 1.4286em
+  font-size: 0.7em
+  text-align: center
   font-weight: bold
+  color: #fff
 
-  .logo
-    height: 3rem
-    filter: grayscale(90%)
+// the hinge of the split flap
+.intro__seam
+  display: block
+  position: absolute
+  left: 0
+  right: 0
+  top: 50%
+  height: 0.03em
+  background: rgba(0, 0, 0, 0.6)
 
-.bounce
-  animation-name: bounce
-  animation-timing-function: ease
-  animation-duration: 1s
-  animation-iteration-count: infinite
+.intro__text
+  display: block
+  color: #fff
+  letter-spacing: 0.3em
+  text-transform: uppercase
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35)
 
-@keyframes bounce
-  0%
-    transform: scale(1)
-  50%
-    transform: scale(1.3)
-  100%
-    transform: scale(1)
++keyframes(intro-flap)
+  from
+    +transform(translateY(0))
+  to
+    +transform(translateY(-100%))
+
+// no motion for those who ask for none: the board stands still
+@media (prefers-reduced-motion: reduce)
+  .intro__strip
+    -webkit-animation: none
+    animation: none
