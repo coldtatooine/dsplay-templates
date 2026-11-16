@@ -1,35 +1,100 @@
 @import ../../styles/mixins
 
+// the template's page is black; the loader's picture is a framed photo in cool greys and a warm sun
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  color: #e8edf4
   background: #000
+  background: radial-gradient(ellipse at 50% 45%, #1c2330 0%, #000 85%)
 
-.intro__icon
-  overflow: visible
+.intro__frame
+  position: relative
+  box-sizing: border-box
+  overflow: hidden
+  border-style: solid
+  border-color: #e8edf4
+  background: #1b2430
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.8)
+
+.intro__picture
+  position: relative
+  overflow: hidden
+  background: #1b2430
+  background: linear-gradient(#26364d, #1b2430)
 
 .intro__sun
-  -webkit-transform-origin: 38px 48px
-  transform-origin: 38px 48px
-  +animation(intro-sun 2.4s ease-in-out infinite)
+  position: absolute
+  border-radius: 50%
+  background: #ffd54f
+  +animation(intro-sun 1.8s ease-in-out infinite)
 
+// a mountain is a box with no size and three borders, the bottom one coloured
+.intro__mountain
+  position: absolute
+  width: 0
+  height: 0
+  border-style: solid
+  border-left-color: transparent
+  border-right-color: transparent
+  border-top-width: 0
+
+.intro__mountain--far
+  border-bottom-color: #34455c
+
+.intro__mountain--near
+  border-bottom-color: #4a5a70
+
+// the band of light, slanted, crosses the picture and rests off to the right for a moment before the next pass
 .intro__sweep
+  position: absolute
+  left: 0
+  background: rgba(255, 255, 255, 0.3)
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0))
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0))
   +animation(intro-sweep 2.4s ease-in-out infinite)
+
+.intro__text
+  display: block
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  text-transform: uppercase
+  letter-spacing: 0.3em
+  +animation(intro-breathe 1.8s ease-in-out infinite)
 
 +keyframes(intro-sun)
   0%
     +transform(scale(1))
   50%
-    +transform(scale(1.18))
+    +transform(scale(1.1))
   100%
     +transform(scale(1))
 
 +keyframes(intro-sweep)
   0%
-    +transform(translateX(0))
+    +transform(translateX(-150%) skewX(-20deg))
+  65%
+    +transform(translateX(450%) skewX(-20deg))
   100%
-    +transform(translateX(190px))
+    +transform(translateX(450%) skewX(-20deg))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.55
+  50%
+    opacity: 1
+  100%
+    opacity: 0.55
+
+@media (prefers-reduced-motion: reduce)
+  .intro__sun,
+  .intro__sweep,
+  .intro__text
+    +animation(none)
+  .intro__sweep
+    display: none
