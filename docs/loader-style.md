@@ -11,6 +11,14 @@ Every template has **its own loader**: the screen a TV shows while `Loader` (`@d
 5. **The minimum visible time is 1500 ms**: `const MIN_LOADING_DURATION = 1500;`, passed as `minDuration` to `Loader`. Real work can make it longer, never shorter. A vanilla template does the same with a timer before it hides its overlay.
 6. **Style variants get their own loader.** A template with several looks (horoscope, jokes) draws one loader per style, with that style's background and mark.
 
+## Process: board first, then code
+
+1. **The design board comes first.** Every loader is drawn and approved on the **"Template loaders" board** (https://claude.ai/artifact/CsyM8U5bAmjPq2oZo91iY9, a private Claude artifact of the DSPLAY owner): one entry per template (and per style of horoscope and jokes) with the mark drawn in every screen shape (landscape, portrait, square, banners), the loader's background (black or the template's own, with the reason) and the owner's decision. A new template, or a new style, gets its entry on the board and is approved there before any code. Change the board by reading the artifact (the Artifact tool, `action: "read"`), editing the page and republishing it to the **same URL**, so the link and the decisions stay.
+2. **Then the code** from the board's `mark(m)` function, in the structure below (`mark.js` / `loader.js` are ported from the board, not redrawn).
+3. **Then the checks** of the checklist, the template's tests and lint, and `npm run zip` for that template only.
+4. **Then the CMS.** A system template is replaced by uploading the new zip in the app (`/project/1211/templates/<id>/edit`); a change to a loader is a change to a template running on the fleet, so it is done only with the owner's go.
+5. **A new media type brings its loader the same way** (see `.claude/new-media-type-standard.md` in `dsplay-web-apps`: the design files come first).
+
 ## Structure
 
 React templates:
