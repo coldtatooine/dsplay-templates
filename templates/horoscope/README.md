@@ -58,7 +58,20 @@ All eight are CMS type **Daily Horoscope**. The name and description of each (`s
 
 ### Screen formats
 
-Every style has a landscape (1280 x 720), a portrait (720 x 1280) and a square (900 x 900) layout, picked from `useScreenInfo().screenFormat`; the banner formats take the landscape and portrait plates. Each layout is drawn on a fixed **plate** in design pixels and scaled to the screen (`Stage`: the root font size is set so that `u(96)` in the stylesheets is 96 design pixels); a screen of another shape (1366 x 768, 1280 x 1024, 1920 x 1200...) gets bars of the style's background round the plate. A text always fits its box: `fitFont` (`src/lib/layout.js`) takes the biggest size that fits, down to a minimum, and the box clips beyond that.
+Every style has a landscape (1280 x 720), a portrait (720 x 1280), a square (900 x 900) and its own horizontal and vertical **banner** layout, picked from `useScreenInfo().screenFormat`. Each layout is drawn on a **plate** in design pixels and scaled to the screen (`Stage`: the root font size is set so that `u(96)` in the stylesheets is 96 design pixels); a screen of another shape (1366 x 768, 1280 x 1024, 1920 x 1200...) gets bars of the style's background round the plate. A text always fits its box: `fitFont` (`src/lib/layout.js`) takes the biggest size that fits, down to a minimum, and the box clips beyond that.
+
+A banner plate is not a fixed size: it is 240 design pixels thick and as long as the screen asks (`plateOf(format, width, height)`: 960 for a 4:1 strip, 2400 for 10:1, up to 3000), so a 1920 x 300 or a 3000 x 300 strip is always filled and the text boxes grow with it. On a short strip the constellation and the scores are left out; the notice stays. The horizontal banner is one row (sign, name and dates, text, then the scores and the lucky number); the vertical one is a narrow column in the same order with the notice at the bottom. Each style draws them in its own way:
+
+| Style | Horizontal banner (1920 x 300) | Vertical banner (300 x 1920) |
+|---|---|---|
+| Starry Sky | ![Starry Sky h-banner](docs/screenshots/starry-sky-h-banner.png) | ![Starry Sky v-banner](docs/screenshots/starry-sky-v-banner.png) |
+| Duo | ![Duo h-banner](docs/screenshots/duo-h-banner.png) | ![Duo v-banner](docs/screenshots/duo-v-banner.png) |
+| Daylight | ![Daylight h-banner](docs/screenshots/daylight-h-banner.png) | ![Daylight v-banner](docs/screenshots/daylight-v-banner.png) |
+| Golden Age | ![Golden Age h-banner](docs/screenshots/golden-age-h-banner.png) | ![Golden Age v-banner](docs/screenshots/golden-age-v-banner.png) |
+| Candy | ![Candy h-banner](docs/screenshots/candy-h-banner.png) | ![Candy v-banner](docs/screenshots/candy-v-banner.png) |
+| Neon Nights | ![Neon Nights h-banner](docs/screenshots/neon-nights-h-banner.png) | ![Neon Nights v-banner](docs/screenshots/neon-nights-v-banner.png) |
+| Gazette | ![Gazette h-banner](docs/screenshots/gazette-h-banner.png) | ![Gazette v-banner](docs/screenshots/gazette-v-banner.png) |
+| Spectrum | ![Spectrum h-banner](docs/screenshots/spectrum-h-banner.png) | ![Spectrum v-banner](docs/screenshots/spectrum-v-banner.png) |
 
 ## Local development
 

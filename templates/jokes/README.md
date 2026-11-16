@@ -39,7 +39,16 @@ All four are CMS type **Jokes**. The name and description of each (`src/styles.j
 
 ### Screen formats
 
-Every style has a landscape (1280 x 720), a portrait (720 x 1280) and a square (900 x 900) layout, picked from `useScreenInfo().screenFormat` (the banner formats take the landscape and portrait plates). Each layout is drawn on a fixed plate in design pixels and scaled to the screen (`Stage`); a screen of another shape gets bars of the style's background round the plate. The drawings were made for a 660 x 371 stage: `m(n)` in the Sass is such a pixel on the landscape plate (1.94 design px).
+Every style has a landscape (1280 x 720), a portrait (720 x 1280), a square (900 x 900) and its own horizontal and vertical **banner** layout, picked from `useScreenInfo().screenFormat`. Each layout is drawn on a plate in design pixels and scaled to the screen (`Stage`); a screen of another shape gets bars of the style's background round the plate. The drawings were made for a 660 x 371 stage: `m(n)` in the Sass is such a pixel on the landscape plate (1.94 design px).
+
+A banner plate is not a fixed size: it is 240 design pixels thick and as long as the screen asks (`plateOf(format, width, height)`: 960 for a 4:1 strip, 2400 for 10:1, up to 3000), so a 1920 x 300 or a 3000 x 300 strip is always filled. On a banner the question comes first and takes the whole strip; when the answer is revealed the question shrinks (to a chip, a label or a small card, depending on the style) and the answer pops in beside it (below it on a vertical banner). Each style draws it in its own way (the question, then the answer):
+
+| Style | Horizontal banner, 1920 x 300 | Vertical banner, 300 x 1920 |
+|---|---|---|
+| Speech Bubbles | ![Speech Bubbles question](docs/screenshots/speech-bubbles-h-banner.png)<br>![Speech Bubbles answer](docs/screenshots/speech-bubbles-h-banner-answer.png) | ![Speech Bubbles question](docs/screenshots/speech-bubbles-v-banner.png) ![Speech Bubbles answer](docs/screenshots/speech-bubbles-v-banner-answer.png) |
+| Game Show | ![Game Show question](docs/screenshots/game-show-h-banner.png)<br>![Game Show answer](docs/screenshots/game-show-h-banner-answer.png) | ![Game Show question](docs/screenshots/game-show-v-banner.png) ![Game Show answer](docs/screenshots/game-show-v-banner-answer.png) |
+| Chat | ![Chat question](docs/screenshots/chat-h-banner.png)<br>![Chat answer](docs/screenshots/chat-h-banner-answer.png) | ![Chat question](docs/screenshots/chat-v-banner.png) ![Chat answer](docs/screenshots/chat-v-banner-answer.png) |
+| Comic | ![Comic question](docs/screenshots/comic-h-banner.png)<br>![Comic answer](docs/screenshots/comic-h-banner-answer.png) | ![Comic question](docs/screenshots/comic-v-banner.png) ![Comic answer](docs/screenshots/comic-v-banner-answer.png) |
 
 ## Local development
 
