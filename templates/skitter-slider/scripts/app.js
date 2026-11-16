@@ -4,12 +4,6 @@
 var MIN_LOADING_DURATION = 1500;
 var startedAt = new Date().getTime();
 
-// the loader's word follows the screen's locale
-var texts = {
-  'en_us': { loading: 'Loading' },
-  'pt_br': { loading: 'Carregando' }
-};
-
 $(document).ready(function () {
   var u = dsplayTemplateUtils;
 
@@ -64,9 +58,6 @@ $(document).ready(function () {
       }
     }
   });
-
-  var locale = String(u.config.locale || 'en_us').toLowerCase();
-  $('#loadingText').text((texts[locale] || texts.en_us).loading);
 
   // the loader goes away when the slider has its pictures (loaded or failed) and the minimum time has passed;
   // Skitter preloads the same pictures, so they come from the cache
