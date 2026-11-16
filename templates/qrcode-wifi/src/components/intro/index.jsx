@@ -1,40 +1,110 @@
 import { useMemo } from 'react';
-import { useScreenInfo, screen } from '@dsplay/react-template-utils';
+import { useTranslation } from 'react-i18next';
+import { useScreenInfo } from '@dsplay/react-template-utils';
 import './style.sass';
 
-// The loader draws what the template is about: a QR code that is being scanned, with the arcs of a wireless signal above it.
+// The loader draws what the template is about: its grey bevelled frame holding a QR code (three finder squares,
+// data cells that light up in a diagonal wave) with a Wi-Fi logo in the middle whose three signal bars rise one
+// after the other. Only HTML boxes are animated: the old Android WebViews cannot transform SVG.
+
+const GRID = 13; // cells per side
+const FINDER = 5; // cells per side of a finder square
+const LOGO = 3; // cells per side of the Wi-Fi logo, in the middle
+const LOOP = 2.4; // seconds
+
+const even = (value) => 2 * Math.round(value / 2);
+
+const inFinder = (row, col) => {
+  const near = (value) => value < FINDER + 1;
+  const far = (value) => value >= GRID - FINDER - 1;
+  return (near(row) && near(col)) || (near(row) && far(col)) || (far(row) && near(col));
+};
+const inLogo = (value) => value >= (GRID - LOGO) / 2 && value < (GRID + LOGO) / 2;
+
+// the data cells, a fixed pattern that looks like a code
+const cells = [];
+for (let row = 0; row < GRID; row += 1) {
+  for (let col = 0; col < GRID; col += 1) {
+    if (!inFinder(row, col) && !(inLogo(row) && inLogo(col)) && (row * 7 + col * 13 + row * col) % 4 !== 0) {
+      cells.push({ row, col });
+    }
+  }
+}
 
 function Intro(props) {
-  const { w, h, screenFormat } = useScreenInfo();
-
-  const dimension = useMemo(() => {
-    const smaller = Math.min(w, h);
-    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 2 : smaller / 6;
-  }, [w, h, screenFormat]);
-
+  const { w, h } = useScreenInfo();
+  const { t } = useTranslation();
   const { className } = props;
 
+  // everything is a part of one number, the frame's side
+  const sizes = useMemo(() => {
+    const side = even(Math.min(h * 0.42, w * 0.55));
+    const border = Math.max(4, Math.round(side * 0.05));
+    const inner = side - 2 * border;
+    const cell = Math.max(2, Math.floor(inner / (GRID + 2)));
+    return {
+      side, border, cell, offset: Math.floor((inner - cell * GRID) / 2),
+    };
+  }, [w, h]);
+
+  const {
+    side, border, cell, offset,
+  } = sizes;
+  const at = (index) => `${offset + index * cell}px`;
+  const box = (row, col, span) => ({
+    left: at(col), top: at(row), width: `${span * cell}px`, height: `${span * cell}px`,
+  });
+  const finder = (row, col) => (
+    <div key={`${row}-${col}`} className="intro__finder" style={box(row, col, FINDER)}>
+      <span className="intro__finder-hole" style={{ left: `${cell}px`, top: `${cell}px`, width: `${3 * cell}px`, height: `${3 * cell}px` }} />
+      <span className="intro__finder-dot" style={{ left: `${2 * cell}px`, top: `${2 * cell}px`, width: `${cell}px`, height: `${cell}px` }} />
+    </div>
+  );
+  const bars = [0, 1, 2].map((index) => {
+    const barWidth = Math.max(2, Math.round(cell * 0.5));
+    const barHeight = Math.round(cell * (0.8 + index * 0.7));
+    return (
+      <span
+        key={index}
+        className="intro__signal"
+        style={{
+          width: `${barWidth}px`,
+          height: `${barHeight}px`,
+          left: `${Math.round(cell * 0.45 + index * cell * 0.85)}px`,
+          bottom: `${Math.round(cell * 0.5)}px`,
+          animationDelay: `${(index * 0.3) - LOOP}s`,
+          WebkitAnimationDelay: `${(index * 0.3) - LOOP}s`,
+        }}
+      />
+    );
+  });
+
   return (
-    <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} aria-hidden="true" focusable="false">
-        <path className="intro__arc intro__arc--1" d="M44 24a22 22 0 0 1 32 0" fill="none" stroke="#4dd0e1" strokeWidth="5" strokeLinecap="round" />
-        <path className="intro__arc intro__arc--2" d="M51 31a12 12 0 0 1 18 0" fill="none" stroke="#4dd0e1" strokeWidth="5" strokeLinecap="round" />
-        <circle className="intro__arc intro__arc--3" cx="60" cy="38" r="3.5" fill="#4dd0e1" />
-        <path d="M22 44h20v20H22zM78 44h20v20H78zM22 100h20v-20H22z" fill="none" stroke="#f2f4f7" strokeWidth="5" strokeLinejoin="round" />
-        <rect className="intro__cell intro__cell--1" x="42" y="36" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--2" x="62" y="46" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--3" x="22" y="66" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--4" x="52" y="66" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--1" x="72" y="76" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--2" x="62" y="86" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--3" x="82" y="66" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--4" x="42" y="96" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--1" x="82" y="96" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--2" x="72" y="56" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--3" x="52" y="86" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__cell intro__cell--4" x="62" y="96" width="7" height="7" fill="#f2f4f7" />
-        <rect className="intro__scan" x="18" y="46" width="84" height="3.5" rx="1.75" fill="#4cc38a" />
-      </svg>
+    <div {...props} className={`intro ${className || ''}`} role="status">
+      <div className="intro__frame" style={{ width: `${side}px`, height: `${side}px`, borderWidth: `${border}px` }} aria-hidden="true">
+        {finder(0, 0)}
+        {finder(0, GRID - FINDER)}
+        {finder(GRID - FINDER, 0)}
+        {cells.map(({ row, col }) => {
+          const delay = `${((row + col) * 0.09) - LOOP}s`;
+          return (
+            <span
+              key={`${row}-${col}`}
+              className="intro__cell"
+              style={{ ...box(row, col, 1), animationDelay: delay, WebkitAnimationDelay: delay }}
+            />
+          );
+        })}
+        <div className="intro__logo" style={{ ...box((GRID - LOGO) / 2, (GRID - LOGO) / 2, LOGO), borderRadius: `${Math.round(cell * 0.5)}px` }}>
+          {bars}
+        </div>
+      </div>
+      <span
+        className="intro__text"
+        style={{ fontSize: `${Math.max(10, Math.min(Math.round(side * 0.09), Math.round(w * 0.05)))}px`, marginTop: `${Math.round(side * 0.12)}px` }}
+      >
+        {t('Loading')}
+      </span>
     </div>
   );
 }
