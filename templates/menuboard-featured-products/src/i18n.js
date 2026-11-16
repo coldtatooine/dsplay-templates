@@ -46,6 +46,7 @@ i18n
     resources: {
       en: {
         translations: {
+          Loading: 'Loading',
           Untitled: 'Untitled',
           ...productTranslations.en,
           ...priceTranslations.en,
@@ -53,6 +54,7 @@ i18n
       },
       pt: {
         translations: {
+          Loading: 'Carregando',
           Untitled: 'Sem título',
           ...productTranslations.pt,
           ...priceTranslations.pt,
@@ -60,6 +62,7 @@ i18n
       },
       es: {
         translations: {
+          Loading: 'Cargando',
           Untitled: 'Sin título',
           ...productTranslations.es,
           ...priceTranslations.es,
@@ -67,6 +70,7 @@ i18n
       },
       it: {
         translations: {
+          Loading: 'Caricamento',
           Untitled: 'Senza titolo',
           ...productTranslations.it,
           ...priceTranslations.it,
@@ -74,6 +78,7 @@ i18n
       },
       de: {
         translations: {
+          Loading: 'Laden',
           Untitled: 'Unbenannt',
           ...productTranslations.de,
           ...priceTranslations.de,
@@ -81,6 +86,7 @@ i18n
       },
       nl: {
         translations: {
+          Loading: 'Laden',
           Untitled: 'Naamloos',
           ...productTranslations.nl,
           ...priceTranslations.nl,

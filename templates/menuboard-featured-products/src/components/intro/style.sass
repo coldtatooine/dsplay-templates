@@ -1,53 +1,203 @@
 @import ../../styles/mixins
 
+// the template can have any picture behind it: the loader paints its own wood, planks included
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  background: #000
+  overflow: hidden
+  background: #5a3a1d
+  background: repeating-linear-gradient(90deg, #5e3d1f 0, #5e3d1f 11%, #553519 11%, #553519 12%), radial-gradient(ellipse at 50% 45%, #7a5230 0%, #3a2312 100%)
 
-.intro__icon
-  overflow: visible
+.intro__boards
+  display: flex
+  flex-direction: row
+  align-items: stretch
 
-.intro__lid
-  -webkit-transform-origin: 98px 84px
-  transform-origin: 98px 84px
-  +animation(intro-lid 3s ease-in-out infinite)
+.intro__panel
+  display: flex
+  flex-direction: column
+  box-sizing: border-box
+  background: #1c211e
+  background: radial-gradient(ellipse at 40% 30%, #2a312d 0%, #161a17 100%)
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55)
 
-.intro__star
+.intro__panel--promo
+  flex: 2
+
+.intro__panel--menu
+  flex: 3
+  justify-content: space-between
+
+// the logo banner, with the round logo ringed in black
+.intro__logo-banner
+  display: flex
+  justify-content: center
+  align-items: center
+  background: #e67e22
+
+.intro__logo
+  display: block
+  box-sizing: border-box
+  border-style: solid
+  border-color: #000
+  border-radius: 50%
+  background: #c0392b
+
+.intro__window
+  position: relative
+  flex: 1
+  overflow: hidden
+
+// a strip of the featured photos, one card wide each, slid one card at a time
+.intro__slides
+  display: flex
+  flex-direction: row
+  width: 400%
+  height: 100%
+  +animation(intro-slide 3s ease-in-out infinite)
+
+.intro__photo
+  display: flex
+  justify-content: center
+  align-items: center
+  flex: 1
+  height: 100%
+
+.intro__photo--orange
+  background: #e67e22
+
+.intro__photo--red
+  background: #c0392b
+
+.intro__photo--yellow
+  background: #f1c40f
+
+// a plate with its dish, drawn in boxes
+.intro__dish
+  display: block
+  box-sizing: border-box
+  border-style: solid
+  border-color: #f4f1e8
+  border-radius: 50%
+  background: #f6d98f
+
+.intro__dots
+  display: flex
+  justify-content: center
+  align-items: flex-end
+
+.intro__dot
+  display: block
+  border-radius: 50%
+  background: #f4f1e8
+  opacity: 0.35
+  +animation(intro-dot 3s ease-in-out infinite)
+
+.intro__banner
+  display: flex
+  justify-content: center
+  align-items: center
+  box-sizing: border-box
+  border-style: solid
+  border-color: rgba(244, 241, 232, 0.85)
+
+.intro__row
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+
+// a stroke of chalk, written from the left
+.intro__chalk
+  display: block
+  align-self: center
+  border-radius: 4px
+  background: #f4f1e8
   opacity: 0
-  -webkit-transform-origin: 60px 62px
-  transform-origin: 60px 62px
-  +animation(intro-star 3s ease-in-out infinite)
+  -webkit-transform-origin: 0 50%
+  transform-origin: 0 50%
+  +animation(intro-write 3s linear infinite)
 
-+keyframes(intro-lid)
-  0%
-    +transform(rotate(0deg) translateY(0))
-  25%
-    +transform(rotate(0deg) translateY(0))
-  50%
-    +transform(rotate(-16deg) translateY(-22px))
-  75%
-    +transform(rotate(-16deg) translateY(-22px))
-  100%
-    +transform(rotate(0deg) translateY(0))
+.intro__chalk--price
+  background: #ffd54f
+  -webkit-transform-origin: 100% 50%
+  transform-origin: 100% 50%
 
-+keyframes(intro-star)
+.intro__text
+  display: block
+  color: #f4f1e8
+  font-family: 'Chalkboard', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  letter-spacing: 0.2em
+  text-transform: uppercase
+  +animation(intro-breathe 2.4s ease-in-out infinite)
+
++keyframes(intro-write)
   0%
+    opacity: 0.9
+    +transform(scaleX(0))
+  28%
+    opacity: 0.9
+    +transform(scaleX(1))
+  82%
+    opacity: 0.9
+    +transform(scaleX(1))
+  96%
     opacity: 0
-    +transform(scale(0.4))
+    +transform(scaleX(1))
+  100%
+    opacity: 0
+    +transform(scaleX(0))
+
+// the strip holds a photo, slides to the next, and the last one is the first again
++keyframes(intro-slide)
+  0%
+    +transform(translateX(0))
+  22%
+    +transform(translateX(0))
+  33%
+    +transform(translateX(-25%))
+  55%
+    +transform(translateX(-25%))
+  66%
+    +transform(translateX(-50%))
+  88%
+    +transform(translateX(-50%))
+  100%
+    +transform(translateX(-75%))
+
++keyframes(intro-dot)
+  0%
+    opacity: 1
   30%
-    opacity: 0
-    +transform(scale(0.4))
+    opacity: 1
+  36%
+    opacity: 0.35
+  100%
+    opacity: 0.35
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.6
   50%
     opacity: 1
-    +transform(scale(1.1))
-  75%
-    opacity: 1
-    +transform(scale(1))
   100%
-    opacity: 0
-    +transform(scale(0.4))
+    opacity: 0.6
+
+// no motion for those who ask for none: the lines stay written, the first photo shows
+@media (prefers-reduced-motion: reduce)
+  .intro__chalk
+    -webkit-animation: none
+    animation: none
+    opacity: 0.9
+    -webkit-transform: none
+    transform: none
+  .intro__slides, .intro__dot, .intro__text
+    -webkit-animation: none
+    animation: none
+  .intro__dot:first-child
+    opacity: 1

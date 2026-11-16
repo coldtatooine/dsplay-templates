@@ -1,33 +1,133 @@
 @import ../../styles/mixins
 
+// the template can have any picture behind it: the loader paints a dark wooden stage of its own
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  background: #000
+  overflow: hidden
+  background: #2a1a0f
+  background: radial-gradient(ellipse at 50% 45%, #4a3020 0%, #1c110a 80%)
 
-.intro__icon
-  overflow: visible
+// the chalkboard in its wooden frame
+.intro__board
+  position: relative
+  display: flex
+  flex-direction: row
+  align-items: center
+  box-sizing: border-box
+  border-style: solid
+  border-color: #8a5a2b
+  background: #27302b
+  background: radial-gradient(ellipse at 40% 30%, #34403a 0%, #1f2723 100%)
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55)
 
-.intro__steam
+// the round logo, ringed in white like on the real board
+.intro__logo
+  display: flex
+  justify-content: center
+  align-items: center
+  box-sizing: border-box
+  border-style: solid
+  border-color: #f4f1e8
+  border-radius: 50%
+  background: #3a4640
+
+.intro__plate
+  display: block
+  box-sizing: border-box
+  border-style: solid
+  border-color: rgba(244, 241, 232, 0.7)
+  border-radius: 50%
+
+.intro__lines
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  align-self: stretch
+  flex: 1
+
+.intro__banner
+  display: flex
+  justify-content: center
+  align-items: center
+  box-sizing: border-box
+  border-style: solid
+  border-color: rgba(244, 241, 232, 0.85)
+
+.intro__row
+  display: flex
+  flex-direction: row
+  align-items: center
+
+// a dotted leader between the product and its price, as on a menu
+.intro__leader
+  display: block
+  flex: 1
+  height: 0
+  border-bottom-style: dotted
+  border-bottom-color: rgba(244, 241, 232, 0.45)
+
+// a stroke of chalk, written from the left
+.intro__chalk
+  display: block
+  border-radius: 4px
+  background: #f4f1e8
   opacity: 0
-  +animation(intro-steam 2.4s ease-in-out infinite)
+  -webkit-transform-origin: 0 50%
+  transform-origin: 0 50%
+  +animation(intro-write 2.8s linear infinite)
 
-.intro__steam--2
-  +animation-delay(0.4s)
+.intro__chalk--price
+  background: #ffd54f
+  -webkit-transform-origin: 100% 50%
+  transform-origin: 100% 50%
 
-.intro__steam--3
-  +animation-delay(0.8s)
+.intro__text
+  display: block
+  color: #f4f1e8
+  font-family: 'ChalkBoard', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  letter-spacing: 0.2em
+  text-transform: uppercase
+  +animation(intro-breathe 2.4s ease-in-out infinite)
 
-+keyframes(intro-steam)
++keyframes(intro-write)
   0%
-    opacity: 0
-    +transform(translateY(8px))
-  30%
     opacity: 0.9
+    +transform(scaleX(0))
+  28%
+    opacity: 0.9
+    +transform(scaleX(1))
+  82%
+    opacity: 0.9
+    +transform(scaleX(1))
+  96%
+    opacity: 0
+    +transform(scaleX(1))
   100%
     opacity: 0
-    +transform(translateY(-10px))
+    +transform(scaleX(0))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.6
+  50%
+    opacity: 1
+  100%
+    opacity: 0.6
+
+// no motion for those who ask for none: the lines stay written
+@media (prefers-reduced-motion: reduce)
+  .intro__chalk
+    -webkit-animation: none
+    animation: none
+    opacity: 0.9
+    -webkit-transform: none
+    transform: none
+  .intro__text
+    -webkit-animation: none
+    animation: none
