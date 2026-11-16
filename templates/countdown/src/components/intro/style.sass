@@ -5,54 +5,80 @@
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  background: #000
+  overflow: hidden
+  background: #2b32b2
+  background: linear-gradient(to top, #1488cc, #2b32b2)
+  font-family: sans-serif
 
-.intro__icon
-  overflow: visible
+// the measures are the template's own, in em of the font size the component sets
+.intro__timer
+  display: flex
+  align-items: center
 
-.intro__sand-top
-  -webkit-transform-origin: 60px 54px
-  transform-origin: 60px 54px
-  +animation(intro-drain 3.2s linear infinite)
+.intro__digits
+  display: flex
 
-.intro__sand-bottom
-  -webkit-transform-origin: 60px 102px
-  transform-origin: 60px 102px
-  +animation(intro-fill 3.2s linear infinite)
+.intro__digit
+  display: block
+  position: relative
+  overflow: hidden
+  width: 0.82em
+  height: 1.3em
+  line-height: 1.3em
+  margin-right: 0.06em
+  text-align: center
+  font-weight: bold
+  color: #fff
+  border-radius: 0.12em
+  background-color: #29292e
 
-.intro__stream
-  +animation(intro-stream 0.6s linear infinite)
+  &:last-child
+    margin-right: 0
 
-+keyframes(intro-drain)
+// the strip of digits moves one tile high at a time
+.intro__strip
+  display: block
+  +animation(intro-reel 3s steps(10) infinite)
+
+.intro__number
+  display: block
+  height: 1.3em
+
+.intro__colon
+  display: block
+  width: 0.35em
+  text-align: center
+  font-weight: bold
+  color: #fff
+  +animation(intro-blink 1s steps(1) infinite)
+
+.intro__text
+  display: block
+  font-weight: bold
+  color: #fff
+  letter-spacing: 0.3em
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35)
+  text-transform: uppercase
+
++keyframes(intro-reel)
+  from
+    +transform(translateY(0))
+  to
+    +transform(translateY(-100%))
+
++keyframes(intro-blink)
   0%
-    opacity: 0
-    +transform(scaleY(1))
-  6%
     opacity: 1
-  88%
-    opacity: 1
-    +transform(scaleY(0.02))
+  50%
+    opacity: 0.2
   100%
-    opacity: 0
-    +transform(scaleY(0.02))
+    opacity: 1
 
-+keyframes(intro-fill)
-  0%
-    opacity: 0
-    +transform(scaleY(0.02))
-  6%
-    opacity: 1
-  88%
-    opacity: 1
-    +transform(scaleY(1))
-  100%
-    opacity: 0
-    +transform(scaleY(1))
-
-+keyframes(intro-stream)
-  0%
-    stroke-dashoffset: 0
-  100%
-    stroke-dashoffset: -10
+// no motion for those who ask for none: the timer stands still
+@media (prefers-reduced-motion: reduce)
+  .intro__strip, .intro__colon
+    -webkit-animation: none
+    animation: none
