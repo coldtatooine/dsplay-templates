@@ -11,7 +11,6 @@ i18n
     resources: {
       en: {
         translations: {
-          Loading: 'Loading',
           Untitled: 'Untitled',
           'Product {{n}}': 'Product {{n}}',
           'Price {{n}}': 'Price {{n}}',
@@ -19,7 +18,6 @@ i18n
       },
       pt: {
         translations: {
-          Loading: 'Carregando',
           Untitled: 'Sem título',
           'Product {{n}}': 'Produto {{n}}',
           'Price {{n}}': 'Preço {{n}}',
@@ -27,7 +25,6 @@ i18n
       },
       es: {
         translations: {
-          Loading: 'Cargando',
           Untitled: 'Sin título',
           'Product {{n}}': 'Producto {{n}}',
           'Price {{n}}': 'Precio {{n}}',
@@ -35,7 +32,6 @@ i18n
       },
       it: {
         translations: {
-          Loading: 'Caricamento',
           Untitled: 'Senza titolo',
           'Product {{n}}': 'Prodotto {{n}}',
           'Price {{n}}': 'Prezzo {{n}}',
@@ -43,7 +39,6 @@ i18n
       },
       de: {
         translations: {
-          Loading: 'Laden',
           Untitled: 'Unbenannt',
           'Product {{n}}': 'Produkt {{n}}',
           'Price {{n}}': 'Preis {{n}}',
@@ -51,7 +46,6 @@ i18n
       },
       nl: {
         translations: {
-          Loading: 'Laden',
           Untitled: 'Naamloos',
           'Product {{n}}': 'Product {{n}}',
           'Price {{n}}': 'Prijs {{n}}',

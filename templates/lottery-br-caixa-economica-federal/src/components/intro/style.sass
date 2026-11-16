@@ -1,8 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
-// the template's own page is a light grey with white; the loader paints that, not the template's picture
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,62 +12,26 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  color: #555
   background: #f5f5f5
-  background: radial-gradient(ellipse at 50% 45%, #fff 0%, #f5f5f5 85%)
-  // Roboto of the template comes from a remote font, so the loader uses the system stack
-  font-family: 'Helvetica Neue', arial, helvetica, sans-serif
 
-.intro__balls
-  display: block
-  text-align: center
-
-// the ball of the template: bold white number on a round tile of the game's colour; it lifts and lights up in turn
-.intro__ball
-  display: inline-block
-  vertical-align: top
-  border-radius: 50%
-  text-align: center
-  color: #fff
-  font-weight: bold
-  opacity: 0.35
-  box-shadow: 0 0.1em 0.3em rgba(0, 0, 0, 0.25)
-  +animation(intro-draw 2.4s ease-in-out infinite)
-
-.intro__text
-  display: block
-  text-transform: uppercase
-  letter-spacing: 0.3em
-  +animation(intro-breathe 1.5s ease-in-out infinite)
-
-+keyframes(intro-draw)
-  0%
-    opacity: 0.35
-    +transform(translateY(0))
-  20%
-    opacity: 1
-    +transform(translateY(-12%))
-  40%
-    opacity: 1
-    +transform(translateY(0))
-  60%
-    opacity: 0.35
-    +transform(translateY(0))
-  100%
-    opacity: 0.35
-    +transform(translateY(0))
-
-+keyframes(intro-breathe)
-  0%
-    opacity: 0.55
+@-webkit-keyframes intro-pulse
+  0%, 100%
+    -webkit-transform: scale(.88)
+    opacity: .75
   50%
+    -webkit-transform: scale(1.08)
     opacity: 1
-  100%
-    opacity: 0.55
 
-@media (prefers-reduced-motion: reduce)
-  .intro__ball
-    +animation(none)
+@keyframes intro-pulse
+  0%, 100%
+    transform: scale(.88)
+    opacity: .75
+  50%
+    transform: scale(1.08)
     opacity: 1
-  .intro__text
-    +animation(none)
+
+// no motion for those who ask for none: the mark stays as a still picture
+@media (prefers-reduced-motion: reduce)
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

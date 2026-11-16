@@ -7,12 +7,6 @@
   var MIN_LOADING_DURATION = 1500;
   var startedAt = new Date().getTime();
 
-  // the template says everything in Portuguese; the loader's word follows the screen's locale
-  var texts = {
-    'en_us': { loading: 'Loading' },
-    'pt_br': { loading: 'Carregando' }
-  };
-
   var input = u.media.buffer;
 
   var result = '';
@@ -30,9 +24,6 @@
   }
 
   document.getElementById('numero').textContent = result;
-
-  var locale = String(u.config.locale || 'pt_br').toLowerCase();
-  document.getElementById('loadingText').textContent = (texts[locale] || texts.pt_br).loading;
 
   var remaining = Math.max(0, MIN_LOADING_DURATION - (new Date().getTime() - startedAt));
   setTimeout(function () {
