@@ -14,6 +14,7 @@ i18n
     resources: {
       en: {
         translations: {
+          Loading: 'Loading',
           locale: enUS,
           days: 'days',
           hours: 'hours',
@@ -23,6 +24,7 @@ i18n
       },
       pt: {
         translations: {
+          Loading: 'Carregando',
           locale: ptBR,
           days: 'dias',
           hours: 'horas',
@@ -32,6 +34,7 @@ i18n
       },
       fr: {
         translations: {
+          Loading: 'Chargement',
           locale: fr,
           days: 'jours',
           hours: 'heures',
@@ -41,6 +44,7 @@ i18n
       },
       de: {
         translations: {
+          Loading: 'Laden',
           locale: de,
           days: 'tage',
           hours: 'std.',
@@ -50,6 +54,7 @@ i18n
       },
       es: {
         translations: {
+          Loading: 'Cargando',
           locale: es,
           days: 'días',
           hours: 'horas.',
@@ -59,6 +64,7 @@ i18n
       },
       it: {
         translations: {
+          Loading: 'Caricamento',
           locale: it,
           days: 'giorni',
           hours: 'ore',
@@ -68,6 +74,7 @@ i18n
       },
       nl: {
         translations: {
+          Loading: 'Laden',
           locale: nl,
           days: 'dagen',
           hours: 'uur',
