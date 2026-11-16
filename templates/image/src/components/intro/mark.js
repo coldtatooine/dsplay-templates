@@ -10,14 +10,14 @@ function prefixed(css) {
 function box(css, inner, cls) {
   return '<div' + (cls ? ' class="' + cls + '"' : '') + ' style="' + prefixed(css) + '">' + (inner || '') + '</div>';
 }
-function svgI(m, vb, inner) {
-  return '<div style="display:block;line-height:0"><svg width="' + m + '" height="' + m + '" viewBox="0 0 ' + vb + ' ' + vb + '" overflow="visible">' + inner + '</svg></div>';
+function dots(m, colors, size, anim, dur, step) {
+  var s = '';
+  for (var i = 0; i < colors.length; i++) {
+    s += box('display:inline-block;width:' + Math.round(m * size) + 'px;height:' + Math.round(m * size) + 'px;margin:0 ' + Math.round(m * 0.07) + 'px;border-radius:50%;background:' + colors[i] + ';' + an(anim, dur, 'ease-in-out', -i * step));
+  }
+  return '<div style="white-space:nowrap;line-height:0">' + s + '</div>';
 }
-function p(m, x) { return Math.round(m * x); }
-function mark(m) {
-  return box('width:' + m + 'px;height:' + m + 'px;border-radius:' + p(m, 0.22) + 'px;background:linear-gradient(135deg,#7dbbff,#2f7fe0);' + an('pulse', 1.5),
-    svgI(m, 24, '<g transform="translate(3.6 3.6) scale(.7)" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 16l5-5 4 4 3-3 4 4"/><circle cx="9" cy="9.5" r=".6" fill="#fff"/></g>'));
-}
+function mark(m) { return dots(m, ['#fff', '#fff', '#fff'], 0.2, 'light', 1.5, 0.5); }
 
 // The one mark is small and centred: 13 % of the short side, 42 % on a banner (3:1 or more), in whole px.
 function markSize(w, h) {
