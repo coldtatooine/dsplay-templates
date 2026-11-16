@@ -58,6 +58,8 @@ The 33 templates (each has its own README with its variables and screen formats)
 | [`weather-forecast`](templates/weather-forecast/) | Weather Forecast Template |
 | [`world-clocks-analog`](templates/world-clocks-analog/) | World Clocks (analog) Template |
 
+Every template shows its own loader while it loads, in the house style of [`docs/loader-style.md`](docs/loader-style.md).
+
 ## Everyday commands
 
 ```bash

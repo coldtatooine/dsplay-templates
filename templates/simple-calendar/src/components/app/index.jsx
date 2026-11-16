@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Loader, useConfig } from '@dsplay/react-template-utils';
 import Main from '../main';
-import LoaderCalendar from '../loader-calendar';
+import Intro from '../intro';
 import i18n from '../../i18n';
 import './style.sass';
 
-const MIN_LOADING_DURATION = 2000;
+const MIN_LOADING_DURATION = 1500;
 
 const fonts = [
   'Roboto Condensed',
@@ -25,7 +25,7 @@ function App() {
     <I18nextProvider i18n={i18n}>
       <div className="container-home">
         <Loader
-          placeholder={<LoaderCalendar />}
+          placeholder={<Intro />}
           minDuration={MIN_LOADING_DURATION}
           fonts={fonts}
         >

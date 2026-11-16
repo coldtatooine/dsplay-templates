@@ -6,7 +6,7 @@ import CountDown from '../count-down';
 import i18n from '../../i18n';
 import './style.sass';
 
-const MIN_LOADING_DURATION = 100;
+const MIN_LOADING_DURATION = 1500;
 
 // other tasks (Promises) to run during template intro
 const tasks = [
