@@ -1,0 +1,102 @@
+@import ../../styles/mixins
+
+// the template's own purple to coral, painted here so the loader never waits for the background image
+// (fixed: the page has a padding, and the loader covers the whole screen)
+.intro
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  overflow: hidden
+  background: #4a2a80
+  background: -webkit-linear-gradient(315deg, #2a1a6e 0%, #5b2a86 50%, #c9607a 100%)
+  background: linear-gradient(135deg, #2a1a6e 0%, #5b2a86 50%, #c9607a 100%)
+
+.intro__frame
+  position: relative
+  display: block
+  box-sizing: border-box
+  background: #fff
+  box-shadow: 0 8px 28px rgba(20, 5, 50, 0.4)
+
+// the photo: the sunset the template's own colours make
+.intro__photo
+  position: relative
+  display: block
+  width: 100%
+  height: 100%
+  overflow: hidden
+  background: #fd1d1d
+  background: -webkit-linear-gradient(45deg, #fcb045, #fd1d1d 55%, #833ab4)
+  background: linear-gradient(45deg, #fcb045, #fd1d1d 55%, #833ab4)
+
+.intro__shine
+  position: absolute
+  display: block
+  top: 0
+  left: 0
+  width: 30%
+  height: 100%
+  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0))
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0))
+  +animation(intro-shine 2.4s linear infinite)
+
+.intro__heart
+  position: absolute
+  display: block
+  +animation(intro-beat 1.4s ease-in-out infinite)
+
+.intro__heart-part
+  position: absolute
+  display: block
+  background: #fff
+
+.intro__text
+  display: block
+  color: #fff
+  font-family: 'Oswald', sans-serif
+  letter-spacing: 0.25em
+  text-transform: uppercase
+  text-shadow: 0 1px 6px rgba(30, 10, 60, 0.45)
+  +animation(intro-breathe 1.4s ease-in-out infinite)
+
++keyframes(intro-beat)
+  0%
+    +transform(scale(1))
+  20%
+    +transform(scale(1.22))
+  40%
+    +transform(scale(1))
+  60%
+    +transform(scale(1.12))
+  80%
+    +transform(scale(1))
+  100%
+    +transform(scale(1))
+
++keyframes(intro-shine)
+  from
+    +transform(translateX(-100%))
+  to
+    +transform(translateX(400%))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.6
+  50%
+    opacity: 1
+  100%
+    opacity: 0.6
+
+// no motion for those who ask for none
+@media (prefers-reduced-motion: reduce)
+  .intro__heart, .intro__shine, .intro__text
+    -webkit-animation: none
+    animation: none
+  .intro__shine
+    display: none

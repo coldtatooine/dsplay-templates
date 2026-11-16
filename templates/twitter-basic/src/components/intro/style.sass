@@ -1,0 +1,100 @@
+@import ../../styles/mixins
+
+// the template's own blue, painted here so the loader never waits for the background image
+// (fixed: the page has a padding, and the loader covers the whole screen)
+.intro
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  overflow: hidden
+  background: #0b8dc4
+  background: radial-gradient(ellipse at 50% 50%, #0d9fd8 0%, #05729c 85%)
+
+.intro__tweet
+  position: relative
+  display: block
+
+.intro__avatar, .intro__name, .intro__handle
+  position: absolute
+  display: block
+
+.intro__avatar
+  top: 0
+  left: 0
+  border-radius: 50%
+  background: rgba(255, 255, 255, 0.85)
+
+.intro__name
+  border-radius: 10px
+  background: #fff
+
+.intro__handle
+  border-radius: 10px
+  background: #b9d0ff
+
+// a line of text draws itself from its left end, holds, and fades out before the next lap
+.intro__line
+  position: absolute
+  display: block
+  left: 0
+  overflow: hidden
+  background: rgba(255, 255, 255, 0.88)
+  -webkit-transform-origin: 0 50%
+  transform-origin: 0 50%
+  +animation(intro-draw 2.4s ease-in-out infinite)
+
+// the colours the template gives to hashtags and links
+.intro__mark
+  position: absolute
+  display: block
+  top: 0
+  height: 100%
+
+.intro__mark--hashtag
+  background: #ffff99
+
+.intro__mark--link
+  background: #b9d0ff
+
+.intro__text
+  display: block
+  color: #fff
+  font-family: 'Roboto', sans-serif
+  letter-spacing: 0.25em
+  text-transform: uppercase
+  text-shadow: 0 1px 6px rgba(0, 40, 70, 0.4)
+  +animation(intro-breathe 2.4s ease-in-out infinite)
+
++keyframes(intro-draw)
+  0%
+    opacity: 1
+    +transform(scaleX(0))
+  45%
+    opacity: 1
+    +transform(scaleX(1))
+  85%
+    opacity: 1
+    +transform(scaleX(1))
+  100%
+    opacity: 0
+    +transform(scaleX(1))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.6
+  50%
+    opacity: 1
+  100%
+    opacity: 0.6
+
+// no motion for those who ask for none: the lines stand drawn
+@media (prefers-reduced-motion: reduce)
+  .intro__line, .intro__text
+    -webkit-animation: none
+    animation: none

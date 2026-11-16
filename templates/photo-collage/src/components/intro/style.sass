@@ -1,34 +1,102 @@
 @import ../../styles/mixins
 
+// the template can have any picture behind it: the loader paints a dark stage of its own
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
+  overflow: hidden
+  background: #15171c
+  background: radial-gradient(ellipse at 50% 45%, #2c313c 0%, #101216 75%)
 
-// the template can have any picture behind it: a soft shadow keeps the light strokes readable
-.intro__icon
-  overflow: visible
-  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.65))
+.intro__collage
+  position: relative
+  display: block
 
+.intro__turn
+  position: absolute
+  display: block
+
+// each photo lifts in turn and settles back
 .intro__photo
+  position: relative
+  display: block
+  width: 100%
+  height: 100%
+  box-sizing: border-box
+  background: #f2f4f7
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5)
   +animation(intro-lift 2.4s ease-in-out infinite)
 
-.intro__photo--2
-  +animation-delay(0.8s)
+.intro__picture
+  position: relative
+  display: block
+  width: 100%
+  height: 100%
+  overflow: hidden
 
-.intro__photo--3
-  +animation-delay(1.6s)
+.intro__picture--cyan
+  background: #4dd0e1
+
+.intro__picture--pink
+  background: #f06292
+
+.intro__picture--orange
+  background: #ffb74d
+
+// the front photo's sun and hill, the hill being a triangle of borders
+.intro__sun
+  position: absolute
+  display: block
+  left: 18%
+  top: 14%
+  border-radius: 50%
+  background: #fff3c4
+
+.intro__hill
+  position: absolute
+  display: block
+  left: 50%
+  bottom: 0
+  width: 0
+  height: 0
+  margin-left: -20%
+  border-style: solid
+  border-color: transparent
+  border-bottom-color: #8d5524
+
+.intro__text
+  display: block
+  color: #e9ecf2
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  letter-spacing: 0.25em
+  text-transform: uppercase
+  +animation(intro-breathe 2.4s ease-in-out infinite)
 
 +keyframes(intro-lift)
   0%
     +transform(translateY(0))
   15%
-    +transform(translateY(-7px))
+    +transform(translateY(-12%))
   35%
     +transform(translateY(0))
   100%
     +transform(translateY(0))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.6
+  50%
+    opacity: 1
+  100%
+    opacity: 0.6
+
+// no motion for those who ask for none
+@media (prefers-reduced-motion: reduce)
+  .intro__photo, .intro__text
+    -webkit-animation: none
+    animation: none

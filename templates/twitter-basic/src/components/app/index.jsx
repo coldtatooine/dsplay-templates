@@ -1,10 +1,24 @@
 import { useEffect } from 'react';
-import { useTemplateVal, useTemplateBoolVal, useConfig, useMedia } from '@dsplay/react-template-utils';
+import { I18nextProvider } from 'react-i18next';
+import {
+  Loader, useTemplateVal, useTemplateBoolVal, useConfig, useMedia,
+} from '@dsplay/react-template-utils';
 import './style.sass';
 import UserProfile from '../user-profile';
 import Posts from '../posts';
+import Intro from '../intro';
+import i18n from '../../i18n';
 
-function App() {
+const MIN_LOADING_DURATION = 1500;
+
+// fonts to preload
+// @font-face's must be defined in fonts.css or another in-use style file
+const fonts = [
+  'Roboto',
+  'Oswald',
+];
+
+function Content() {
   const { orientation, width, height } = useConfig();
   const isVertical = orientation === 'portrait';
 
@@ -65,6 +79,34 @@ function App() {
       <UserProfile {...user} />
       <Posts posts={selectedPosts} pageDuration={pageDuration} />
     </div>
+  );
+}
+
+function App() {
+  const { locale } = useConfig();
+  const [lng] = (locale || 'en').split('_');
+  const horizontalBackground = useTemplateVal('bg_horizontal');
+  const verticalBackground = useTemplateVal('bg_vertical');
+  const { result: { data: { user: { pic } = {} } = {} } = {} } = useMedia();
+
+  useEffect(() => {
+    i18n.changeLanguage(lng);
+  }, [lng]);
+
+  // images to preload
+  const images = [horizontalBackground, verticalBackground, pic];
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      <Loader
+        placeholder={<Intro />}
+        fonts={fonts}
+        images={images}
+        minDuration={MIN_LOADING_DURATION}
+      >
+        <Content />
+      </Loader>
+    </I18nextProvider>
   );
 }
 
