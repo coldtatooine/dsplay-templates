@@ -15,9 +15,8 @@
   }
   function p(m, x) { return Math.round(m * x); }
   function mark(m) {
-    var s = p(m, 0.24);
-    return box('', box('width:' + s + 'px;height:' + s + 'px;margin:0 auto ' + p(m, 0.26) + 'px;border-radius:' + p(m, 0.04) + 'px;background:#7fd6ff;' + an('light', 1.2, 'ease-in-out')) +
-      box('width:' + s + 'px;height:' + s + 'px;margin:0 auto;border-radius:' + p(m, 0.04) + 'px;background:#7fd6ff;' + an('light', 1.2, 'ease-in-out', -0.6)));
+    var b = Math.max(2, p(m, 0.09));
+    return box('width:' + m + 'px;height:' + m + 'px;border-radius:50%;box-sizing:border-box;border:' + b + 'px solid rgba(255,255,255,.22);border-top-color:#fff;' + an('spin', 1, 'linear'));
   }
 
   // The one mark is small and centred: 13 % of the short side, 42 % on a banner (3:1 or more), in whole px.

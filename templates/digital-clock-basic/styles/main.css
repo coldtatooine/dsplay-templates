@@ -44,21 +44,15 @@ html, body {
   align-items: center;
 }
 
-@-webkit-keyframes intro-light {
-  0%, 100% {
-    opacity: .25;
-  }
-  40% {
-    opacity: 1;
+@-webkit-keyframes intro-spin {
+  to {
+    -webkit-transform: rotate(360deg);
   }
 }
 
-@keyframes intro-light {
-  0%, 100% {
-    opacity: .25;
-  }
-  40% {
-    opacity: 1;
+@keyframes intro-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -67,24 +61,6 @@ html, body {
   #overlay * {
     -webkit-animation: none !important;
     animation: none !important;
-  }
-}
-
-@-webkit-keyframes intro-light {
-  0%, 100% {
-    opacity: .25;
-  }
-  40% {
-    opacity: 1;
-  }
-}
-
-@keyframes intro-light {
-  0%, 100% {
-    opacity: .25;
-  }
-  40% {
-    opacity: 1;
   }
 }
 
