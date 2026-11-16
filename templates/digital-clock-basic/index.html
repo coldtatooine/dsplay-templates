@@ -28,7 +28,18 @@
       </div>
     </div>
   </div>
-  <div id="overlay"></div>
+  <!-- the loader: the template's own bar and digits, ticking, with the word in the language of the screen (filled by app.js) -->
+  <div id="overlay" role="status">
+    <div class="loader">
+      <div class="loader__bar"></div>
+      <div class="loader__info">
+        <div class="loader__label"><span id="loadingText"></span></div>
+        <div class="loader__time" aria-hidden="true">
+          <span class="loader__digit">0</span><span class="loader__digit">0</span><span class="loader__colon">:</span><span class="loader__digit">0</span><span class="loader__digit">0</span><span class="loader__colon">:</span><span class="loader__digit">0</span><span class="loader__digit loader__reel"><span class="loader__strip"><span class="loader__number">0</span><span class="loader__number">1</span><span class="loader__number">2</span><span class="loader__number">3</span><span class="loader__number">4</span><span class="loader__number">5</span><span class="loader__number">6</span><span class="loader__number">7</span><span class="loader__number">8</span><span class="loader__number">9</span></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- import core-js (try to use the latest version) -->
   <script src="scripts/core-js-3.50.0.js"></script>
   <!-- import dsplay-data.js -->

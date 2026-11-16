@@ -10,8 +10,13 @@ function updateTime() {
 
 var lang = 'pt_br';
 
+// the loader stays at least this long, like the other templates' loaders
+var MIN_LOADING_DURATION = 1500;
+var startedAt = new Date().getTime();
+
 var texts = {
   'en_us': {
+    loading: "Loading",
     weekDays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     getFormatted: function (date) {
@@ -19,6 +24,7 @@ var texts = {
     }
   },
   'pt_br': {
+    loading: "Carregando",
     weekDays: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
     months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
     getFormatted: function (date) {
@@ -75,5 +81,10 @@ $(function () {
     $("#mainDiv").css("background-image", "url('" + template.background + "')");
   }
 
-  $('#overlay').fadeOut(500);
+  $('#loadingText').text(texts[lang].loading);
+
+  var remaining = Math.max(0, MIN_LOADING_DURATION - (new Date().getTime() - startedAt));
+  setTimeout(function () {
+    $('#overlay').fadeOut(500);
+  }, remaining);
 });
