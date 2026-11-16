@@ -1,7 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -9,76 +12,47 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  background: #2b32b2
-  background: linear-gradient(to top, #1488cc, #2b32b2)
-  font-family: sans-serif
+  background-color: #2b32b2
+  background-image: linear-gradient(135deg,#2b32b2,#1488cc)
 
-// the measures are the template's own, in em of the font size the component sets
-.intro__timer
-  display: flex
-  align-items: center
+@-webkit-keyframes intro-flipglass
+  0%, 78%
+    -webkit-transform: rotate(0deg)
+  100%
+    -webkit-transform: rotate(180deg)
 
-.intro__digits
-  display: flex
+@keyframes intro-flipglass
+  0%, 78%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(180deg)
 
-.intro__digit
-  display: block
-  position: relative
-  overflow: hidden
-  width: 0.82em
-  height: 1.3em
-  line-height: 1.3em
-  margin-right: 0.06em
-  text-align: center
-  font-weight: bold
-  color: #fff
-  border-radius: 0.12em
-  background-color: #29292e
-
-  &:last-child
-    margin-right: 0
-
-// the strip of digits moves one tile high at a time
-.intro__strip
-  display: block
-  +animation(intro-reel 3s steps(10) infinite)
-
-.intro__number
-  display: block
-  height: 1.3em
-
-.intro__colon
-  display: block
-  width: 0.35em
-  text-align: center
-  font-weight: bold
-  color: #fff
-  +animation(intro-blink 1s steps(1) infinite)
-
-.intro__text
-  display: block
-  font-weight: bold
-  color: #fff
-  letter-spacing: 0.3em
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35)
-  text-transform: uppercase
-
-+keyframes(intro-reel)
-  from
-    +transform(translateY(0))
-  to
-    +transform(translateY(-100%))
-
-+keyframes(intro-blink)
+@-webkit-keyframes intro-sandtop
   0%
     opacity: 1
-  50%
-    opacity: 0.2
-  100%
+  78%, 100%
+    opacity: .12
+
+@keyframes intro-sandtop
+  0%
+    opacity: 1
+  78%, 100%
+    opacity: .12
+
+@-webkit-keyframes intro-sandbot
+  0%
+    opacity: .12
+  78%, 100%
     opacity: 1
 
-// no motion for those who ask for none: the timer stands still
+@keyframes intro-sandbot
+  0%
+    opacity: .12
+  78%, 100%
+    opacity: 1
+
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__strip, .intro__colon
-    -webkit-animation: none
-    animation: none
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important

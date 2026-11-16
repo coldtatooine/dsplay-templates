@@ -1,7 +1,10 @@
-@import ../../styles/mixins
+// The loader paints its own full background (never the template's, which may not be loaded yet) and centres one small mark.
+// Keyframes are written out with their -webkit- twin for Android 4.4 WebViews.
 
 .intro
   position: absolute
+  top: 0
+  left: 0
   width: 100%
   height: 100%
   display: flex
@@ -10,113 +13,21 @@
   align-items: center
   overflow: hidden
   background: #26282b
-  background: radial-gradient(ellipse at 50% 45%, #3a3d41 0%, #26282b 75%)
 
-.intro__clocks
-  display: flex
-  align-items: flex-start
-
-.intro__clock
-  display: flex
-  flex-direction: column
-  align-items: center
-
-// the template's faces: the local one grey, the cities' white
-.intro__face
-  position: relative
-  display: block
-  border-radius: 50%
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45)
-
-.intro__face--local
-  background: #888
-
-.intro__face--city
-  background: #fff
-
-.intro__tick
-  position: absolute
-  display: block
-  border-radius: 50%
-
-.intro__face--local .intro__tick
-  background: #fff
-
-.intro__face--city .intro__tick
-  background: #888
-
-.intro__hand
-  position: absolute
-  display: block
-  left: 50%
-  bottom: 50%
-  border-radius: 10px
-  -webkit-transform-origin: 50% 100%
-  transform-origin: 50% 100%
-
-.intro__hand--hours
-  height: 22.5%
-  background: #8f9c6c
-  +animation(intro-hands 18s linear infinite)
-
-.intro__hand--minutes
-  height: 30%
-  background: #cd6a51
-  +animation(intro-hands 6s linear infinite)
-
-.intro__hand--seconds
-  height: 37.5%
-  background: #dfc48c
-  +animation(intro-hands 1.5s linear infinite)
-
-.intro__cover
-  position: absolute
-  display: block
-  left: 50%
-  top: 50%
-  border-radius: 50%
-  background: #d0d0d0
-
-// where each city's name will be
-.intro__city
-  display: block
-  border-radius: 10px
-  background: #e9e8e2
-  opacity: 0.35
-  +animation(intro-breathe 1.5s ease-in-out infinite)
-
-.intro__text
-  display: block
-  color: #e9e8e2
-  font-family: 'Oswald', sans-serif
-  letter-spacing: 0.25em
-  text-transform: uppercase
-  +animation(intro-breathe 1.5s ease-in-out infinite)
-
-+keyframes(intro-hands)
-  from
-    +transform(rotate(0deg))
-  to
-    +transform(rotate(360deg))
-
-+keyframes(intro-breathe)
+@-webkit-keyframes intro-spin
   0%
-    opacity: 0.3
-  50%
-    opacity: 0.8
+    -webkit-transform: rotate(0deg)
   100%
-    opacity: 0.3
+    -webkit-transform: rotate(360deg)
 
-// no motion for those who ask for none: the clocks stand still
+@keyframes intro-spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)
+
+// no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)
-  .intro__hand--hours, .intro__hand--minutes, .intro__hand--seconds, .intro__city, .intro__text
-    -webkit-animation: none
-    animation: none
-  .intro__text
-    opacity: 1
-  .intro__hand--hours
-    +transform(rotate(300deg))
-  .intro__hand--minutes
-    +transform(rotate(60deg))
-  .intro__hand--seconds
-    +transform(rotate(180deg))
+  .intro *
+    -webkit-animation: none !important
+    animation: none !important
