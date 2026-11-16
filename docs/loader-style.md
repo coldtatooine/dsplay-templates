@@ -53,6 +53,16 @@ The loader is the first thing the oldest devices draw, so it follows every rule 
 - **Reduced motion**: a `@media (prefers-reduced-motion: reduce)` block turns the animations off (`animation: none`) and leaves the art in a pleasant still pose (the hands at ten past ten, the marker on the first day). Browsers that do not know the query ignore the block, which is the old behaviour.
 - Contrast: the word must read on the loader's own background (a soft `text-shadow` on a light gradient).
 
+## Lessons from the vanilla and shape-heavy loaders
+
+- **Shapes from boxes:** a triangle (a warning sign, a mountain) is a box with `width: 0; height: 0` and three borders, the side ones `transparent`; a flame is a box with `border-radius: 50% 0 50% 50%` turned `rotate(-45deg)` (rotating an HTML box is fine, only SVG cannot be transformed); a raindrop is `border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%`; a slanted band of light is a gradient box with `skewX()` in its `transform`.
+- **Keyframes cannot read JavaScript sizes:** express the travel in percentages of the box itself (`translateY(260%)`, `translateX(-50%)` of a two-halves strip) so one stylesheet fits every screen; a seamless marquee is two identical halves of an `inline-block` track moved by `-50%`.
+- **Start the loop already in phase:** give the staggered parts negative `animation-delay`s (in a loop's length) so the first frame already looks like the middle of the animation.
+- **A vanilla overlay must outrank the plugin it hides:** Skitter draws up to `z-index: 10000`, so its overlay is `100000`; check the plugin's own layers before choosing. Skitter only starts once every picture is in, so its overlay waits for the same pictures (load or error) as well as the minimum time.
+- **No `em` under `font-size: 0`:** a row of inline-block dots sized in `em` vanishes inside a parent with `font-size: 0`; use `line-height: 0` there instead.
+- **The test that forbids `flex` in the loader's CSS also reads comments:** do not write the word in a comment.
+- **A template that kept its loader switched off** (`image`: no minimum, no placeholder) now shows it for 1.5 s like the others; say so in the PR, it is a visible change.
+
 ## Checklist
 
 1. It is themed to the template: colours, fonts and shapes taken from its real sass, not invented.

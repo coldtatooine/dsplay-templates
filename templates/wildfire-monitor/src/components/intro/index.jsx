@@ -1,37 +1,54 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useScreenInfo, screen } from '@dsplay/react-template-utils';
+import { useScreenInfo } from '@dsplay/react-template-utils';
 import './style.sass';
 
-// The loader draws what the media is about: a flame that flickers while two sparks rise from it one after the other.
+// The loader draws what the media is about, wildfires: a flame, built from two rounded boxes turned on their
+// corner, that flickers while two sparks rise from it one after the other, over a faint glow on the ground, in
+// the template's dark page, its orange and its amber. Only HTML boxes are animated: the old Android WebViews
+// cannot transform SVG.
+
+const even = (value) => 2 * Math.round(value / 2);
 
 function Intro(props) {
-  const { w, h, screenFormat } = useScreenInfo();
+  const { w, h } = useScreenInfo();
   const { t } = useTranslation();
-
-  const dimension = useMemo(() => {
-    const smaller = Math.min(w, h);
-    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 3 : smaller / 6;
-  }, [w, h, screenFormat]);
-
   const { className } = props;
 
+  // everything is a part of one number, the art's side
+  const art = useMemo(() => even(Math.min(h * 0.34, w * 0.5)), [w, h]);
+  const box = (centerX, centerY, size) => ({
+    left: `${Math.round(art * centerX - size / 2)}px`,
+    top: `${Math.round(art * centerY - size / 2)}px`,
+    width: `${Math.round(size)}px`,
+    height: `${Math.round(size)}px`,
+  });
+  const sparks = [[0.3, 0.42, 0.07, 0], [0.7, 0.3, 0.055, -0.8]].map(([x, y, size, delay]) => ({
+    key: x,
+    style: {
+      ...box(x, y, art * size),
+      borderRadius: '50%',
+      animationDelay: `${delay}s`,
+      WebkitAnimationDelay: `${delay}s`,
+    },
+  }));
+
   return (
-    <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} role="img" aria-label={t('Loading')}>
-        <g className="intro__flame">
-          <path
-            d="M60 12c4 20 24 30 24 56a24 24 0 0 1-48 0c0-12 6-18 10-26 2 8 6 10 8 10 4-10 0-24 6-40z"
-            fill="#ff6a00"
-          />
-          <path
-            d="M60 50c2 10 12 14 12 26a12 12 0 0 1-24 0c0-6 4-9 6-13 2 4 4 5 5 5 2-5 0-12 1-18z"
-            fill="#ffb300"
-          />
-        </g>
-        <circle className="intro__spark intro__spark--1" cx="40" cy="30" r="3" fill="#ffb300" />
-        <circle className="intro__spark intro__spark--2" cx="82" cy="34" r="2.5" fill="#ff6a00" />
-      </svg>
+    <div {...props} className={`intro ${className || ''}`} role="status">
+      <div className="intro__art" style={{ width: `${art}px`, height: `${art}px` }} aria-hidden="true">
+        <span className="intro__glow" style={{ left: `${Math.round(art * 0.2)}px`, top: `${Math.round(art * 0.82)}px`, width: `${Math.round(art * 0.6)}px`, height: `${Math.round(art * 0.12)}px` }} />
+        <div className="intro__flame">
+          <span className="intro__fire intro__fire--outer" style={box(0.5, 0.58, art * 0.5)} />
+          <span className="intro__fire intro__fire--inner" style={box(0.5, 0.68, art * 0.26)} />
+        </div>
+        {sparks.map(({ key, style }) => <span key={key} className="intro__spark" style={style} />)}
+      </div>
+      <span
+        className="intro__text"
+        style={{ fontSize: `${Math.max(10, Math.min(Math.round(art * 0.1), Math.round(w * 0.05)))}px`, marginTop: `${Math.round(art * 0.1)}px` }}
+      >
+        {t('Loading')}
+      </span>
     </div>
   );
 }

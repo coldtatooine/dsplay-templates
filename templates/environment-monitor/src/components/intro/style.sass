@@ -1,44 +1,79 @@
 @import ../../styles/mixins
 
+// the template's own look: the dark blue page, the pale blue cloud, the rain blue, Oswald
 .intro
   position: absolute
   width: 100%
   height: 100%
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
-  background-color: #080f1a
+  overflow: hidden
+  color: #7ba3c8
+  background: #080f1a
+  background: radial-gradient(ellipse at 50% 45%, #0d1f38 0%, #080f1a 85%)
 
-.intro__icon
-  overflow: visible
+.intro__art
+  position: relative
 
 .intro__cloud
+  position: absolute
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
   +animation(intro-rock 2.4s ease-in-out infinite)
 
+.intro__puff
+  position: absolute
+  background: #7ba3c8
+  background: -webkit-linear-gradient(#a9c6e0, #7ba3c8)
+  background: linear-gradient(#a9c6e0, #7ba3c8)
+
 .intro__drop
+  position: absolute
+  background: #29b6f6
   opacity: 0
   +animation(intro-fall 1.2s ease-in infinite)
 
-.intro__drop--2
-  +animation-delay(0.4s)
-
-.intro__drop--3
-  +animation-delay(0.8s)
+.intro__text
+  display: block
+  font-family: 'Oswald', 'Roboto Condensed', sans-serif
+  text-transform: uppercase
+  letter-spacing: 0.3em
+  +animation(intro-breathe 1.8s ease-in-out infinite)
 
 +keyframes(intro-rock)
   0%
     +transform(translateY(0))
   50%
-    +transform(translateY(-3px))
+    +transform(translateY(-3%))
   100%
     +transform(translateY(0))
 
 +keyframes(intro-fall)
   0%
     opacity: 0
-    +transform(translateY(-4px))
+    +transform(translateY(0))
   20%
     opacity: 1
   100%
     opacity: 0
-    +transform(translateY(26px))
+    +transform(translateY(260%))
+
++keyframes(intro-breathe)
+  0%
+    opacity: 0.55
+  50%
+    opacity: 1
+  100%
+    opacity: 0.55
+
+@media (prefers-reduced-motion: reduce)
+  .intro__cloud,
+  .intro__drop,
+  .intro__text
+    +animation(none)
+  .intro__drop
+    opacity: 1

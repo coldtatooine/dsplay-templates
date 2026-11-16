@@ -1,41 +1,53 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useScreenInfo, screen } from '@dsplay/react-template-utils';
+import { useScreenInfo } from '@dsplay/react-template-utils';
 import './style.sass';
 
-// The loader draws what the media is about: a cloud that rocks gently while three raindrops fall from it one after the other.
+// The loader draws what the media is about, the weather: a cloud, built from boxes, that rocks gently while three
+// raindrops fall from it one after the other, in the template's dark blue and its rain blue. Only HTML boxes are
+// animated: the old Android WebViews cannot transform SVG.
+
+const even = (value) => 2 * Math.round(value / 2);
 
 function Intro(props) {
-  const { w, h, screenFormat } = useScreenInfo();
+  const { w, h } = useScreenInfo();
   const { t } = useTranslation();
-
-  const dimension = useMemo(() => {
-    const smaller = Math.min(w, h);
-    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 3 : smaller / 6;
-  }, [w, h, screenFormat]);
-
   const { className } = props;
 
+  // everything is a part of one number, the art's side
+  const art = useMemo(() => even(Math.min(h * 0.34, w * 0.5)), [w, h]);
+  const part = (left, top, width, height, radius) => ({
+    left: `${Math.round(art * left)}px`,
+    top: `${Math.round(art * top)}px`,
+    width: `${Math.round(art * width)}px`,
+    height: `${Math.round(art * height)}px`,
+    borderRadius: radius,
+  });
+  const drops = [0.3, 0.5, 0.7].map((center, index) => ({
+    key: index,
+    style: {
+      ...part(center - 0.05, 0.6, 0.1, 0.14, '50% 50% 50% 50% / 60% 60% 40% 40%'),
+      animationDelay: `${index * -0.4}s`,
+      WebkitAnimationDelay: `${index * -0.4}s`,
+    },
+  }));
+
   return (
-    <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} role="img" aria-label={t('Loading')}>
-        <g className="intro__cloud">
-          <path
-            d="M34 70a18 18 0 0 1 3-35.7A26 26 0 0 1 87 38a16 16 0 0 1 1 32z"
-            fill="#7ba3c8"
-          />
-          <path
-            d="M34 70a18 18 0 0 1 3-35.7A26 26 0 0 1 87 38a16 16 0 0 1 1 32z"
-            fill="none"
-            stroke="#e8f4fd"
-            strokeWidth="3"
-            strokeLinejoin="round"
-          />
-        </g>
-        <path className="intro__drop intro__drop--1" d="M42 80c0 0-5 7-5 11a5 5 0 0 0 10 0c0-4-5-11-5-11z" fill="#29b6f6" />
-        <path className="intro__drop intro__drop--2" d="M62 80c0 0-5 7-5 11a5 5 0 0 0 10 0c0-4-5-11-5-11z" fill="#29b6f6" />
-        <path className="intro__drop intro__drop--3" d="M82 80c0 0-5 7-5 11a5 5 0 0 0 10 0c0-4-5-11-5-11z" fill="#29b6f6" />
-      </svg>
+    <div {...props} className={`intro ${className || ''}`} role="status">
+      <div className="intro__art" style={{ width: `${art}px`, height: `${art}px` }} aria-hidden="true">
+        <div className="intro__cloud">
+          <span className="intro__puff" style={part(0.1, 0.3, 0.8, 0.32, `${Math.round(art * 0.16)}px`)} />
+          <span className="intro__puff" style={part(0.18, 0.14, 0.38, 0.38, '50%')} />
+          <span className="intro__puff" style={part(0.4, 0.04, 0.46, 0.46, '50%')} />
+        </div>
+        {drops.map(({ key, style }) => <span key={key} className="intro__drop" style={style} />)}
+      </div>
+      <span
+        className="intro__text"
+        style={{ fontSize: `${Math.max(10, Math.min(Math.round(art * 0.1), Math.round(w * 0.05)))}px`, marginTop: `${Math.round(art * 0.12)}px` }}
+      >
+        {t('Loading')}
+      </span>
     </div>
   );
 }
