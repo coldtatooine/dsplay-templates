@@ -1,0 +1,55 @@
+import {
+  describe, it, expect, afterEach, beforeAll,
+} from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { render, cleanup, screen } from '@testing-library/react';
+import { I18nextProvider } from 'react-i18next';
+
+// @dsplay/react-template-utils reads window.dsplay_config at import time, so the config is set before the intro is imported.
+let Intro;
+let i18n;
+
+beforeAll(async () => {
+  window.dsplay_config = {
+    locale: 'en', orientation: 'landscape', width: 1920, height: 1080, osVersion: 30,
+  };
+  ({ default: i18n } = await import('../../i18n'));
+  ({ default: Intro } = await import('.'));
+});
+
+afterEach(cleanup);
+
+const renderIntro = () => render(<I18nextProvider i18n={i18n}><Intro /></I18nextProvider>);
+
+describe('Intro', () => {
+  it('draws a tweet: avatar, name, handle and three lines of text, with a hashtag and a link in the colours of the template, announced as a status in the screen language', async () => {
+    const { container } = renderIntro();
+    expect(screen.getByRole('status')).toHaveTextContent('Loading');
+    expect(container.querySelectorAll('.intro__avatar')).toHaveLength(1);
+    expect(container.querySelectorAll('.intro__line')).toHaveLength(3);
+    expect(container.querySelector('.intro__mark--hashtag')).not.toBeNull();
+    expect(container.querySelector('.intro__mark--link')).not.toBeNull();
+    await i18n.changeLanguage('pt');
+    expect(screen.getByRole('status')).toHaveTextContent('Carregando');
+    await i18n.changeLanguage('en');
+  });
+
+  it('says "Loading" in every language of the template', () => {
+    ['en', 'pt', 'fr', 'es', 'de', 'nl', 'it'].forEach((lng) => {
+      expect(i18n.getFixedT(lng)('Loading')).not.toBe('');
+      expect(i18n.exists('Loading', { lng })).toBe(true);
+    });
+  });
+
+  it('animates only HTML boxes: no SVG at all (the old WebViews cannot transform SVG)', () => {
+    const { container } = renderIntro();
+    expect(container.querySelector('svg')).toBeNull();
+  });
+
+  it('keeps to what Android 4.4 WebViews run: no custom properties, no flex gap, and still when motion is not wanted', () => {
+    const sass = readFileSync(resolve(import.meta.dirname, 'style.sass'), 'utf8');
+    expect(sass).not.toMatch(/var\(--|^\s*--|\bgap\b/m);
+    expect(sass).toMatch(/prefers-reduced-motion/);
+  });
+});
