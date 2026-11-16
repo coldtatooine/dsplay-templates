@@ -1,37 +1,62 @@
 import { useMemo } from 'react';
-import { useScreenInfo, screen } from '@dsplay/react-template-utils';
+import { useTranslation } from 'react-i18next';
+import { useScreenInfo } from '@dsplay/react-template-utils';
 import './style.sass';
 
 // The loader draws what the template is about: three photos fanned like a collage, each lifting in turn.
+// Only HTML boxes are animated: the old Android WebViews cannot transform SVG. Each photo is two boxes: the
+// one that is turned (still) and the one inside it that lifts.
+
+const PHOTOS = [
+  { name: 'cyan', angle: -14, shift: -0.34 },
+  { name: 'pink', angle: 12, shift: 0.34 },
+  { name: 'orange', angle: 0, shift: 0 },
+];
+
+const px = (value) => `${Math.round(value)}px`;
 
 function Intro(props) {
-  const { w, h, screenFormat } = useScreenInfo();
+  const { w, h } = useScreenInfo();
+  const { t } = useTranslation();
 
-  const dimension = useMemo(() => {
-    const smaller = Math.min(w, h);
-    return screenFormat === screen.H_BANNER || screenFormat === screen.V_BANNER ? smaller / 2 : smaller / 6;
-  }, [w, h, screenFormat]);
-
+  const size = useMemo(() => Math.round(Math.min(w, h) / 3), [w, h]);
   const { className } = props;
 
+  const width = Math.round(size * 0.7);
+  const height = Math.round(size * 0.88);
+  const border = Math.round(size * 0.05);
+
   return (
-    <div {...props} className={`intro ${className || ''}`}>
-      <svg className="intro__icon" viewBox="0 0 120 120" width={dimension} height={dimension} aria-hidden="true" focusable="false">
-        <g className="intro__photo intro__photo--1" transform="rotate(-14 60 64)">
-          <rect x="30" y="26" width="52" height="64" rx="4" fill="#f2f4f7" />
-          <rect x="35" y="31" width="42" height="40" rx="2" fill="#4dd0e1" />
-        </g>
-        <g className="intro__photo intro__photo--2" transform="rotate(12 60 64)">
-          <rect x="38" y="30" width="52" height="64" rx="4" fill="#f2f4f7" />
-          <rect x="43" y="35" width="42" height="40" rx="2" fill="#f06292" />
-        </g>
-        <g className="intro__photo intro__photo--3">
-          <rect x="34" y="28" width="52" height="64" rx="4" fill="#f2f4f7" />
-          <rect x="39" y="33" width="42" height="40" rx="2" fill="#ffb74d" />
-          <circle cx="52" cy="46" r="5" fill="#fff3c4" />
-          <path d="M39 73l14-14 10 10 6-6 12 10z" fill="#8d5524" />
-        </g>
-      </svg>
+    <div {...props} className={`intro ${className || ''}`} role="status">
+      <div className="intro__collage" style={{ width: px(size * 1.6), height: px(height * 1.12) }}>
+        {PHOTOS.map(({ name, angle, shift }, index) => (
+          <span
+            key={name}
+            className="intro__turn"
+            style={{
+              width: px(width),
+              height: px(height),
+              left: px((size * 1.6 - width) / 2 + shift * size),
+              top: px(height * 0.06),
+              WebkitTransform: `rotate(${angle}deg)`,
+              transform: `rotate(${angle}deg)`,
+            }}
+          >
+            <span
+              className="intro__photo"
+              style={{
+                padding: px(border), paddingBottom: px(border * 3), borderRadius: px(size * 0.04), animationDelay: `${index * 0.8}s`, WebkitAnimationDelay: `${index * 0.8}s`,
+              }}
+            >
+              <span className={`intro__picture intro__picture--${name}`}>
+                {name === 'orange' && <span className="intro__sun" style={{ width: px(size * 0.12), height: px(size * 0.12) }} />}
+                {name === 'orange' && <span className="intro__hill" style={{ borderLeftWidth: px(size * 0.2), borderRightWidth: px(size * 0.2), borderBottomWidth: px(size * 0.24) }} />}
+              </span>
+            </span>
+          </span>
+        ))}
+      </div>
+      <span className="intro__text" style={{ fontSize: px(Math.max(12, size * 0.11)), marginTop: px(size * 0.16) }}>{t('Loading')}</span>
     </div>
   );
 }
