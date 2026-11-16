@@ -1,0 +1,60 @@
+@import ../../styles/mixins
+
+.intro
+  position: absolute
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  background: #ffd84d
+  overflow: hidden
+
+.intro__bubble
+  position: relative
+  display: block
+  background: #fff
+  text-align: center
+  box-shadow: 0 6px 0 rgba(58, 42, 0, 0.18)
+  +animation(intro-wobble 1.6s ease-in-out infinite)
+
+.intro__mark
+  display: block
+  font-family: 'Arial Black', Arial, sans-serif
+  font-weight: 900
+  color: #ff7ab8
+
+.intro__tail
+  position: absolute
+  display: block
+  background: #fff
+  +transform(rotate(45deg))
+
+.intro__dots
+  display: flex
+
+.intro__dot
+  display: block
+  border-radius: 50%
+  background: #3a2a00
+  +animation(intro-bounce 0.9s ease-in-out infinite)
+
++keyframes(intro-wobble)
+  0%
+    +transform(rotate(-3deg))
+  50%
+    +transform(rotate(3deg))
+  100%
+    +transform(rotate(-3deg))
+
++keyframes(intro-bounce)
+  0%
+    +transform(translateY(0))
+    opacity: 0.5
+  50%
+    +transform(translateY(-60%))
+    opacity: 1
+  100%
+    +transform(translateY(0))
+    opacity: 0.5
