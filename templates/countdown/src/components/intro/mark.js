@@ -12,15 +12,10 @@ function box(css, inner, cls) {
 }
 function p(m, x) { return Math.round(m * x); }
 function mark(m) {
-  var w = p(m, 0.56), h = p(m, 0.36), cap = p(m, 0.07);
-  function tri(top, css) {
-    return box('position:absolute;left:0;' + (top ? 'top:' + cap + 'px;' : 'top:' + (cap + h) + 'px;') + 'width:0;height:0;border-left:' + Math.round(w / 2) + 'px solid transparent;border-right:' + Math.round(w / 2) + 'px solid transparent;' + (top ? 'border-top:' : 'border-bottom:') + h + 'px solid #fff;' + css);
-  }
-  return box('position:relative;width:' + w + 'px;height:' + (2 * h + 2 * cap) + 'px;' + an('flipglass', 3.2, 'ease-in-out'),
-    box('position:absolute;left:-' + p(m, 0.06) + 'px;top:0;width:' + (w + p(m, 0.12)) + 'px;height:' + cap + 'px;border-radius:' + cap + 'px;background:#fff;') +
-    tri(true, an('sandtop', 3.2, 'linear')) + tri(false, an('sandbot', 3.2, 'linear')) +
-    box('position:absolute;left:0;bottom:0;width:' + (w + 0) + 'px;height:0;') +
-    box('position:absolute;left:-' + p(m, 0.06) + 'px;bottom:0;width:' + (w + p(m, 0.12)) + 'px;height:' + cap + 'px;border-radius:' + cap + 'px;background:#fff;'));
+  var w = p(m, 0.78), h = p(m, 1), digits = ['3', '2', '1', '0'], col = '';
+  for (var i = 0; i < digits.length; i++) col += box('height:' + h + 'px;line-height:' + h + 'px;text-align:center;', digits[i]);
+  return box('position:relative;width:' + w + 'px;height:' + h + 'px;overflow:hidden;border-radius:' + p(m, 0.1) + 'px;background:#2a2a2e;color:#fff;font:bold ' + p(m, 0.74) + 'px/' + h + 'px \'Helvetica Neue\',Arial,sans-serif;',
+    box('' + an('reel', 2.4, 'steps(4, end)'), col));
 }
 
 // The one mark is small and centred: 13 % of the short side, 42 % on a banner (3:1 or more), in whole px.

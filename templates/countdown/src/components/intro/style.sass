@@ -12,44 +12,19 @@
   justify-content: center
   align-items: center
   overflow: hidden
-  background-color: #2b32b2
-  background-image: linear-gradient(135deg,#2b32b2,#1488cc)
+  background: #000
 
-@-webkit-keyframes intro-flipglass
-  0%, 78%
-    -webkit-transform: rotate(0deg)
-  100%
-    -webkit-transform: rotate(180deg)
+@-webkit-keyframes intro-reel
+  from
+    -webkit-transform: translateY(0)
+  to
+    -webkit-transform: translateY(-100%)
 
-@keyframes intro-flipglass
-  0%, 78%
-    transform: rotate(0deg)
-  100%
-    transform: rotate(180deg)
-
-@-webkit-keyframes intro-sandtop
-  0%
-    opacity: 1
-  78%, 100%
-    opacity: .12
-
-@keyframes intro-sandtop
-  0%
-    opacity: 1
-  78%, 100%
-    opacity: .12
-
-@-webkit-keyframes intro-sandbot
-  0%
-    opacity: .12
-  78%, 100%
-    opacity: 1
-
-@keyframes intro-sandbot
-  0%
-    opacity: .12
-  78%, 100%
-    opacity: 1
+@keyframes intro-reel
+  from
+    transform: translateY(0)
+  to
+    transform: translateY(-100%)
 
 // no motion for those who ask for none: the mark stays as a still picture
 @media (prefers-reduced-motion: reduce)

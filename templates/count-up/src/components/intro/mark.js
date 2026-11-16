@@ -11,17 +11,11 @@ function box(css, inner, cls) {
   return '<div' + (cls ? ' class="' + cls + '"' : '') + ' style="' + prefixed(css) + '">' + (inner || '') + '</div>';
 }
 function p(m, x) { return Math.round(m * x); }
-function hand(m, len, w, color, dur, delay) {
-  var h = Math.round(m * len), ww = Math.max(2, Math.round(m * w));
-  return box('position:absolute;left:0;top:0;width:100%;height:100%;' + an('spin', dur, 'linear', delay || 0),
-    box('position:absolute;left:50%;bottom:50%;margin-left:-' + Math.round(ww / 2) + 'px;width:' + ww + 'px;height:' + h + 'px;background:' + color + ';border-radius:' + ww + 'px;'));
-}
 function mark(m) {
-  var d = p(m, 0.84);
-  return box('position:relative;width:' + m + 'px;height:' + m + 'px;',
-    box('position:absolute;left:' + p(m, 0.4) + 'px;top:0;width:' + p(m, 0.2) + 'px;height:' + p(m, 0.1) + 'px;border-radius:' + p(m, 0.03) + 'px;background:#fff;') +
-    box('position:absolute;left:' + p(m, 0.08) + 'px;top:' + p(m, 0.16) + 'px;width:' + d + 'px;height:' + d + 'px;border-radius:50%;box-sizing:border-box;border:' + p(m, 0.07) + 'px solid #fff;',
-      hand(d - p(m, 0.14), 0.4, 0.06, '#fff', 1.5)));
+  var w = p(m, 0.78), h = p(m, 1), digits = ['0', '1', '2', '3'], col = '';
+  for (var i = 0; i < digits.length; i++) col += box('height:' + h + 'px;line-height:' + h + 'px;text-align:center;', digits[i]);
+  return box('position:relative;width:' + w + 'px;height:' + h + 'px;overflow:hidden;border-radius:' + p(m, 0.1) + 'px;background:#2a2a2e;color:#fff;font:bold ' + p(m, 0.74) + 'px/' + h + 'px \'Helvetica Neue\',Arial,sans-serif;',
+    box('' + an('reel', 2.4, 'steps(4, end)'), col));
 }
 
 // The one mark is small and centred: 13 % of the short side, 42 % on a banner (3:1 or more), in whole px.

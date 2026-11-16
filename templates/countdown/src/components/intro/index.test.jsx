@@ -11,11 +11,12 @@ const sass = readFileSync(resolve(import.meta.dirname, 'style.sass'), 'utf8');
 const SHAPES = [[1920, 1080], [1080, 1920], [1080, 1080], [1920, 270], [270, 1920]];
 
 describe('Intro', () => {
-  it('is one status with a label and no text at all, drawing the mark', () => {
+  it('is one status with a label and no words (only the single digit of the counting tile), drawing the mark', () => {
     const { container } = render(<Intro />);
     const status = screen.getByRole('status');
     expect(status).toHaveAttribute('aria-label', 'Loading');
-    expect(container.textContent).toBe('');
+    expect(container.textContent.replace(/[0-3]/g, '')).toBe('');
+    expect(container.textContent).not.toMatch(/[A-Za-z]/);
     expect(status.children.length).toBeGreaterThan(0);
   });
 
@@ -37,11 +38,11 @@ describe('Intro', () => {
     });
   });
 
-  it('draws no text and animates no SVG: SVG is a still layer without style, animate or set elements', () => {
+  it('draws no words and animates no SVG: SVG is a still layer without style, animate or set elements', () => {
     SHAPES.forEach(([w, h]) => {
       const holder = document.createElement('div');
       holder.innerHTML = mark(markSize(w, h));
-      expect(holder.textContent).toBe('');
+      expect(holder.textContent.replace(/[0-3]/g, '')).toBe('');
       holder.querySelectorAll('svg, svg *').forEach((node) => {
         expect(node.getAttribute('style')).toBeNull();
         expect(node.tagName.toLowerCase()).not.toMatch(/^(animate|animatetransform|set)/);
