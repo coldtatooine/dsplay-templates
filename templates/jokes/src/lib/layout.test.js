@@ -1,16 +1,29 @@
 import { describe, it, expect } from 'vitest';
 import {
-  PLATES, countLines, fitFont, fitLine, plateOf, rem, scaleOf,
+  PLATES, countLines, fitFont, fitLine, isBanner, plateOf, rem, scaleOf,
 } from './layout';
 
 describe('plateOf', () => {
   it('gives each screen format its plate', () => {
     expect(plateOf('landscape')).toBe(PLATES.landscape);
-    expect(plateOf('h-banner')).toBe(PLATES.landscape);
     expect(plateOf('portrait')).toBe(PLATES.portrait);
-    expect(plateOf('v-banner')).toBe(PLATES.portrait);
     expect(plateOf('square')).toBe(PLATES.square);
     expect(plateOf(undefined)).toBe(PLATES.landscape);
+  });
+
+  it('gives a banner a plate 240 thick and as long as the screen asks, from 4:1 to 12.5:1', () => {
+    expect(plateOf('h-banner', 1920, 480)).toEqual({ kind: 'h-banner', w: 960, h: 240 });
+    expect(plateOf('h-banner', 1920, 300)).toEqual({ kind: 'h-banner', w: 1536, h: 240 });
+    expect(plateOf('h-banner', 3000, 300)).toEqual({ kind: 'h-banner', w: 2400, h: 240 });
+    expect(plateOf('h-banner', 1920, 240)).toEqual({ kind: 'h-banner', w: 1920, h: 240 });
+    expect(plateOf('v-banner', 300, 1920)).toEqual({ kind: 'v-banner', w: 240, h: 1536 });
+    expect(plateOf('v-banner', 480, 1920)).toEqual({ kind: 'v-banner', w: 240, h: 960 });
+    // a banner with no size (or a silly one) is a 4:1 strip; an extreme one stops growing
+    expect(plateOf('h-banner')).toEqual({ kind: 'h-banner', w: 960, h: 240 });
+    expect(plateOf('h-banner', 6000, 100).w).toBe(3000);
+    expect(isBanner('h-banner')).toBe(true);
+    expect(isBanner('v-banner')).toBe(true);
+    expect(isBanner('landscape')).toBe(false);
   });
 
   it('scales the plate to fit the screen, whatever its shape', () => {
@@ -20,6 +33,9 @@ describe('plateOf', () => {
     expect(scaleOf(PLATES.landscape, 1024, 768)).toBe(0.8);
     expect(scaleOf(PLATES.portrait, 1080, 1920)).toBe(1.5);
     expect(scaleOf(PLATES.square, 450, 450)).toBe(0.5);
+    // a banner plate takes the whole strip: one design px is height / 240 real pixels
+    expect(scaleOf(plateOf('h-banner', 1920, 300), 1920, 300)).toBe(1.25);
+    expect(scaleOf(plateOf('v-banner', 300, 1920), 300, 1920)).toBe(1.25);
   });
 
   it('writes design pixels as rem', () => {

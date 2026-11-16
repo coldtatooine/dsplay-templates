@@ -5,10 +5,11 @@ import Glyph from '../../components/glyph';
 import Constellation from '../../components/constellation';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import { longDate } from '../../lib/model';
 import signView from '../../lib/sign-view';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -70,6 +71,7 @@ function Duo({
 }) {
   const { t, i18n } = useTranslation();
   const { kind } = usePlate();
+  if (isBanner(kind)) return <Banner signs={signs} today={today} screen={screen} screens={screens} />;
   return (
     <Stage className="duo">
       <div className="duo__top">

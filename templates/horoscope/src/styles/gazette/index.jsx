@@ -5,11 +5,12 @@ import Glyph from '../../components/glyph';
 import Constellation from '../../components/constellation';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import { longDate } from '../../lib/model';
 import signView from '../../lib/sign-view';
 import { SIGN_IDS } from '../../lib/zodiac';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -42,6 +43,7 @@ function Gazette({ signs: [sign], today }) {
   const { t, i18n } = useTranslation();
   const plate = usePlate();
   const { kind } = plate;
+  if (isBanner(kind)) return <Banner sign={sign} today={today} />;
   const view = signView(sign, t);
   const box = BOX[kind];
   const number = String(SIGN_IDS.indexOf(sign.id) + 1).padStart(2, '0');

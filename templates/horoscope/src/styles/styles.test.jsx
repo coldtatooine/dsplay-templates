@@ -10,15 +10,22 @@ import i18n from '../i18n';
 import { player } from '../test-support/mock-utils';
 import { exampleResult } from '../test-support/fixture';
 import { readSigns, pickSigns } from '../lib/model';
-import { PLATES } from '../lib/layout';
+import { plateOf } from '../lib/layout';
 import { STYLES, CMS_TYPE, DEFAULT_STYLE } from '../styles';
 
 // every style is imported by its folder, whichever one the build bundles
 const MODULES = import.meta.glob('./*/index.jsx', { eager: true });
 
 const SIZES = {
-  landscape: [1920, 1080], portrait: [1080, 1920], square: [1080, 1080],
+  landscape: [1920, 1080],
+  portrait: [1080, 1920],
+  square: [1080, 1080],
+  'h-banner': [1920, 300],
+  'v-banner': [300, 1920],
 };
+
+// the screens a banner is tried on, from the shortest strip (4:1) to a very long one
+const BANNER_SIZES = [[1920, 480], [1920, 300], [3000, 300], [480, 1920], [300, 1920], [300, 3000]];
 
 const all = readSigns(exampleResult());
 const draw = (module, signs) => render(
@@ -31,6 +38,8 @@ afterEach(() => {
   cleanup();
   document.documentElement.style.fontSize = '';
   player.format = 'landscape';
+  player.w = 1280;
+  player.h = 720;
   i18n.changeLanguage('en');
 });
 
@@ -71,10 +80,33 @@ STYLES.forEach(({ id }) => {
         });
         expect(screen.getByText('Escrito por IA para entretenimento. Não é conselho nem previsão.')).toBeInTheDocument();
         const plate = container.querySelector('.stage__plate');
-        expect(plate.style.width).toBe(`${PLATES[format].w / 10}rem`);
-        expect(plate.style.height).toBe(`${PLATES[format].h / 10}rem`);
+        const expected = plateOf(format, w, h);
+        expect(expected.kind).toBe(format);
+        expect(plate.style.width).toBe(`${expected.w / 10}rem`);
+        expect(plate.style.height).toBe(`${expected.h / 10}rem`);
         // the plate is scaled to the screen by the root font size
-        expect(document.documentElement.style.fontSize).toBe(`${Math.min(w / PLATES[format].w, h / PLATES[format].h) * 10}px`);
+        expect(document.documentElement.style.fontSize).toBe(`${Math.min(w / expected.w, h / expected.h) * 10}px`);
+      });
+    });
+
+    BANNER_SIZES.forEach(([w, h]) => {
+      it(`fills a ${w} x ${h} strip with a plate of its own shape, whatever the language`, () => {
+        player.format = w > h ? 'h-banner' : 'v-banner';
+        player.w = w;
+        player.h = h;
+        ['pt', 'de'].forEach((lng) => {
+          i18n.changeLanguage(lng);
+          const signs = pickSigns(all, 4, module.PER_SCREEN);
+          const { container, unmount } = draw(module, signs);
+          const plate = container.querySelector('.stage__plate');
+          const expected = plateOf(player.format, w, h);
+          expect(plate.style.width).toBe(`${expected.w / 10}rem`);
+          expect(plate.style.height).toBe(`${expected.h / 10}rem`);
+          expect(container.querySelector('.stage').className).toContain(`stage--${player.format}`);
+          signs.forEach((sign) => expect(screen.getByText(sign.text)).toBeInTheDocument());
+          expect(container.textContent).not.toMatch(/undefined|null|NaN|{{/);
+          unmount();
+        });
       });
     });
 

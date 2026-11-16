@@ -5,9 +5,10 @@ import Glyph from '../../components/glyph';
 import Constellation from '../../components/constellation';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import signView from '../../lib/sign-view';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -49,6 +50,7 @@ function GoldenAge({ signs: [sign] }) {
   const { t } = useTranslation();
   const plate = usePlate();
   const { kind } = plate;
+  if (isBanner(kind)) return <Banner sign={sign} />;
   const view = signView(sign, t);
   const box = BOX[kind];
 

@@ -4,9 +4,10 @@ import usePlate from '../../components/stage/use-plate';
 import Glyph from '../../components/glyph';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import signView from '../../lib/sign-view';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -23,6 +24,7 @@ const BOX = {
 function Spectrum({ signs: [sign] }) {
   const { t } = useTranslation();
   const { kind } = usePlate();
+  if (isBanner(kind)) return <Banner sign={sign} />;
   const view = signView(sign, t);
   const box = BOX[kind];
 

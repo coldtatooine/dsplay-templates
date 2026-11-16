@@ -4,11 +4,12 @@ import usePlate from '../../components/stage/use-plate';
 import Glyph from '../../components/glyph';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import { shortDate } from '../../lib/model';
 import signView from '../../lib/sign-view';
 import { SIGN_DEFAULTS, SIGN_IDS } from '../../lib/zodiac';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -31,6 +32,7 @@ const BOX = {
 function Daylight({ signs: [sign], today }) {
   const { t } = useTranslation();
   const { kind } = usePlate();
+  if (isBanner(kind)) return <Banner sign={sign} />;
   const view = signView(sign, t);
   const accent = GRADIENT[sign.element][1];
   const box = BOX[kind];

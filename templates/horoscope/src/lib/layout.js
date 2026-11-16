@@ -1,7 +1,8 @@
 // Pure layout: which design plate a screen gets and how big a text can be so that it fits its box, whatever its length.
 //
-// A style is drawn on a fixed plate (1280 x 720 landscape, 720 x 1280 portrait, 900 x 900 square), in "design pixels" (1 design px = 0.1rem; the Stage sets the
+// A style is drawn on a plate (1280 x 720 landscape, 720 x 1280 portrait, 900 x 900 square), in "design pixels" (1 design px = 0.1rem; the Stage sets the
 // root font size so that the plate fits the screen). A screen of another shape gets bars of the style's background around the plate.
+// The banners are the exception: their plate is 240 design px thick and as long as the real screen asks (4:1 to 10:1 and beyond), so the strip is always filled.
 
 export const PLATES = {
   landscape: { kind: 'landscape', w: 1280, h: 720 },
@@ -9,11 +10,40 @@ export const PLATES = {
   square: { kind: 'square', w: 900, h: 900 },
 };
 
-/** The plate of a screen format ("landscape", "portrait", "square", "h-banner", "v-banner"); the banners take the landscape and portrait plates. */
-export function plateOf(screenFormat) {
-  if (screenFormat === 'portrait' || screenFormat === 'v-banner') return PLATES.portrait;
+export const BANNER_THICKNESS = 240;
+// the long side of a banner plate, in design px: a 4:1 strip is 960 long, a 10:1 one 2400; beyond the maximum the plate stops growing (bars at the ends)
+const BANNER_MIN = 960;
+const BANNER_MAX = 3000;
+
+/**
+ * The plate of a screen format ("landscape", "portrait", "square", "h-banner", "v-banner") on a screen of `width` x `height`. A banner plate is 240 design px
+ * thick and as long as the screen's own shape asks, so it fills the strip whatever its ratio; without a size it is a 4:1 strip.
+ */
+export function plateOf(screenFormat, width, height) {
+  if (screenFormat === 'h-banner' || screenFormat === 'v-banner') {
+    const ratio = width > 0 && height > 0 ? Math.max(width, height) / Math.min(width, height) : 4;
+    const length = Math.max(BANNER_MIN, Math.min(BANNER_MAX, Math.round(BANNER_THICKNESS * ratio)));
+    return screenFormat === 'h-banner'
+      ? { kind: 'h-banner', w: length, h: BANNER_THICKNESS }
+      : { kind: 'v-banner', w: BANNER_THICKNESS, h: length };
+  }
+  if (screenFormat === 'portrait') return PLATES.portrait;
   if (screenFormat === 'square') return PLATES.square;
   return PLATES.landscape;
+}
+
+/** True for the plates of the banner formats (kind "h-banner" or "v-banner"). */
+export const isBanner = (kind) => kind === 'h-banner' || kind === 'v-banner';
+
+/**
+ * The box of the text on a banner, in design px. Horizontal: the strip minus the fixed columns (`left`: what comes before the text, `right`: what comes after,
+ * both with their margins) and its padding. Vertical: the column's width and what is left of the length after the fixed parts (`top`).
+ */
+export function bannerText(plate, {
+  left = 0, right = 0, top = 0, pad = 28, height = 176, max = 44, min = 12,
+}) {
+  if (plate.kind === 'v-banner') return { w: plate.w - 32, h: plate.h - top, max: 34, min };
+  return { w: plate.w - left - right - pad * 2, h: height, max, min };
 }
 
 /** How many real pixels one design pixel is on a screen of `width` x `height`. */

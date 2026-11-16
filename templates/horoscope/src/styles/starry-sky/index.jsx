@@ -6,11 +6,12 @@ import Glyph from '../../components/glyph';
 import Constellation from '../../components/constellation';
 import Meter from '../../components/meter';
 import FittedText from '../../components/fitted-text';
-import { fitLine, rem } from '../../lib/layout';
+import { fitLine, isBanner, rem } from '../../lib/layout';
 import { DISCLAIMER } from '../../lib/labels';
 import { shortDate } from '../../lib/model';
 import signView from '../../lib/sign-view';
 import { SIGN_DEFAULTS, SIGN_IDS } from '../../lib/zodiac';
+import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
@@ -31,7 +32,7 @@ const BOX = {
 const ART = { landscape: [400, 400], portrait: [440, 340], square: [300, 220] };
 
 /** One sign on a night sky: its constellation, the name big, the text, the scores and the lucky facts; the portrait layout adds the strip of the twelve signs. */
-function StarrySky({ signs: [sign], today }) {
+function StarryPlate({ signs: [sign], today }) {
   const { t } = useTranslation();
   const plate = usePlate();
   const { kind } = plate;
@@ -116,6 +117,13 @@ function StarrySky({ signs: [sign], today }) {
       <p className="starry__disclaimer">{t(DISCLAIMER)}</p>
     </Stage>
   );
+}
+
+/** The strip formats get their own design (`./banner`); the others one plate. */
+function StarrySky(props) {
+  const { kind } = usePlate();
+  const { signs: [sign], today } = props;
+  return isBanner(kind) ? <Banner sign={sign} today={today} /> : <StarryPlate {...props} />;
 }
 
 export default StarrySky;
