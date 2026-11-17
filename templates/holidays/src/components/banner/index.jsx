@@ -25,7 +25,7 @@ function Banner({ view, className = '' }) {
         <Medal kind={holiday.kind} className="banner__medal" />
         <div className="banner__text">
           <div className="banner__label">{t(today ? 'Holiday today' : 'Next holiday')}</div>
-          <FittedText as="div" text={holiday.name} width={box.w} height={box.h} max={box.max} min={box.min} lineHeight={1.05} charWidth={0.6} wholeWords={vertical} className="banner__name" />
+          <FittedText as="div" text={holiday.name} width={box.w} height={box.h} max={box.max} min={box.min} lineHeight={1.05} wholeWords={vertical} className="banner__name" />
           <div className="banner__when">{today ? date(holiday.date, { short: true }) : `${when(away)} · ${date(holiday.date, { short: true })}`}</div>
         </div>
       </div>

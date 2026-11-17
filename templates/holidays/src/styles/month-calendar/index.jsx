@@ -2,6 +2,7 @@ import Stage from '../../components/stage';
 import usePlate from '../../components/stage/use-plate';
 import Medal from '../../components/medal';
 import Banner from '../../components/banner';
+import FittedText from '../../components/fitted-text';
 import useLabels from '../../lib/use-labels';
 import {
   dayOf, holidayOn, monthGrid, monthOf, yearOf, lastDay,
@@ -64,8 +65,8 @@ function MonthCalendar({ view }) {
           <div key={`${h.date}-${h.name}`} className={`mc__item${h.date < view.today && lastDay(h) < view.today ? ' mc__item--past' : ''}`}>
             <Medal kind={h.kind} className="mc__item-medal" />
             <div className="mc__item-text">
-              <b>{h.name}</b>
-              <span>{`${date(h.date, { short: true })}${h.days > 1 ? ` – ${dayOf(lastDay(h))}` : ''} · ${scope(h.scope)}`}</span>
+              <FittedText as="b" text={h.name} max={30} min={16} lineHeight={1.15} nowrap />
+              <FittedText as="span" text={`${date(h.date, { short: true })}${h.days > 1 ? ` – ${dayOf(lastDay(h))}` : ''} · ${scope(h.scope)}`} max={22} min={13} lineHeight={1.3} nowrap />
             </div>
           </div>
         ))}

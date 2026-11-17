@@ -43,7 +43,7 @@ function NextHoliday({ view }) {
           </div>
         )}
         <div className="nh__text">
-          <FittedText as="h2" text={main.name} width={w} height={h} max={max} min={min} lineHeight={1.02} charWidth={0.56} wholeWords className="nh__name" />
+          <FittedText as="h2" text={main.name} width={w} height={h} max={max} min={min} lineHeight={1.02} wholeWords className="nh__name" />
           <div className="nh__date">{date(main.date)}</div>
           <span className="nh__tag">{scope(main.scope)}</span>
         </div>
@@ -53,8 +53,8 @@ function NextHoliday({ view }) {
           <Medal kind={next.kind} className="nh__next-medal" />
           <div className="nh__next-text">
             <small>{t('Next holiday')}</small>
-            <b>{next.name}</b>
-            <span>{`${when(daysAway(view.today, next.date))} · ${date(next.date, { short: true })}`}</span>
+            <FittedText as="b" text={next.name} max={40} min={20} lineHeight={1.15} nowrap />
+            <FittedText as="span" text={`${when(daysAway(view.today, next.date))} · ${date(next.date, { short: true })}`} max={26} min={15} lineHeight={1.3} nowrap />
           </div>
         </div>
       )}

@@ -2,6 +2,7 @@ import Stage from '../../components/stage';
 import usePlate from '../../components/stage/use-plate';
 import Medal from '../../components/medal';
 import Banner from '../../components/banner';
+import FittedText from '../../components/fitted-text';
 import useLabels from '../../lib/use-labels';
 import { daysAway, lastDay } from '../../lib/model';
 import { isBanner } from '../../lib/layout';
@@ -39,8 +40,8 @@ function UpcomingList({ view }) {
             <div key={`${h.date}-${h.name}`} className={`ul__row${on ? ' ul__row--on' : ''}`}>
               <Medal kind={h.kind} className="ul__medal" />
               <div className="ul__text">
-                <b>{h.name}</b>
-                <span>{`${date(h.date, { short: true })} · ${scope(h.scope)}${h.type === 'optional' ? ` · ${t('Optional')}` : ''}${wide ? '' : ` · ${on ? t('today') : when(daysAway(view.today, h.date))}`}`}</span>
+                <FittedText as="b" text={h.name} max={wide ? 38 : 34} min={18} lineHeight={1.15} nowrap />
+                <FittedText as="span" text={`${date(h.date, { short: true })} · ${scope(h.scope)}${h.type === 'optional' ? ` · ${t('Optional')}` : ''}${wide ? '' : ` · ${on ? t('today') : when(daysAway(view.today, h.date))}`}`} max={24} min={14} lineHeight={1.3} nowrap />
               </div>
               {wide && <div className="ul__when">{on ? t('today') : when(daysAway(view.today, h.date))}</div>}
             </div>
