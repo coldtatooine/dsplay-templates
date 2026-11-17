@@ -37,7 +37,7 @@ function HolidayPoster({ view }) {
         <div className="hp__label">{t(today ? 'Holiday today' : 'Next holiday')}</div>
         <Medal kind={holiday.kind} className="hp__medal" />
       </div>
-      <FittedText as="h2" text={holiday.name} width={w} height={h} max={max} min={min} lineHeight={0.98} charWidth={0.7} wholeWords className="hp__name" />
+      <FittedText as="h2" text={holiday.name} width={w} height={h} max={max} min={min} lineHeight={0.98} wholeWords className="hp__name" />
       <div className="hp__foot">
         <div className="hp__date">{date(holiday.date)}</div>
         <div className="hp__chips">

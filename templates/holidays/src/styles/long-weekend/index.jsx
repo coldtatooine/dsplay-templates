@@ -69,7 +69,7 @@ function LongWeekend({ view }) {
                   <Medal kind={holiday.kind} className="lw__medal" />
                   {vertical
                     ? <span className="lw__name">{holiday.name}</span>
-                    : <FittedText as="span" text={holiday.name} width={tileW - 28} height={96} max={26} min={13} lineHeight={1.1} charWidth={0.55} wholeWords className="lw__name" />}
+                    : <FittedText as="span" text={holiday.name} width={tileW - 28} height={96} max={26} min={13} lineHeight={1.1} wholeWords className="lw__name" />}
                 </div>
               ) : (
                 <div className="lw__what lw__what--off">
