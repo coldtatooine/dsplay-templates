@@ -51,9 +51,9 @@ npm start [-- <style>]     # dev server of a style (default: next-holiday)
 
 `public/dsplay-data.js` is an example answer (São Paulo, Brazil's 2026 and 2027 holidays). Add `?today=2026-09-07` to the URL to pretend it is that day: `2026-09-07` is a holiday, `2026-09-01` has a long weekend ahead, `2026-02-16` is the middle of Carnival (five days), `?locale=en` (or `es`, `fr`, `de`, `it`) for another language. `public/test-assets/format.html?w=1920&h=300` frames the template in a screen of an exact size.
 
-## Loader
+## Loading
 
-Each style has its own loader (`src/styles/<style>/loader.js`, the standard of `docs/loader-style.md`): one small mark centred on the style's background, no text, a looping motion, shown at least 1500 ms. **The five loaders still have to be drawn and approved on the "Template loaders" board** before the system templates are replaced or created in the CMS; they follow the rules (and the marks are a ring, a calendar page, three tiles, a poster sheet and list rows) but the owner has not approved them yet.
+There is no loader screen. `Loader` runs in `reveal` mode (`@dsplay/react-template-utils`): the template is mounted hidden while the style's fonts (every weight it uses, see `FONTS`) are fetched, then shown with the class `dsplay-ready`, and the blocks of the plate rise and fade in one after the other (`src/components/stage/style.sass`). There is no minimum time; a 4 s cap shows the template anyway.
 
 ## Commands
 

@@ -13,8 +13,7 @@ import { isBanner, rem } from '../../lib/layout';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Fredoka'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Fredoka', weight: 500 }, { family: 'Fredoka', weight: 600 }, { family: 'Fredoka', weight: 700 }];
 
 const MAX_TILES = 7;
 
