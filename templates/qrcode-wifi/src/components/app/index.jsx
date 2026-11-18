@@ -4,6 +4,7 @@ import { Loader, useScreenInfo, useConfig } from '@dsplay/react-template-utils';
 import Main from '../main';
 import i18n from '../../i18n';
 import './style.sass';
+import '../../entrance.css';
 import background from '../../images/default-bg-01.jpg';
 
 // fonts to preload
