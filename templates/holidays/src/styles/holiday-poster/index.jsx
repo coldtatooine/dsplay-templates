@@ -9,8 +9,7 @@ import { isBanner } from '../../lib/layout';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Poppins'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Poppins', weight: 600 }, { family: 'Poppins', weight: 700 }, { family: 'Poppins', weight: 800 }];
 
 const NAME = {
   landscape: [900, 300, 150, 34],
