@@ -19,6 +19,12 @@ body
 .dsplay-ready .fade-in
   @include animation(fadeIn 1s ease-in)
 
+// #root is a flex row that stretches .app to the full height; the reveal wrapper sits between them and keeps that layout
+.dsplay-reveal
+  display: -webkit-box
+  display: -webkit-flex
+  display: flex
+
 .portrait
   display: none !important
 
