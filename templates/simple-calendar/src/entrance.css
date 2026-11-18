@@ -18,3 +18,29 @@
     animation: none;
   }
 }
+
+/* Main renders its two panels as a fragment, so they are flex items of .container-home; the reveal wrapper sits between them and takes over that flex row (a column in portrait or under 960px, as .container-home does). */
+.dsplay-reveal {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+}
+
+@media only screen and (orientation: portrait) {
+  .dsplay-reveal {
+    -webkit-box-orient: vertical;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  .dsplay-reveal {
+    -webkit-box-orient: vertical;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+}
