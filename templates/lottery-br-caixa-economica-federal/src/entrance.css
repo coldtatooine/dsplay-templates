@@ -18,3 +18,10 @@
     animation: none;
   }
 }
+
+/* #root is a flex container and .App grows inside it (flex-grow), so the reveal wrapper between them has to be one too. */
+.dsplay-reveal {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}

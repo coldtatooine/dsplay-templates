@@ -18,3 +18,13 @@
     animation: none;
   }
 }
+
+/* The reveal wrapper sits between #root and .App: #root centers its child vertically (flex), so the wrapper has to do the same or the strip sticks to the top. */
+.dsplay-reveal {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
