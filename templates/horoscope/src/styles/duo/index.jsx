@@ -41,14 +41,14 @@ function Card({ sign, kind }) {
         pad={20}
         accent={accent}
         label={view.name}
-        className="duo__stars"
+        className="duo__stars" idle
         lineWidth={1.6}
         lineOpacity={0.7}
         starScale={1.8}
         haloScale={4.4}
       />
       <div className="duo__head">
-        <Glyph id={sign.id} className="duo__glyph" stroke={accent} />
+        <Glyph id={sign.id} className="duo__glyph" idle stroke={accent} />
         <span className="duo__range">{view.range}</span>
       </div>
       <h2 className="duo__name" style={{ fontSize: rem(fitLine({ text: view.name, width: box.name, max: box.nameMax, min: 30, charWidth: 0.5 })) }}>{view.name}</h2>

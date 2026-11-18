@@ -27,7 +27,7 @@ function DaylightBanner({ sign }) {
     <Stage className="daylight">
       <div className={`dayb dayb--${vertical ? 'v' : 'h'}`}>
         <div className="dayb__art">
-          <span className="dayb__tile" style={{ background: `linear-gradient(145deg, ${from}, ${accent})` }}><Glyph id={sign.id} className="dayb__glyph" stroke="#fff" strokeWidth={1.6} label={view.name} /></span>
+          <span className="dayb__tile" style={{ background: `linear-gradient(145deg, ${from}, ${accent})` }}><Glyph id={sign.id} className="dayb__glyph" idle stroke="#fff" strokeWidth={1.6} label={view.name} /></span>
         </div>
         <div className="dayb__who">
           <h1 className="daylight__name dayb__name" style={{ fontSize: rem(fitLine({ text: view.name, width: vertical ? 208 : 290, max: vertical ? 56 : 62, min: 30, charWidth: 0.55 })) }}>{view.name}</h1>

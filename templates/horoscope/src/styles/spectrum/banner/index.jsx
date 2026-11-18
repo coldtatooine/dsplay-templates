@@ -23,7 +23,7 @@ function SpectrumBanner({ sign }) {
 
   return (
     <Stage className={`spectrum spectrum--${sign.element}`}>
-      <Glyph id={sign.id} className="specb__watermark" stroke="#fff" strokeWidth={0.5} />
+      <Glyph id={sign.id} className="specb__watermark" idle stroke="#fff" strokeWidth={0.5} />
       <div className={`specb specb--${vertical ? 'v' : 'h'}`}>
         <div className="specb__who" style={vertical ? undefined : { width: rem(nameBox) }}>
           <div className="specb__kicker"><Glyph id={sign.id} className="spectrum__icon specb__icon" stroke="#fff" strokeWidth={2} />{t('Daily horoscope')}</div>

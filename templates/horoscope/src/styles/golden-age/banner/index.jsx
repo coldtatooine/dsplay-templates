@@ -52,12 +52,12 @@ function GoldenBanner({ sign }) {
               <circle cx="180" cy="180" r="170" fill="none" stroke={GOLD} strokeWidth="3" />
               <circle cx="180" cy="180" r="156" fill="none" stroke={GOLD} strokeWidth="1.2" strokeDasharray="3 9" opacity="0.8" />
             </svg>
-            <Constellation id={sign.id} width={220} height={220} pad={70} accent={LIGHT_GOLD} label={view.name} className="goldb__stars" lineWidth={2.6} lineOpacity={0.8} starFill="#fff3cf" starScale={2.2} haloScale={5} haloOpacity={0.25} />
+            <Constellation id={sign.id} width={220} height={220} pad={70} accent={LIGHT_GOLD} label={view.name} className="goldb__stars" idle lineWidth={2.6} lineOpacity={0.8} starFill="#fff3cf" starScale={2.2} haloScale={5} haloOpacity={0.25} />
           </div>
         )}
         <div className="goldb__who">
           <div className="goldb__head">
-            <Glyph id={sign.id} className="goldb__glyph" stroke={LIGHT_GOLD} strokeWidth={1.5} />
+            <Glyph id={sign.id} className="goldb__glyph" idle stroke={LIGHT_GOLD} strokeWidth={1.5} />
             <span className="golden__range goldb__range">{view.range}</span>
           </div>
           <h1 className="golden__name goldb__name" style={{ fontSize: rem(fitLine({ text: view.name.toUpperCase(), width: vertical ? 208 : 300, max: vertical ? 40 : 46, min: 24, charWidth: 0.78 })) }}>{view.name}</h1>

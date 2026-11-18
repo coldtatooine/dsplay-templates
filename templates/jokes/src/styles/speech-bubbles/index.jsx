@@ -24,6 +24,9 @@ const BOX = {
   },
 };
 
+/** Where the burst behind the answer is centred, down the plate: the answer bubble sits lower on a landscape plate than on the tall ones. */
+const BURST_Y = { landscape: 0.51, portrait: 0.34, square: 0.32 };
+const AIR = [1, 2, 3, 4, 5, 6, 7, 8];
 const CONFETTI = ['#ff7ab8', '#2dd4bf', '#ffffff', '#ff9f43'];
 
 /** The question in a big white speech bubble on yellow; the answer pops into a second bubble on pink and orange while the question shrinks to a label. */
@@ -44,14 +47,17 @@ function BubblesPlate({ joke, revealed }) {
     burst: Array.from({ length: 28 }, (_, i) => {
       const a = (Math.PI * 2 * i) / 28;
       const r = (i % 2 ? 150 : 230) * k;
-      return `${(plate.w / 2 + Math.cos(a) * r * 1.3).toFixed(1)},${(plate.h * 0.51 + Math.sin(a) * r).toFixed(1)}`;
+      return `${(plate.w / 2 + Math.cos(a) * r * 1.3).toFixed(1)},${(plate.h * BURST_Y[kind] + Math.sin(a) * r).toFixed(1)}`;
     }).join(' '),
-  }), [plate.w, plate.h, k]);
+  }), [plate.w, plate.h, k, kind]);
 
   return (
     <Stage className={`bubbles bubbles--${kind}${revealed ? ' is-revealed' : ''}`}>
       <div className="bubbles__bg bubbles__bg--answer" />
-      <svg className="bubbles__decor" viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
+      <div className="bubbles__air" aria-hidden="true">
+        {AIR.map((n) => <i key={n} className={`idle-rise bubbles__air-${n}`} />)}
+      </div>
+      <span className="bubbles__decor idle-plate idle-drift"><svg viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
         {decor.confetti.map((c) => <circle key={`${c.x}-${c.y}`} cx={c.x} cy={c.y} r={c.r} fill={revealed ? '#fff' : c.fill} opacity={revealed ? 0.55 : 0.7} />)}
         {revealed
           ? <polygon points={decor.burst} fill="#fff6c9" opacity="0.5" />
@@ -61,7 +67,7 @@ function BubblesPlate({ joke, revealed }) {
               <text x={plate.w * 0.06} y={plate.h * 0.89} fontFamily="Fredoka, sans-serif" fontWeight="700" fontSize={72 * k} fill="#2dd4bf" transform={`rotate(-12 ${plate.w * 0.06} ${plate.h * 0.89})`}>?</text>
             </>
           )}
-      </svg>
+      </svg></span>
 
       <div className={`bubbles__question${revealed ? ' is-gone' : ''}`}>
         <FittedText text={joke.setup} width={box.question.w} height={box.question.h} max={box.question.max} min={box.question.min} lineHeight={1.2} charWidth={0.5} className="bubbles__question-text" />

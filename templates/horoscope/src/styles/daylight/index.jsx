@@ -42,7 +42,7 @@ function Daylight({ signs: [sign], today }) {
       <div className="daylight__main">
         <div className="daylight__kicker">{`${t('Daily horoscope')} · ${shortDate(today, t)}`}</div>
         <div className="daylight__hero">
-          <span className="daylight__tile" style={tileStyle(sign.element)}><Glyph id={sign.id} className="daylight__glyph" stroke="#fff" strokeWidth={1.6} /></span>
+          <span className="daylight__tile" style={tileStyle(sign.element)}><Glyph id={sign.id} className="daylight__glyph" idle stroke="#fff" strokeWidth={1.6} /></span>
           <div className="daylight__who">
             <h1 className="daylight__name" style={{ fontSize: rem(fitLine({ text: view.name, width: box.name, max: box.nameMax, min: 36, charWidth: 0.55 })) }}>{view.name}</h1>
             <div className="daylight__range">{`${view.range} · ${view.elementName}`}</div>

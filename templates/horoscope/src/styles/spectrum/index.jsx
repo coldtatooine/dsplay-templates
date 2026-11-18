@@ -30,7 +30,7 @@ function Spectrum({ signs: [sign] }) {
 
   return (
     <Stage className={`spectrum spectrum--${sign.element}`}>
-      <Glyph id={sign.id} className="spectrum__watermark" stroke="#fff" strokeWidth={0.5} />
+      <Glyph id={sign.id} className="spectrum__watermark" idle stroke="#fff" strokeWidth={0.5} />
       <div className="spectrum__content">
         <div className="spectrum__kicker"><Glyph id={sign.id} className="spectrum__icon" stroke="#fff" strokeWidth={2} />{t('Daily horoscope')}</div>
         <h1 className="spectrum__name" style={{ fontSize: rem(fitLine({ text: view.name, width: box.name, max: box.nameMax, min: 44, charWidth: 0.62 })) }}>{view.name}</h1>

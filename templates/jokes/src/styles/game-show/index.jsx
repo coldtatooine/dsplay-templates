@@ -51,14 +51,17 @@ function ShowPlate({ joke, revealed }) {
 
   return (
     <Stage className={`show show--${kind}${revealed ? ' is-revealed' : ''}`}>
-      <svg className="show__decor" viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
+      <span className="show__spot idle-glow" />
+      <span className="show__rays idle-spin"><svg viewBox={`${-plate.w} ${-plate.h * 1.1} ${plate.w * 3} ${plate.h * 3}`} aria-hidden="true">
         {decor.rays.map((points) => <polygon key={points} points={points} fill="#ffffff" opacity="0.05" />)}
+      </svg></span>
+      <span className="show__decor idle-plate idle-drift"><svg viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
         {revealed && decor.bits.map((b) => (
           <rect key={`${b.x}-${b.y}`} x={b.x} y={b.y} width={12 * k} height={7 * k} rx={2 * k} fill={b.fill} transform={`rotate(${b.rot} ${b.x} ${b.y})`} />
         ))}
-      </svg>
+      </svg></span>
 
-      <div className={`show__back${revealed ? ' is-gone' : ''}`}><span>?</span></div>
+      <div className={`show__back${revealed ? ' is-gone' : ''}`}><span className="idle-lean">?</span></div>
       <div className={`show__card show__card--question${revealed ? ' is-gone' : ''}`}>
         <span className="show__badge show__badge--question">{t('Question')}</span>
         <FittedText text={joke.setup} width={box.question.w} height={box.question.h} max={box.question.max} min={box.question.min} lineHeight={1.2} charWidth={0.58} className="show__text" />

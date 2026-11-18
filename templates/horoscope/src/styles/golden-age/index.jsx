@@ -59,10 +59,10 @@ function GoldenAge({ signs: [sign] }) {
       <Frame w={plate.w} h={plate.h} />
       <div className="golden__kicker">{t('Daily horoscope')}</div>
       <div className="golden__ring">
-        <svg className="golden__circles" viewBox="0 0 360 360" aria-hidden="true">
+        <span className="golden__circles idle-ring"><svg viewBox="0 0 360 360" aria-hidden="true">
           <circle cx="180" cy="180" r="170" fill="none" stroke={GOLD} strokeWidth="2" />
           <circle cx="180" cy="180" r="158" fill="none" stroke={GOLD} strokeWidth="0.8" strokeDasharray="2 7" opacity="0.8" />
-        </svg>
+        </svg></span>
         <Constellation
           id={sign.id}
           width={220}
@@ -70,7 +70,7 @@ function GoldenAge({ signs: [sign] }) {
           pad={70}
           accent={LIGHT_GOLD}
           label={view.name}
-          className="golden__stars"
+          className="golden__stars" idle
           lineWidth={1.8}
           lineOpacity={0.8}
           starFill="#fff3cf"
@@ -81,7 +81,7 @@ function GoldenAge({ signs: [sign] }) {
       </div>
       <div className="golden__info">
         <div className="golden__head">
-          <Glyph id={sign.id} className="golden__glyph" stroke={LIGHT_GOLD} strokeWidth={1.5} />
+          <Glyph id={sign.id} className="golden__glyph" idle stroke={LIGHT_GOLD} strokeWidth={1.5} />
           <span className="golden__range">{view.range}</span>
         </div>
         <h1 className="golden__name" style={{ fontSize: rem(fitLine({ text: view.name.toUpperCase(), width: box.name, max: box.nameMax, min: 36, charWidth: 0.78 })) }}>{view.name}</h1>
