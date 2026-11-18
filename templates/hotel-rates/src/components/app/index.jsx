@@ -19,7 +19,7 @@ function App() {
   const { locale } = useConfig();
 
   // images to preload
-  const images = useMemo(() => [logo], [logo]);
+  const images = useMemo(() => [logo].filter(Boolean), [logo]);
 
   const [lng] = (locale || 'en').split('_');
 
@@ -36,7 +36,7 @@ function App() {
       >
         <div
           className={`app fade-in ${screenFormat}`}
-          style={{ backgroundColor: `${bgColor}` }}
+          style={{ backgroundColor: bgColor }}
         >
           <Main />
         </div>
