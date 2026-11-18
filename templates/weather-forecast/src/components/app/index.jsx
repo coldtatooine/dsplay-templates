@@ -5,6 +5,7 @@ import Main from '../main';
 import i18n from '../../i18n';
 import { iconImages } from '../icon';
 import './style.sass';
+import '../../entrance.css';
 
 // images to preload
 const images = iconImages;
@@ -33,7 +34,7 @@ function App() {
         fonts={fonts}
         images={images}
       >
-        <div className={`app fade-in ${screenFormat}`}>
+        <div className={`app ${screenFormat}`}>
           <Main />
         </div>
       </Loader>
