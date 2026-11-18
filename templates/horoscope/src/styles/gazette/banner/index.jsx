@@ -37,7 +37,7 @@ function GazetteBanner({ sign, today }) {
         </div>
         <div className="gazb__row">
           <div className="gazb__art">
-            <Glyph id={sign.id} className="gazb__glyph" stroke={INK} strokeWidth={0.7} label={view.name} />
+            <Glyph id={sign.id} className="gazb__glyph" idle stroke={INK} strokeWidth={0.7} label={view.name} />
             <Constellation id={sign.id} width={100} height={100} pad={15} accent={RED} className="gazb__stamp" lineWidth={2} lineOpacity={1} starFill={RED} starScale={1.6} haloOpacity={0} />
           </div>
           <div className="gazb__who">

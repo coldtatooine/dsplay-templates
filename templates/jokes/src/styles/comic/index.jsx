@@ -39,9 +39,9 @@ function ComicPlate({ joke, revealed }) {
   return (
     <Stage className={`comic comic--${kind}${revealed ? ' is-revealed' : ''}`}>
       {revealed && (
-        <svg className="comic__burst" viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
+        <span className="comic__burst idle-plate idle-swell"><svg viewBox={`0 0 ${plate.w} ${plate.h}`} aria-hidden="true">
           <polygon points={burst} fill="#ffd84d" stroke="#111" strokeWidth={7 * k} strokeLinejoin="round" />
-        </svg>
+        </svg></span>
       )}
       {revealed ? (
         <>
@@ -58,7 +58,7 @@ function ComicPlate({ joke, revealed }) {
           <div className="comic__panel">
             <FittedText text={joke.setup} width={box.question.w} height={box.question.h} max={box.question.max} min={box.question.min} lineHeight={1.2} charWidth={0.52} className="comic__question-text" />
           </div>
-          <div className="comic__mark">?</div>
+          <div className="comic__mark idle-lean">?</div>
         </>
       )}
     </Stage>

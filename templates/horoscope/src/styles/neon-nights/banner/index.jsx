@@ -36,7 +36,7 @@ function NeonBanner({ sign }) {
               <circle cx="200" cy="200" r="190" fill="none" stroke="#ff2fb3" strokeWidth="4" opacity="0.55" />
               <circle cx="200" cy="200" r="150" fill="#ff2fb3" opacity="0.1" />
             </svg>
-            <Constellation id={sign.id} width={280} height={280} pad={30} accent={NEON[sign.element]} label={view.name} className="neonb__stars" lineWidth={5} lineOpacity={1} haloOpacity={0.35} starScale={3} haloScale={6} />
+            <Constellation id={sign.id} width={280} height={280} pad={30} accent={NEON[sign.element]} label={view.name} className="neonb__stars" idle lineWidth={5} lineOpacity={1} haloOpacity={0.35} starScale={3} haloScale={6} />
           </div>
         )}
         <div className="neonb__who">

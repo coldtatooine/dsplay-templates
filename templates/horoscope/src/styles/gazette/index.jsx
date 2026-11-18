@@ -57,7 +57,7 @@ function Gazette({ signs: [sign], today }) {
         <span className="gazette__section">{`${number} / 12`}</span>
       </div>
       <div className="gazette__art">
-        <Glyph id={sign.id} className="gazette__glyph" stroke={INK} strokeWidth={0.55} label={view.name} />
+        <Glyph id={sign.id} className="gazette__glyph" idle stroke={INK} strokeWidth={0.55} label={view.name} />
         <Constellation
           id={sign.id}
           width={100}

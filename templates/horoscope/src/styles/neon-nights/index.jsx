@@ -39,10 +39,10 @@ function NeonNights({ signs: [sign] }) {
     <Stage className={`neon neon--${sign.element}`}>
       <Grid w={plate.w} h={plate.h} />
       <div className="neon__art">
-        <svg className="neon__ring" viewBox="0 0 400 400" aria-hidden="true">
+        <span className="neon__ring idle-breathe"><svg viewBox="0 0 400 400" aria-hidden="true">
           <circle cx="200" cy="200" r="190" fill="none" stroke="#ff2fb3" strokeWidth="2" opacity="0.5" />
           <circle cx="200" cy="200" r="150" fill="#ff2fb3" opacity="0.08" />
-        </svg>
+        </svg></span>
         <Constellation
           id={sign.id}
           width={280}
@@ -50,7 +50,7 @@ function NeonNights({ signs: [sign] }) {
           pad={30}
           accent={neon}
           label={view.name}
-          className="neon__stars"
+          className="neon__stars" idle
           lineWidth={3}
           lineOpacity={1}
           haloOpacity={0.35}

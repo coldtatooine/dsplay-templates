@@ -59,14 +59,14 @@ function StarryPlate({ signs: [sign], today }) {
 
       {kind !== 'landscape' && kicker}
       <div className="starry__art">
-        {kind === 'landscape' && <Glyph id={sign.id} className="starry__watermark" stroke={accent} strokeWidth={0.35} />}
+        {kind === 'landscape' && <Glyph id={sign.id} className="starry__watermark" idle stroke={accent} strokeWidth={0.35} />}
         <Constellation
           id={sign.id}
           width={artW}
           height={artH}
           accent={accent}
           label={view.name}
-          className="starry__stars"
+          className="starry__stars" idle
           lineWidth={kind === 'landscape' ? 2.2 : 2.4}
           starScale={kind === 'landscape' ? 2.4 : 2.2}
           haloScale={kind === 'landscape' ? 6 : 5.6}

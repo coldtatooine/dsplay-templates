@@ -56,14 +56,14 @@ function StarryBanner({ sign, today }) {
             pad={18}
             accent={accent}
             label={view.name}
-            className="starry-b__stars"
+            className="starry-b__stars" idle
             lineWidth={2}
             starScale={2}
             haloScale={5}
           />
         )}
         <div className="starry-b__who">
-          {!withArt && <Glyph id={sign.id} className="starry-b__glyph" stroke={accent} strokeWidth={1.6} label={view.name} />}
+          {!withArt && <Glyph id={sign.id} className="starry-b__glyph" idle stroke={accent} strokeWidth={1.6} label={view.name} />}
           <h1 className="starry__name starry-b__name" style={{ fontSize: rem(fitLine({ text: view.name, width: nameBox, max: vertical ? 56 : 64, min: 30, charWidth: 0.5 })) }}>{view.name}</h1>
           <div className="starry-b__range">{view.range}</div>
           {view.keyword && <span className="starry__chip starry-b__chip" style={{ color: accent, borderColor: accent }}>{view.keyword}</span>}

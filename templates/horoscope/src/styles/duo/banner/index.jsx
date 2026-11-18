@@ -24,7 +24,7 @@ function Card({ sign, plate }) {
   return (
     <section className="duob__card">
       <div className="duob__who">
-        <Glyph id={sign.id} className="duob__glyph" stroke={accent} />
+        <Glyph id={sign.id} className="duob__glyph" idle stroke={accent} />
         <div className="duob__id">
           <h2 className="duo__name duob__name" style={{ fontSize: rem(fitLine({ text: view.name, width: vertical ? 120 : 130, max: vertical ? 40 : 46, min: 24, charWidth: 0.5 })) }}>{view.name}</h2>
           <span className="duo__range duob__range">{view.range}</span>

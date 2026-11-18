@@ -40,7 +40,7 @@ function Candy({ signs: [sign] }) {
           <path className="candy__blob-back" d="M210 12c88 0 188 62 192 168 4 112-86 232-196 228C108 404 14 320 18 206 22 104 118 12 210 12z" />
           <path d="M210 40c70 0 150 50 154 134 3 90-70 188-156 185C130 356 52 288 56 204 60 122 138 40 210 40z" fill="#fff" opacity="0.45" />
         </svg>
-        <Glyph id={sign.id} className="candy__glyph" stroke="#fff" strokeWidth={1.4} label={view.name} />
+        <Glyph id={sign.id} className="candy__glyph" idle stroke="#fff" strokeWidth={1.4} label={view.name} />
       </div>
       <div className="candy__info">
         <div className="candy__tag">{t('Daily horoscope')}</div>
