@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Loader, useTemplateVal, useConfig } from '@dsplay/react-template-utils';
-import Intro from '../intro';
 import i18n from '../../i18n';
 import Clock from '../clock';
 import Quotes from '../quotes';
@@ -9,8 +8,7 @@ import News from '../news';
 import Weather from '../weather';
 import Sponsor from '../sponsor';
 import './style.sass';
-
-const MIN_LOADING_DURATION = 1500;
+import '../../entrance.css';
 
 // c - clock
 // w - weather
@@ -73,8 +71,7 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Loader
-        placeholder={<Intro />}
-        minDuration={MIN_LOADING_DURATION}
+        reveal
       >
         <div className="App block" style={style}>
           {widgets}

@@ -9,8 +9,7 @@ import Laugh from './laugh';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Inter', weight: 500 }, { family: 'Inter', weight: 600 }, { family: 'Inter', weight: 700 }];
 
 const BOX = {
   landscape: {

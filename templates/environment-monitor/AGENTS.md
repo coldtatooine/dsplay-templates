@@ -21,7 +21,6 @@ src/
   components/
     app/                    <-- loader and fonts
     main/                   <-- the dashboard (index.jsx) and its pure helpers (model.js, tested in model.test.js)
-    intro/                  <-- loading placeholder
 scripts/pack.mjs           <-- zips the Vite build output into template.zip
 ```
 

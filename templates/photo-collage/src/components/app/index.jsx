@@ -7,12 +7,10 @@ import {
   useMedia,
   useScreenInfo,
 } from '@dsplay/react-template-utils';
-import Intro from '../intro';
 import Main from '../main';
 import i18n from '../../i18n';
 import './style.sass';
-
-const MIN_LOADING_DURATION = 1500;
+import '../../entrance.css';
 
 function shuffle(array) {
   let currentIndex = array.length;
@@ -64,9 +62,6 @@ function App() {
 
   const imagesToShow = [...images, ...allMediaImages];
 
-  // Pictures of an image media get the collage loader. Pictures of social posts (Instagram) come with no loader at all, like the Instagram templates, whose content just fades in.
-  const fromPosts = images.length === 0 && allMediaImages.length > 0;
-
   // images to preload
   const imagesToLoad = [
     ...imagesToShow,
@@ -94,9 +89,8 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Loader
-        placeholder={fromPosts ? null : <Intro />}
+        reveal
         images={imagesToLoad}
-        minDuration={MIN_LOADING_DURATION}
         tasks={imageTasks}
       >
         <div className={`app fade-in ${screenFormat}`}>

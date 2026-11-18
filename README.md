@@ -58,7 +58,7 @@ The 33 templates (each has its own README with its variables and screen formats)
 | [`weather-forecast`](templates/weather-forecast/) | Weather Forecast Template |
 | [`world-clocks-analog`](templates/world-clocks-analog/) | World Clocks (analog) Template |
 
-Every template shows its own loader while it loads, in the house style of [`docs/loader-style.md`](docs/loader-style.md).
+No template shows a loader screen: each is revealed once its fonts and images are in, with an entrance made of its own components, in the house style of [`docs/entrance-style.md`](docs/entrance-style.md).
 
 ## Everyday commands
 

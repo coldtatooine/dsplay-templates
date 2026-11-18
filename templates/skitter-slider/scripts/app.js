@@ -1,9 +1,5 @@
 "use strict";
 
-// the loader stays at least this long, like the other templates' loaders
-var MIN_LOADING_DURATION = 1500;
-var startedAt = new Date().getTime();
-
 $(document).ready(function () {
   var u = dsplayTemplateUtils;
 
@@ -59,14 +55,13 @@ $(document).ready(function () {
     }
   });
 
-  // the loader goes away when the slider has its pictures (loaded or failed) and the minimum time has passed;
+  // the loader goes away when the slider has its pictures (loaded or failed);
   // Skitter preloads the same pictures, so they come from the cache
   var pending = imagesToShow.length;
-  var minimumPassed = false;
   var hidden = false;
 
   function hideLoader() {
-    if (!hidden && minimumPassed && pending <= 0) {
+    if (!hidden && pending <= 0) {
       hidden = true;
       $('#overlay').fadeOut(500);
     }
@@ -81,8 +76,6 @@ $(document).ready(function () {
     preload.src = image;
   });
 
-  setTimeout(function () {
-    minimumPassed = true;
-    hideLoader();
-  }, Math.max(0, MIN_LOADING_DURATION - (new Date().getTime() - startedAt)));
+  // no picture to wait for: the slider shows at once
+  hideLoader();
 });

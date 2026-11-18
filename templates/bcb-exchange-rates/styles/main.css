@@ -173,7 +173,7 @@ body {
   }
 }
 
-/* The loader: one small mark centred on a black page, no text (docs/loader-style.md). Plain CSS for the old Android WebViews: prefixed flex and animations. */
+/* The cover: a plain black page that scripts/app.js fades out once the page is ready. Plain CSS for the old Android WebViews: prefixed flex. */
 #overlay {
   position: absolute;
   top: 0;
@@ -195,49 +195,5 @@ body {
   -webkit-box-align: center;
   -webkit-align-items: center;
   align-items: center;
-}
-
-@-webkit-keyframes intro-coin {
-  0%, 100% {
-    -webkit-transform: scaleX(1);
-  }
-  50% {
-    -webkit-transform: scaleX(.1);
-  }
-}
-
-@keyframes intro-coin {
-  0%, 100% {
-    transform: scaleX(1);
-  }
-  50% {
-    transform: scaleX(.1);
-  }
-}
-
-/* no motion for those who ask for none: the mark stays as a still picture */
-@media (prefers-reduced-motion: reduce) {
-  #overlay * {
-    -webkit-animation: none !important;
-    animation: none !important;
-  }
-}
-
-@-webkit-keyframes intro-coin {
-  0%, 100% {
-    -webkit-transform: scaleX(1);
-  }
-  50% {
-    -webkit-transform: scaleX(.1);
-  }
-}
-
-@keyframes intro-coin {
-  0%, 100% {
-    transform: scaleX(1);
-  }
-  50% {
-    transform: scaleX(.1);
-  }
 }
 

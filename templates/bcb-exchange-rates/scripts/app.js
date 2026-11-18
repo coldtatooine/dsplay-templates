@@ -1,8 +1,13 @@
 "use strict";
 
-// the loader stays at least this long, like the other templates' loaders
-var MIN_LOADING_DURATION = 1500;
-var startedAt = new Date().getTime();
+// Fonts: the cover waits for them (an old WebView has no document.fonts: a short fixed wait there).
+function whenFontsReady(done) {
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(done, done);
+  } else {
+    setTimeout(done, 300);
+  }
+}
 
 $(function () {
   $('#root').hide();
@@ -30,8 +35,7 @@ $(function () {
 
   $('#root').fadeIn();
 
-  var remaining = Math.max(0, MIN_LOADING_DURATION - (new Date().getTime() - startedAt));
-  setTimeout(function () {
+  whenFontsReady(function () {
     $('#overlay').fadeOut(500);
-  }, remaining);
+  });
 });

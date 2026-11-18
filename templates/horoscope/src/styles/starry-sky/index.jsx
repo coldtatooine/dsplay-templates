@@ -16,8 +16,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Cormorant Garamond', 'Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Cormorant Garamond', weight: 700 }, { family: 'Inter', weight: 500 }, { family: 'Inter', weight: 600 }];
 
 const ELEMENT_COLOR = {
   fire: '#ff8a4c', earth: '#86c76b', air: '#6ec3ff', water: '#7a9cff',

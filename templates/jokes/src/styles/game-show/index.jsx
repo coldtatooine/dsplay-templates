@@ -8,8 +8,7 @@ import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Poppins'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Poppins', weight: 600 }, { family: 'Poppins', weight: 700 }, { family: 'Poppins', weight: 800 }];
 
 const BOX = {
   landscape: {

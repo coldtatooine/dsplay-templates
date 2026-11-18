@@ -12,8 +12,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Poppins'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Poppins', weight: 600 }, { family: 'Poppins', weight: 700 }, { family: 'Poppins', weight: 800 }];
 
 const BOX = {
   landscape: { text: { w: 900, h: 215 }, name: 1136, nameMax: 150, max: 35, min: 16 },

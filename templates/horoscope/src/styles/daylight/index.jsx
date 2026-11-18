@@ -14,8 +14,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Fraunces', 'Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Fraunces', weight: 700 }, { family: 'Inter', weight: 500 }, { family: 'Inter', weight: 600 }];
 
 // the gradient of a tile by element (from, to); `to` is also the accent
 const GRADIENT = {
