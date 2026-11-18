@@ -46,6 +46,7 @@ The 33 templates (each has its own README with its variables and screen formats)
 | [`meeting-room`](templates/meeting-room/) | Meeting Room Template |
 | [`menuboard-featured-products`](templates/menuboard-featured-products/) | Menu Board (Featured Products) Template |
 | [`menuboard-standard`](templates/menuboard-standard/) | Menu Board (Standard) Template |
+| [`menuboard-two-products`](templates/menuboard-two-products/) | Menu Board (two products) Template |
 | [`menuboard`](templates/menuboard/) | Menu Board |
 | [`photo-collage`](templates/photo-collage/) | Photo Collage Template |
 | [`qrcode-wifi`](templates/qrcode-wifi/) | Wi-Fi QR Code Template |
