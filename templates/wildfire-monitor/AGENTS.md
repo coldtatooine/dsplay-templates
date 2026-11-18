@@ -20,7 +20,6 @@ src/
     app/                    <-- loader and fonts
     main/                   <-- the dashboard (index.jsx) and its pure helpers (model.js, tested in model.test.js)
     fire-map/               <-- the map, drawn as SVG from the outlines (outlines-coarse.json, outlines-fine.json)
-    intro/                  <-- loading placeholder
 scripts/pack.mjs           <-- zips the Vite build output into template.zip
 scripts/build-outlines.mjs <-- writes the two outline files from Natural Earth
 ```

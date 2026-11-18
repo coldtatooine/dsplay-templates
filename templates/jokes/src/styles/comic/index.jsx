@@ -8,8 +8,7 @@ import Banner from './banner';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Bangers', 'Fredoka'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Bangers', weight: 400 }, { family: 'Fredoka', weight: 600 }, { family: 'Fredoka', weight: 700 }];
 
 const BOX = {
   landscape: {

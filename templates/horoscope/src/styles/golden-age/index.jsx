@@ -13,8 +13,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Cinzel', 'Cormorant Garamond', 'Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Cinzel', weight: 500 }, { family: 'Cinzel', weight: 700 }, { family: 'Cormorant Garamond', weight: 500 }, { family: 'Inter', weight: 500 }];
 
 const GOLD = '#c9a24c';
 const LIGHT_GOLD = '#e7c673';

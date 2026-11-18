@@ -1,15 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import {
-  Loader, useTemplateVal, useTemplateBoolVal, useConfig, useMedia,
+  Loader, useTemplateVal, useTemplateBoolVal, useConfig, useMedia, LoaderContext,
 } from '@dsplay/react-template-utils';
 import './style.sass';
 import UserProfile from '../user-profile';
 import Posts from '../posts';
-import Intro from '../intro';
 import i18n from '../../i18n';
-
-const MIN_LOADING_DURATION = 1500;
 
 // fonts to preload
 // @font-face's must be defined in fonts.css or another in-use style file
@@ -19,6 +16,13 @@ const fonts = [
 ];
 
 function Content() {
+  const { ready } = useContext(LoaderContext);
+
+  // The fade starts when the Loader reveals the template: started at mount it would run while the template is still hidden.
+  useEffect(() => {
+    if (ready) document.querySelector('.App').classList.add('fadeIn');
+  }, [ready]);
+
   const { orientation, width, height } = useConfig();
   const isVertical = orientation === 'portrait';
 
@@ -44,7 +48,6 @@ function Content() {
   }, [horizontalBackground, verticalBackground, isVertical]);
 
   useEffect(() => {
-    document.querySelector('.App').classList.add('fadeIn');
     document.querySelector('.App').style.opacity = 1;
 
     document.body.style.color = primaryColor;
@@ -99,10 +102,9 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Loader
-        placeholder={<Intro />}
+        reveal
         fonts={fonts}
         images={images}
-        minDuration={MIN_LOADING_DURATION}
       >
         <Content />
       </Loader>

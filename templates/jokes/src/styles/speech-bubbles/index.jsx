@@ -9,8 +9,7 @@ import Face from './face';
 import './fonts.sass';
 import './style.sass';
 
-export const FONTS = ['Fredoka', 'Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Fredoka', weight: 500 }, { family: 'Fredoka', weight: 600 }, { family: 'Fredoka', weight: 700 }, { family: 'Inter', weight: 500 }, { family: 'Inter', weight: 600 }];
 
 // Boxes in design px: the text of the question bubble, the text of the answer bubble and the small question above it
 const BOX = {

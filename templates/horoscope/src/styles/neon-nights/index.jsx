@@ -13,8 +13,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Orbitron', 'Space Grotesk'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Orbitron', weight: 600 }, { family: 'Orbitron', weight: 800 }, { family: 'Space Grotesk', weight: 500 }];
 
 const NEON = {
   fire: '#ff9a3c', earth: '#4dffa0', air: '#3dd9ff', water: '#9d8bff',

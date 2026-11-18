@@ -12,8 +12,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Nunito', 'Fredoka'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Nunito', weight: 700 }, { family: 'Nunito', weight: 800 }, { family: 'Fredoka', weight: 700 }];
 
 const BOX = {
   landscape: { text: { w: 676, h: 215 }, name: 676, nameMax: 100, max: 33, min: 16 },

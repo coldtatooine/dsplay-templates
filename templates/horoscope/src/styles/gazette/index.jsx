@@ -15,8 +15,7 @@ import './fonts.sass';
 import './style.sass';
 
 export const PER_SCREEN = 1;
-export const FONTS = ['Playfair Display', 'Inter'];
-export { default as LOADER } from './loader';
+export const FONTS = [{ family: 'Playfair Display', weight: 500 }, { family: 'Playfair Display', weight: 700 }, { family: 'Inter', weight: 600 }];
 
 const INK = '#1c1a17';
 const RED = '#c8442b';

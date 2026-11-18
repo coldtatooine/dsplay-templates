@@ -10,12 +10,10 @@ import {
 
 import NewsItem from '../news-item';
 import { DEFAULT_BG_COLOR } from '../../util/defaults';
-import Intro from '../intro';
 import i18n from '../../i18n';
 import Debugger from '../debugger';
 import './style.sass';
-
-const MIN_LOADING_DURATION = 1500;
+import '../../entrance.css';
 
 const fonts = [
   'Roboto Condensed',
@@ -43,9 +41,8 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Loader
-        placeholder={<Intro />}
+        reveal
         fonts={fonts}
-        minDuration={MIN_LOADING_DURATION}
       >
         <div className={`app ${screenFormat}`} style={style}>
           <NewsItem />

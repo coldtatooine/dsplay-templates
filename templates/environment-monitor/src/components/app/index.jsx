@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Loader, useConfig, useScreenInfo } from '@dsplay/react-template-utils';
-import Intro from '../intro';
 import Main from '../main';
 import i18n from '../../i18n';
 import './style.sass';
-
-const MIN_LOADING_DURATION = 1500;
 
 // fonts to preload
 // @font-face's must be defined in fonts.sass or another in-use style file
@@ -33,10 +30,9 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Loader
-        placeholder={<Intro />}
+        reveal
         fonts={fonts}
         images={[]}
-        minDuration={MIN_LOADING_DURATION}
       >
         <div className={`app fade-in ${screenFormat}`}>
           <Main />

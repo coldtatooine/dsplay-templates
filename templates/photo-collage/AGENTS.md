@@ -18,9 +18,8 @@ src/
   index.jsx                 <-- React entry point
   setup-tests.js             <-- Vitest setup (referenced by vite.config.js)
   components/
-    app/                      <-- top-level component (loader, images-to-preload, grid shuffle)
+    app/                      <-- top-level component (loader in reveal mode, images-to-preload, grid shuffle)
     main/                     <-- renders GridGallery with the preloaded images
-    intro/                    <-- loading placeholder
 scripts/
   pack.mjs                   <-- zips the Vite build output into template.zip (Windows/macOS/Linux)
 ```
