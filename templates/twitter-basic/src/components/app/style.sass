@@ -2,14 +2,13 @@ html
   width: 100%
   height: 100%
   margin: 0
-  // the loader is a block of the page's own width and height, so the body's padding would make it scroll
+  // the Loader's wrapper is a block of the screen's own width and height: never let the page scroll
   overflow: hidden
   font-size: 2vh
 
 body
   box-sizing: border-box
   margin: 0
-  padding: 2%
   font-family: Roboto, sans-serif
   background-color: black
   color: whitesmoke
@@ -18,6 +17,11 @@ body
   background-image: url('../../images/twitter-basic-background.jpg')
   background-size: cover
   background-position: center
+
+// The 2% margin lives on the Loader's wrapper, not on body: the wrapper is a block of the screen's own size anchored at its corner, so a padding on body would push it off the screen.
+.dsplay-reveal
+  box-sizing: border-box
+  padding: 2%
 
 
 [class^="flaticon-"]:before, [class*=" flaticon-"]:before,

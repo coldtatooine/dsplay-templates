@@ -11,6 +11,9 @@ import { wait } from '../../utils/time';
 
 const style = {
   position: 'absolute',
+  // Anchored: without an offset the wrapper sits at its static position, inside the body's padding, and overflows the screen by that padding.
+  top: 0,
+  left: 0,
   width: '100vw',
   height: '100vh',
   overflow: 'hidden',
