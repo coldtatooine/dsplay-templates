@@ -1,5 +1,4 @@
-import { useTemplateVal } from '@dsplay/react-template-utils';
-import FittedText from '../fitted-text';
+import { FittedText, useTemplateVal } from '@dsplay/react-template-utils';
 import logo from '../../images/ig-logo.png';
 
 function UserProfile({
