@@ -1,4 +1,4 @@
-import FittedText from '../fitted-text';
+import { FittedText } from '@dsplay/react-template-utils';
 
 function UserProfile({
     name,

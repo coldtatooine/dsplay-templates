@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 
 // the search stops when the two sizes are this close, in em
 const PRECISION = 0.02;
@@ -6,11 +6,21 @@ const PRECISION = 0.02;
 const REMEASURE_AFTER = [300, 1000, 2500];
 
 /**
- * A text on one line that takes the space it needs and no more: the font size is the biggest, from `max` down to `min` (in em, of the parent's font size), at which the
- * text, measured as the browser draws it, fits the width its parent gives it. It measures the real element before the first paint, so a long name never wraps over the
- * text below it, and again once the fonts are in (the Loader mounts the template hidden while they load, and a text measured in the fallback font would be cut, or too
- * small, when the real one arrives). If even `min` is too much the text is cut with an ellipsis. The shared `FitText` fills a fixed box with no biggest or smallest size,
- * so it would blow a short name up to the whole box. The same idea as the Holidays template's `FittedText`, in em instead of its design pixels.
+ * A text on one line that takes the space it needs and no more: the font size is the biggest, from `max` down to `min`, at which the text, measured as the browser
+ * draws it, fits the width its parent gives it. It measures the real element before the first paint, so a long name never wraps over the text below it, and again
+ * once the fonts are in (`Loader` mounts the template hidden while they load, and a text measured in the fallback font would be cut, or too small, when the real
+ * one arrives). If even `min` is too much the text is cut with an ellipsis. A short text keeps `max`.
+ *
+ * It differs from `FitText`, which fills a fixed box with no biggest or smallest size and so would blow a short text up to the whole box. The element is a block
+ * as wide as its parent leaves it: give the parent the width the text may use.
+ * @param {object} props
+ * @param {string} props.text - The text, one line
+ * @param {number} props.max - Biggest font size, in em of the parent's font size (the size a short text gets)
+ * @param {number} props.min - Smallest font size, in em of the parent's font size
+ * @param {string} [props.as] - Tag of the element, `span` by default
+ * @param {string} [props.className] - Class applied to the element
+ * @param {React.CSSProperties} [props.style] - Extra styles merged into the element (the size and the one-line rules always win)
+ * @returns {React.ReactElement}
  */
 function FittedText({
   as: Tag = 'span', text, max, min, className = '', style = {},

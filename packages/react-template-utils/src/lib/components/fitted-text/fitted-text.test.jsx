@@ -1,8 +1,9 @@
+import React from 'react';
 import {
   describe, it, expect, afterEach, beforeEach, vi,
 } from 'vitest';
 import { render, cleanup } from '@testing-library/react';
-import FittedText from '.';
+import FittedText from './fitted-text';
 
 // jsdom has no layout: a text is `em * 100` px wide and the box is `boxWidth` px.
 let boxWidth = 200;
@@ -13,8 +14,8 @@ beforeEach(() => {
   vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(() => boxWidth);
 });
 
-function sizeOf(props) {
-  const { container } = render(<FittedText text="A name" max={3} min={1.2} {...props} />);
+function sizeOf() {
+  const { container } = render(<FittedText text="A name" max={3} min={1.2} />);
   return parseFloat(container.firstChild.style.fontSize);
 }
 
@@ -26,19 +27,19 @@ describe('FittedText', () => {
 
   it('keeps the biggest size when the text fits', () => {
     boxWidth = 500;
-    expect(sizeOf({})).toBe(3);
+    expect(sizeOf()).toBe(3);
   });
 
   it('shrinks to the biggest size that fits', () => {
     boxWidth = 200;
-    const size = sizeOf({});
+    const size = sizeOf();
     expect(size).toBeLessThanOrEqual(2);
     expect(size).toBeGreaterThan(1.97);
   });
 
   it('never goes below the smallest size', () => {
     boxWidth = 50;
-    expect(sizeOf({})).toBe(1.2);
+    expect(sizeOf()).toBe(1.2);
   });
 
   it('stays on one line and cuts what does not fit', () => {
