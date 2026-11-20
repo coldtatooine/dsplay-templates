@@ -31,6 +31,7 @@ The 33 templates (each has its own README with its variables and screen formats)
 | [`chamador-loterias-caixa`](templates/chamador-loterias-caixa/) | Chamador Loterias Caixa |
 | [`count-up`](templates/count-up/) | Count Up Template |
 | [`countdown`](templates/countdown/) | Countdown Template |
+| [`currency-quotes`](templates/currency-quotes/) | Currency Quotes: three styles (board, cards, spotlight), one zip each |
 | [`digital-clock-basic`](templates/digital-clock-basic/) | Digital Clock |
 | [`environment-monitor`](templates/environment-monitor/) | Environment Monitor Template |
 | [`facebook-posts`](templates/facebook-posts/) | Facebook Posts Template |
