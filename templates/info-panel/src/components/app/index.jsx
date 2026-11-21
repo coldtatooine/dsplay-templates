@@ -3,8 +3,10 @@ import {
   Loader, useConfig, useMedia, useTemplateVal,
 } from '@dsplay/react-template-utils';
 import { formatOf, isFlat, spotFormatOf } from '../../lib/layout';
+import { scaleOf } from '../../lib/scale';
 import { readPanel } from '../../lib/model';
 import { readSpotlight } from '../../lib/spotlight';
+import { useRotation } from '../../lib/rotation';
 import { lngOf } from '../../lib/strings';
 import {
   Clock, Weather, Quotes, Logo, Slide,
@@ -38,6 +40,8 @@ const FONTS = {
 const FIT = {
   'fmt-slim': { max: 0.78, min: 0.45 }, 'fmt-band': { max: 0.66, min: 0.4 }, 'fmt-landscape': { max: 2.5, min: 0.9 }, 'fmt-square': { max: 2.3, min: 0.9 }, 'fmt-portrait': { max: 2.3, min: 0.9 }, 'fmt-tall': null,
 };
+// how long a slide of the rotating area stays (ms): the media's duration shared among the slides, never more than the maximum nor less than the minimum
+const PANEL_DWELL = { min: 3000, max: 8000 };
 // how much of the strip the rotating area may take, by how many other widgets there are (the horizontal bar's rule: the long text never takes the whole banner)
 const SHARE = [100, 65, 55, 45, 40];
 
@@ -45,13 +49,25 @@ const windowSize = () => [window.innerWidth, window.innerHeight];
 
 /** The format class of the screen for a family's `of` function, again whenever the window is resized. */
 function useFormat(of) {
-  const [format, setFormat] = useState(() => of(...windowSize()));
+  const [size, setSize] = useState(windowSize);
   useEffect(() => {
-    const onResize = () => setFormat(of(...windowSize()));
+    const onResize = () => setSize(windowSize());
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, [of]);
-  return format;
+  }, []);
+  return { format: of(...size), size };
+}
+
+/** Draws its children at the format's reference size and scales them to the real screen (see lib/scale.js). */
+function Scaled({ format, size, children }) {
+  const k = scaleOf(format, size[0], size[1]);
+  if (Math.abs(k - 1) < 0.02) return children;
+  const transform = `scale(${k})`;
+  return (
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ width: size[0] / k, height: size[1] / k, WebkitTransform: transform, transform, WebkitTransformOrigin: '0 0', transformOrigin: '0 0' }}>{children}</div>
+    </div>
+  );
 }
 
 const boxOf = (backgroundColor, color) => (backgroundColor || color ? { backgroundColor: backgroundColor || undefined, color: color || undefined } : undefined);
@@ -63,7 +79,7 @@ function App() {
   const styleVar = useTemplateVal('style', 'classic');
   const style = STYLES.includes(styleVar) ? styleVar : 'classic';
   const spotlightFamily = SPOTLIGHT_STYLES.includes(style);
-  const format = useFormat(spotlightFamily ? spotFormatOf : formatOf);
+  const { format, size } = useFormat(spotlightFamily ? spotFormatOf : formatOf);
   const pin = useTemplateVal('pin') === 'both';
   const bgColor = useTemplateVal('bg_color');
   const bgImage = useTemplateVal('bg_image');
@@ -74,6 +90,7 @@ function App() {
 
   const iteration = media && media.iteration;
   const panel = spotlightFamily ? null : readPanel(media, { lng, iteration });
+  const rotation = useRotation({ phases: panel ? panel.slides.map((s) => s.slots) : [], duration: media && media.duration, iteration, ...PANEL_DWELL });
   const spotlight = spotlightFamily ? readSpotlight(media, { lng, iteration, pin }) : null;
   const flat = isFlat(format);
   const tall = format === 'fmt-tall';
@@ -92,13 +109,13 @@ function App() {
 
   let content = null;
   if (panel) {
-    const { order, widgets, slides, slots } = panel;
+    const { order, widgets, slides } = panel;
     const others = order.filter((k) => k !== 'rot').length;
     const share = SHARE[Math.min(others, 4)];
     const rotStyle = tall ? { maxHeight: `${share}%` } : { maxWidth: `${share}%` };
     const rot = (
-      <div key="rot" className={`rot rot-n${Math.min(Math.max(slots, 1), 7)}`} style={flat ? rotStyle : undefined}>
-        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} delay={`${i * 4}s`} />)}
+      <div key="rot" className="rot" style={flat ? rotStyle : undefined}>
+        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
       </div>
     );
     const fixedWidget = (type, index) => (
@@ -127,18 +144,22 @@ function App() {
   if (spotlightFamily) {
     return (
       <Loader reveal fonts={FONTS[style]}>
+        <Scaled format={format} size={size}>
         {spotlight ? (
-          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} />
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} />
         ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
+        </Scaled>
       </Loader>
     );
   }
   return (
     <Loader reveal fonts={FONTS[style]}>
-      <div className={rootClass} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
-        <div className="bg" style={bgStyle} />
-        {content}
-      </div>
+      <Scaled format={format} size={size}>
+        <div className={rootClass} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
+          <div className="bg" style={bgStyle} />
+          {content}
+        </div>
+      </Scaled>
     </Loader>
   );
 }

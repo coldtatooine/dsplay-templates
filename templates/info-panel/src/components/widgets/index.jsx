@@ -96,13 +96,15 @@ export function Logo({ url, boxStyle }) {
 }
 
 /** One slide of the rotating area: the icon and the tag, then the text, which is fitted to the room it has (a joke shows the question, then the answer). */
-export function Slide({ slide, fit, newsBoxStyle, delay }) {
+export function Slide({
+  slide, fit, newsBoxStyle, active, phase,
+}) {
   // `fit` is null on the tall banner, where a long text wraps over several lines at one size instead of shrinking
   const headline = (value, className, style) => (fit
     ? <FittedText className={className} style={style} text={value} max={fit.max} min={fit.min} />
     : <span className={className} style={style}>{value}</span>);
   return (
-    <div className={`ri ${slide.alt ? 'dbl' : ''} ${slide.sev ? `sev-${slide.sev}` : ''}`} style={{ animationDelay: delay }}>
+    <div className={`ri ${slide.alt ? 'dbl' : ''} ${slide.sev ? `sev-${slide.sev}` : ''} ${active ? 'on' : ''} ${active && phase === 1 ? 'ph1' : ''}`}>
       <div className="rtop">
         {slide.ico && <span className="ico" style={newsBoxStyle}>{slide.logo ? <img src={slide.logo} alt="" /> : 'N'}</span>}
         {slide.tile && (
@@ -116,8 +118,8 @@ export function Slide({ slide, fit, newsBoxStyle, delay }) {
         {slide.big && <span className="big">{slide.big}</span>}
         {slide.alt ? (
           <div className="swap">
-            {headline(slide.headline, 'headline sw-q', { animationDelay: delay })}
-            {headline(slide.alt, 'headline sw-a', { animationDelay: delay })}
+            {headline(slide.headline, 'headline sw-q')}
+            {headline(slide.alt, 'headline sw-a')}
           </div>
         ) : headline(slide.headline, 'headline')}
         {slide.sub && <span className="sub">{slide.sub}</span>}

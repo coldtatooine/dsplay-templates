@@ -4,9 +4,9 @@ import { readSpotlight, chartPoints } from './spotlight';
 const NOW = new Date(2026, 10, 21, 9, 14);
 const answer = () => ({
   result: {
-    order: ['clock', 'weather', 'quotes', 'news', 'holidays', 'countdown', 'jokes', 'logo'],
+    order: ['clock', 'weather', 'quotes', 'news', 'holidays', 'countdown', 'jokes', 'horoscope', 'logo'],
     fixed: ['clock', 'weather', 'quotes', 'logo'],
-    rotating: ['news', 'holidays', 'countdown', 'jokes'],
+    rotating: ['news', 'holidays', 'countdown', 'jokes', 'horoscope'],
     widgets: {
       clock: { type: 'clock', status: 'ok', data: {} },
       weather: {
@@ -24,6 +24,7 @@ const answer = () => ({
       news: { type: 'news', status: 'ok', data: { title: 'Canal 12', items: [{ title: 'Uma notícia', description: 'Detalhe', images: ['https://example.com/a.jpg'] }] } },
       holidays: { type: 'holidays', status: 'ok', data: { date: '2026-11-21', holidays: [{ date: '2026-12-25', name: 'Natal' }, { date: '2027-01-01', name: 'Ano Novo' }, { date: '2026-11-20', name: 'Ontem' }] } },
       countdown: { type: 'countdown', status: 'ok', data: { date: '2026-11-27T00:00', title: 'a Black Friday' } },
+      horoscope: { type: 'horoscope', status: 'ok', data: { signs: [{ sign: 'leo', from: '07-23', to: '08-22', keyword: 'Confiança', text: 'Um bom dia.' }, { sign: 'virgo', keyword: 'Ordem', text: 'Organize-se.' }] } },
       jokes: { type: 'jokes', status: 'ok', data: { jokes: [{ setup: 'Por quê?', punchline: 'Porque sim.' }] } },
       logo: { type: 'logo', status: 'ok', data: { url: 'https://example.com/logo.png' } },
     },
@@ -33,8 +34,13 @@ const answer = () => ({
 describe('readSpotlight', () => {
   it('makes a slide of every widget in the order of the answer, the quotes being one slide', () => {
     const { slides } = readSpotlight(answer(), { lng: 'pt', now: NOW });
-    expect(slides.map((s) => s.kind)).toEqual(['clock', 'weather', 'quotes2', 'news', 'hol', 'count', 'joke', 'logo']);
-    expect(slides.map((s) => s.delay)).toEqual(['0s', '8s', '16s', '24s', '32s', '40s', '48s', '56s']);
+    expect(slides.map((s) => s.kind)).toEqual(['clock', 'weather', 'quotes2', 'news', 'hol', 'count', 'joke', 'horo', 'logo']);
+  });
+
+  it('makes the horoscope slide of the sign being read, with its dates', () => {
+    const horo = readSpotlight(answer(), { lng: 'pt', now: NOW }).slides[7];
+    expect(horo).toMatchObject({ isHoro: true, signName: 'Leão', title: 'Confiança', text: 'Um bom dia.' });
+    expect(horo.tagText).toContain('Leão');
   });
 
   it('reads the weather in detail: the facts, today and the forecast', () => {

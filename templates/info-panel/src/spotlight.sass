@@ -1,11 +1,10 @@
 @use "sass:math"
 // Generated from the approved design (spot.css of the Claude Design canvas, ADR 0070) by converting it to the indented syntax; edit this file from now on.
 // The spotlight family: one widget at a time, with its detail. Flex and margins only, no grid, no gap, no CSS variables (Android 4.4's WebView).
-// Every slide lasts 8 s and the inner animations have an 8 s period too, taking the slide's start as their delay.
+// A slide is on when the rotation (lib/rotation.js) says so; its inner animations play once when it comes on.
 
 // Info panel, spotlight family: one widget at a time, with its detail. Same rules as panel.css: flex and margins only, no grid, no gap, no CSS variables, opacity and transform on HTML boxes only.
 // Formats are classes here (sf-*); in the real template they are aspect-ratio queries. Sizes are em; a format sets the root font-size.
-// Every slide lasts 8 s; the inner animations have an 8 s period too and take the slide's start as their delay, so they replay each time the slide comes back.
 .sp
   position: relative
   overflow: hidden
@@ -23,97 +22,33 @@
   right: 0
   bottom: 0
 // ---------- motion ----------
-@keyframes rise8
+@keyframes rise
   0%
     opacity: 0
     transform: translateY(.7em)
-  8%
-    opacity: 1
-    transform: none
-  92%
-    opacity: 1
-    transform: none
   100%
-    opacity: 0
-@keyframes pop8
-  0%,
-  2%
+    opacity: 1
+    transform: none
+@keyframes pop
+  0%
     opacity: 0
     transform: scale(.6)
-  10%
+  60%
     opacity: 1
     transform: scale(1.06)
-  14%
-    transform: scale(1)
-  92%
+  100%
     opacity: 1
-    transform: none
-  100%
-    opacity: 0
-@keyframes reveal8
-  0%,
-  4%
-    width: 0
-  34%,
-  100%
-    width: 100%
-@keyframes bars8
-  0%,
-  8%
+    transform: scale(1)
+@keyframes bars
+  0%
     transform: scaleX(0)
-  30%,
   100%
     transform: scaleX(1)
-@keyframes odo8
-  0%,
-  25%
-    transform: translateY(0)
-  35%,
-  60%
-    transform: translateY(-33.333%)
-  70%,
+@keyframes slidein
+  0%
+    transform: translateX(.8em)
   100%
-    transform: translateY(-66.667%)
-@keyframes flash8
-  0%,
-  30%
-    background-color: transparent
-  38%,
-  52%
-    background-color: rgba(60,220,140,.4)
-  70%,
-  100%
-    background-color: transparent
-@keyframes flashd8
-  0%,
-  30%
-    background-color: transparent
-  38%,
-  52%
-    background-color: rgba(255,90,110,.4)
-  70%,
-  100%
-    background-color: transparent
-@keyframes swq8
-  0%,
-  46%
-    opacity: 1
     transform: none
-  50%,
-  100%
-    opacity: 0
-    transform: translateY(-.3em)
-@keyframes swa8
-  0%,
-  50%
-    opacity: 0
-    transform: translateY(.4em)
-  54%,
-  96%
-    opacity: 1
-    transform: none
-  100%
-    opacity: 0
 @keyframes kspin
   to
     transform: rotate(360deg)
@@ -144,14 +79,24 @@
   bottom: 0
   display: flex
   opacity: 0
-  animation: sl1 8s ease infinite both
+  visibility: hidden
+  transition: opacity .5s ease, visibility 0s linear .5s
 .sp .a-rise
-  animation: rise8 8s ease infinite both
+  opacity: 0
+
+.sp .slide.on .a-rise
+  animation: rise .7s ease both
 .sp .a-pop
-  animation: pop8 8s ease infinite both
+  opacity: 0
+
+.sp .slide.on .a-pop
+  animation: pop .8s ease both
 .sp .bars
   transform-origin: left center
-  animation: bars8 8s ease infinite both
+  transform: scaleX(0)
+
+.sp .slide.on .bars
+  animation: bars 1s ease .3s both
 .sp .od
   display: inline-block
   height: 1.15em
@@ -160,7 +105,6 @@
   vertical-align: bottom
 .sp .od-in
   display: block
-  animation: odo8 8s ease-in-out infinite
 .sp .ln
   display: block
   height: 1.15em
@@ -523,13 +467,24 @@
   position: relative
   min-width: 0
 .sp .jq
-  animation: swq8 8s linear infinite both
+  opacity: 1
+  transition: opacity .4s ease, transform .4s ease
+
+.sp .slide.ph1 .jq
+  opacity: 0
+  transform: translateY(-.3em)
 .sp .ja
   position: absolute
   left: 0
   top: 0
   right: 0
-  animation: swa8 8s linear infinite both
+  opacity: 0
+  transform: translateY(.4em)
+  transition: opacity .4s ease, transform .4s ease
+
+.sp .slide.ph1 .ja
+  opacity: 1
+  transform: none
 .sp .bigic svg
   display: block
   width: 100%
@@ -1280,41 +1235,18 @@
 .sf-tall .q2n
   display: none
 
-// ---------- the loop, for any number of slides (1 to 11) ----------
-// A slide of N lasts 8 s in a loop of 8N s: it comes in over 0.6 s, holds until 7.4 s and goes out at 8 s. The dot of the slide grows while it is on.
-@for $n from 1 through 11
-  $total: 8 * $n
-  @keyframes sl#{$n}
-    0%
-      opacity: 0
-      transform: translateX(.8em)
-    #{math.div(0.6, $total) * 100}%
-      opacity: 1
-      transform: none
-    #{math.div(7.4, $total) * 100}%
-      opacity: 1
-      transform: none
-    #{math.div(100, $n)}%
-      opacity: 0
-      transform: translateX(-.8em)
-    100%
-      opacity: 0
-  @keyframes dot#{$n}
-    0%
-      opacity: 1
-      transform: scale(1.5)
-    #{math.div(100, $n)}%
-      opacity: 1
-      transform: scale(1.5)
-    #{math.div(100, $n) + .1}%, 100%
-      opacity: .35
-      transform: scale(1)
-  .sp.sn#{$n} .slide
-    animation: sl#{$n} #{$total}s ease infinite both
-  .sp.sn#{$n} .dot
-    animation: dot#{$n} #{$total}s linear infinite both
+// ---------- the loop ----------
+// The slides take turns by script (lib/rotation.js): the one showing has the class `on`, and a joke's second phase `ph1`. The animations inside a slide play once, when it comes on.
+.sp .slide.on
+  opacity: 1
+  visibility: visible
+  transition: opacity .5s ease, visibility 0s
+  animation: slidein .6s ease both
 
-.sp.sn1 .dot.on
+.sp .dot
+  transition: opacity .3s ease, transform .3s ease
+
+.sp .dot.on
   opacity: 1
   transform: scale(1.5)
 

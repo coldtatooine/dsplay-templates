@@ -6,9 +6,9 @@ import {
 const NOW = new Date(2026, 10, 21, 9, 14);
 const answer = (extra = {}) => ({
   result: {
-    order: ['clock', 'weather', 'quotes', 'news', 'holidays', 'countdown', 'jokes', 'logo'],
+    order: ['clock', 'weather', 'quotes', 'news', 'holidays', 'countdown', 'jokes', 'horoscope', 'logo'],
     fixed: ['clock', 'weather', 'quotes', 'logo'],
-    rotating: ['news', 'holidays', 'countdown', 'jokes'],
+    rotating: ['news', 'holidays', 'countdown', 'jokes', 'horoscope'],
     widgets: {
       clock: { type: 'clock', status: 'ok', data: { hour12: false } },
       weather: { type: 'weather', status: 'ok', data: { weather: { city: 'São Paulo', current: { temp: 27.6, icon: 'c02d' } } } },
@@ -17,6 +17,7 @@ const answer = (extra = {}) => ({
       news: { type: 'news', status: 'ok', data: { items: [{ title: 'A', description: '<p>Obra tem 12 km</p>' }, { title: 'B' }] } },
       holidays: { type: 'holidays', status: 'ok', data: { date: '2026-11-21', holidays: [{ date: '2026-11-20', name: 'Consciência Negra' }, { date: '2026-12-25', name: 'Natal' }] } },
       countdown: { type: 'countdown', status: 'ok', data: { date: '2026-11-27T00:00', title: 'a Black Friday' } },
+      horoscope: { type: 'horoscope', status: 'ok', data: { signs: [{ sign: 'leo', from: '07-23', to: '08-22', keyword: 'Confiança', text: 'Um bom dia.' }, { sign: 'virgo', keyword: 'Ordem', text: 'Organize-se.' }] } },
       jokes: { type: 'jokes', status: 'ok', data: { jokes: [{ setup: 'Por quê?', punchline: 'Porque sim.' }] } },
     },
     ...extra,
@@ -31,11 +32,17 @@ describe('readPanel', () => {
 
   it('turns every rotating widget into a slide, a joke taking two turns', () => {
     const panel = readPanel(answer(), { lng: 'pt', now: NOW });
-    expect(panel.slides.map((s) => s.type)).toEqual(['news', 'holiday', 'countdown', 'joke']);
-    expect(panel.slots).toBe(5);
+    expect(panel.slides.map((s) => s.type)).toEqual(['news', 'holiday', 'countdown', 'joke', 'horoscope']);
+    expect(panel.slots).toBe(6);
     expect(panel.slides[1]).toMatchObject({ big: '34', headline: 'dias para Natal' });
     expect(panel.slides[2]).toMatchObject({ big: '5', headline: 'dias para a Black Friday' });
     expect(panel.slides[3]).toMatchObject({ headline: 'Por quê?', alt: 'Porque sim.' });
+  });
+
+  it('reads one sign per showing: the glyph, the name and the text of the day', () => {
+    const first = readPanel(answer(), { lng: 'pt', iteration: 0, now: NOW }).slides[4];
+    expect(first).toMatchObject({ type: 'horoscope', lead: 'Leão', headline: 'Um bom dia.', sub: 'Confiança' });
+    expect(readPanel(answer(), { lng: 'pt', iteration: 1, now: NOW }).slides[4].lead).toBe('Virgem');
   });
 
   it('shows the next headline at each showing', () => {

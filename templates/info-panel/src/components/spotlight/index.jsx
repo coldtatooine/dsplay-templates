@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRotation } from '../../lib/rotation';
 
 // The spotlight family (Claude Design canvas, ADR 0070): one widget at a time, with its detail. Markup and class names as in the approved design; style.sass's sibling spotlight.sass has the looks.
 
@@ -67,6 +68,7 @@ function Hero({ s }) {
   if (s.isBig) return <div className="bignum a-pop">{s.big}</div>;
   if (s.isClock) return <div className="bigtime a-pop">{s.hours}<span className="blink">:</span>{s.minutes}</div>;
   if (s.isLogo) return <div className="slogo biglogo a-pop"><img src={s.url} alt="" /></div>;
+  if (s.isHoro) return <div className="signbox"><div className="sign a-pop"><Icon path={s.icon} /></div><div className="signname a-rise">{s.signName}</div></div>;
   if (s.isJoke) return <div className="bigic a-pop"><Icon path={s.icon} width={1.5} /></div>;
   if (s.isAlert) return <div className="bigic alertic a-pop"><Icon path={s.icon} width={1.6} /></div>;
   return null;
@@ -130,33 +132,36 @@ function Info({ s }) {
       ))}
       {s.isJoke && (
         <div className="jsw">
-          <div className="title jq" style={{ animationDelay: s.delay }}>{s.q}</div>
-          <div className="title ja" style={{ animationDelay: s.delay }}>{s.a}</div>
+          <div className="title jq">{s.q}</div>
+          <div className="title ja">{s.a}</div>
         </div>
       )}
     </div>
   );
 }
 
+// how long a slide stays (ms): the media's duration shared among the slides, never more than the maximum nor less than the minimum (a joke has two phases)
+const SPOT_DWELL = { min: 5000, max: 12000 };
+
 const LAYOUT = { poster: 'lay-overlay', night: 'lay-overlay', cards: 'lay-side', split: 'lay-side', minimal: 'lay-side' };
 
 /** @param {{spotlight: {slides: object[], pinned: object}, style: string, format: string, lng: string}} props */
 export default function Spotlight({
-  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle,
+  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration,
 }) {
   const { slides, pinned } = spotlight;
-  const count = Math.max(slides.length, 1);
+  const { active, phase } = useRotation({ phases: slides.map((s) => (s.isJoke ? 2 : 1)), duration, iteration, ...SPOT_DWELL });
   const hasHead = Boolean(pinned.clock || pinned.logo);
   return (
-    <div className={`sp ${format} st-${style} ${LAYOUT[style]} sn${count} ${hasHead ? 'withhead' : 'nohead'}`} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
+    <div className={`sp ${format} st-${style} ${LAYOUT[style]} ${hasHead ? 'withhead' : 'nohead'}`} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
       <div className="sbg" style={backgroundStyle} />
       <div className="head">
         {pinned.clock ? <PinnedClock lng={lng} {...pinned.clock} /> : <div />}
         {pinned.logo && <div className="slogo" style={logoBoxStyle}><img src={pinned.logo.url} alt="" /></div>}
       </div>
       <div className="stage">
-        {slides.map((s) => (
-          <div className={`slide sl-${s.kind}`} style={{ animationDelay: s.delay }} key={s.key}>
+        {slides.map((s, i) => (
+          <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key}>
             <div className="hero"><Hero s={s} /></div>
             <Info s={s} />
             <span className="sline">{s.line}</span>
@@ -164,7 +169,7 @@ export default function Spotlight({
         ))}
       </div>
       <div className="foot">
-        {slides.map((s, n) => <i key={s.key} className={`dot ${count === 1 ? 'on' : ''}`} style={{ animationDelay: `${n * 8}s` }} />)}
+        {slides.map((s, i) => <i key={s.key} className={`dot ${i === active ? 'on' : ''}`} />)}
       </div>
     </div>
   );
