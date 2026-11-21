@@ -83,6 +83,32 @@ describe('App', () => {
     expect(again.container.querySelector('.wx-t').textContent).toBe('70°F');
   });
 
+  it('draws the spotlight family, one slide per widget, when the style is a spotlight style', () => {
+    screen(1920, 1080, { style: 'poster' });
+    const { container } = render(<App />);
+    expect(container.querySelector('.sp.sf-landscape.st-poster.lay-overlay.sn5.nohead')).not.toBeNull();
+    expect(container.querySelectorAll('.slide')).toHaveLength(5);
+    expect(container.querySelectorAll('.dot')).toHaveLength(5);
+    expect(container.querySelector('.sl-weather .temp').textContent).toBe('21°C');
+  });
+
+  it('draws the animated icons of the forecast and the alert slide of the spotlight', () => {
+    screen(1920, 1080, { style: 'poster' });
+    player.media = { duration: 30000, result: { ...answer, order: ['alerts', 'weather'], rotating: ['alerts'], fixed: ['weather'], widgets: { ...answer.widgets, alerts: { type: 'alerts', status: 'ok', data: { items: [{ id: 'a', event: 'Vendaval', severity: 'extreme', areas: [], expires: '2099-01-01T00:00:00' }] } }, weather: { type: 'weather', status: 'ok', data: { weather: { current: { temp: 20, icon: 'c01d', min: 15, max: 25 }, forecast: [{ date: '2026-11-22', min: 14, max: 22, icon: 'r01d' }] } } } } } };
+    const { container } = render(<App />);
+    expect(container.querySelector('.slide.sl-alert.sev-extreme .alertic')).not.toBeNull();
+    expect(container.querySelectorAll('.sl-weather .dwx .dsun .dray')).toHaveLength(8);
+    expect(container.querySelectorAll('.sl-weather .dwx .ddrops i')).toHaveLength(3);
+  });
+
+  it('pins the clock and the logo to the top bar of the spotlight when the template asks for it', () => {
+    screen(1920, 1080, { style: 'cards', pin: 'both' });
+    const { container } = render(<App />);
+    expect(container.querySelector('.sp.withhead .sclock')).not.toBeNull();
+    expect(container.querySelector('.sp .head .slogo img').getAttribute('src')).toBe('https://example.com/logo.png');
+    expect(container.querySelectorAll('.slide')).toHaveLength(3);
+  });
+
   it('draws only the background when the media carries no panel answer', () => {
     player.media = { duration: 30000 };
     const { container } = render(<App />);

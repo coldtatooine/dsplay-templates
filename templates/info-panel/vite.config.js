@@ -56,6 +56,8 @@ export default defineConfig({
     minify: 'terser',
     // the CSS minifier drops the vendor prefixes the default (modern) target does not need; the oldest players' WebView (Chrome 30) does
     cssTarget: 'chrome30',
+    // every flag stays its own file, so a screen fetches only the flags it shows
+    assetsInlineLimit: 0,
   },
   server: {
     port: 3000,

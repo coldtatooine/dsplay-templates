@@ -2,16 +2,22 @@ import { useEffect, useState } from 'react';
 import {
   Loader, useConfig, useMedia, useTemplateVal,
 } from '@dsplay/react-template-utils';
-import { formatOf, isFlat } from '../../lib/layout';
+import { formatOf, isFlat, spotFormatOf } from '../../lib/layout';
 import { readPanel } from '../../lib/model';
+import { readSpotlight } from '../../lib/spotlight';
 import { lngOf } from '../../lib/strings';
 import {
   Clock, Weather, Quotes, Logo, Slide,
 } from '../widgets';
 import '../../fonts.sass';
+import Spotlight from '../spotlight';
 import '../../style.sass';
+import '../../spotlight.sass';
 
-const STYLES = ['classic', 'terminal', 'glass', 'newsroom', 'paper', 'neon'];
+// the panel family (every widget at once) and the spotlight family (one widget at a time, with its detail)
+const PANEL_STYLES = ['classic', 'terminal', 'glass', 'newsroom', 'paper', 'neon'];
+const SPOTLIGHT_STYLES = ['poster', 'cards', 'split', 'night', 'minimal'];
+const STYLES = [...PANEL_STYLES, ...SPOTLIGHT_STYLES];
 
 // the faces a style draws with, loaded before the template is shown (the bundled ones, see fonts.sass)
 const FONTS = {
@@ -21,6 +27,11 @@ const FONTS = {
   newsroom: [{ family: 'Inter', weight: 700 }, { family: 'Barlow Condensed', weight: 700 }],
   paper: [{ family: 'Inter', weight: 700 }, { family: 'Newsreader', weight: 700 }],
   neon: [{ family: 'Inter', weight: 700 }, { family: 'Space Grotesk', weight: 700 }],
+  poster: [{ family: 'Inter', weight: 700 }],
+  cards: [{ family: 'Inter', weight: 700 }],
+  split: [{ family: 'Inter', weight: 700 }],
+  night: [{ family: 'Inter', weight: 700 }, { family: 'Space Grotesk', weight: 700 }],
+  minimal: [{ family: 'Inter', weight: 700 }, { family: 'Newsreader', weight: 700 }],
 };
 
 // the biggest and the smallest size of the rotating text, in em of its format's type size (the design's FIT table); the tall banner wraps instead
@@ -30,15 +41,16 @@ const FIT = {
 // how much of the strip the rotating area may take, by how many other widgets there are (the horizontal bar's rule: the long text never takes the whole banner)
 const SHARE = [100, 65, 55, 45, 40];
 
-const windowFormat = () => formatOf(window.innerWidth, window.innerHeight);
+const windowSize = () => [window.innerWidth, window.innerHeight];
 
-function useFormat() {
-  const [format, setFormat] = useState(windowFormat);
+/** The format class of the screen for a family's `of` function, again whenever the window is resized. */
+function useFormat(of) {
+  const [format, setFormat] = useState(() => of(...windowSize()));
   useEffect(() => {
-    const onResize = () => setFormat(windowFormat());
+    const onResize = () => setFormat(of(...windowSize()));
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, []);
+  }, [of]);
   return format;
 }
 
@@ -48,9 +60,11 @@ function App() {
   const media = useMedia();
   const { locale } = useConfig();
   const lng = lngOf(locale);
-  const format = useFormat();
   const styleVar = useTemplateVal('style', 'classic');
   const style = STYLES.includes(styleVar) ? styleVar : 'classic';
+  const spotlightFamily = SPOTLIGHT_STYLES.includes(style);
+  const format = useFormat(spotlightFamily ? spotFormatOf : formatOf);
+  const pin = useTemplateVal('pin') === 'both';
   const bgColor = useTemplateVal('bg_color');
   const bgImage = useTemplateVal('bg_image');
   const textColor = useTemplateVal('text_color');
@@ -58,7 +72,9 @@ function App() {
   const newsBox = boxOf(useTemplateVal('rss_logo_box_color'));
   const logoBox = boxOf(useTemplateVal('sponsor_logo_box_color'));
 
-  const panel = readPanel(media, { lng, iteration: media && media.iteration });
+  const iteration = media && media.iteration;
+  const panel = spotlightFamily ? null : readPanel(media, { lng, iteration });
+  const spotlight = spotlightFamily ? readSpotlight(media, { lng, iteration, pin }) : null;
   const flat = isFlat(format);
   const tall = format === 'fmt-tall';
   const fit = FIT[format.split(' ')[0]];
@@ -108,6 +124,15 @@ function App() {
   }
 
   const rootClass = `ip ${format} st-${style} ${flat ? 'flat' : ''} ${panel && panel.widgets.logo ? 'withlogo' : 'nologo'}`;
+  if (spotlightFamily) {
+    return (
+      <Loader reveal fonts={FONTS[style]}>
+        {spotlight ? (
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} />
+        ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
+      </Loader>
+    );
+  }
   return (
     <Loader reveal fonts={FONTS[style]}>
       <div className={rootClass} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
