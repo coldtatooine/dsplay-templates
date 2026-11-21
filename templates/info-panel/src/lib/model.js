@@ -49,17 +49,25 @@ export function weatherKind(icon) {
   return 'cloud';
 }
 
-/** The current weather: the temperature in celsius (the media's values always are), the drawing and the city. */
+/** The unit the widget was set to: `F` (or "Fahrenheit") is Fahrenheit, anything else Celsius. */
+export const unitOf = (value) => (value === 'F' || value === 'Fahrenheit' ? 'F' : 'C');
+
+/** The current weather: the temperature in celsius (the media's values always are), the unit the widget was set to, the drawing and the city. */
 export function readWeather(data) {
   const weather = data && data.weather;
   const current = weather && weather.current;
   const temp = current ? finite(current.temp) : null;
   if (temp === null) return null;
-  return { temp, kind: weatherKind(current.icon), city: text(weather.city) };
+  return {
+    temp, unit: unitOf(data.unit), kind: weatherKind(current.icon), city: text(weather.city),
+  };
 }
 
-/** The temperature as the screen writes it, "28°": in celsius, or converted to fahrenheit when the template asks for it. */
-export const formatTemp = (celsius, unit) => `${Math.round(unit === 'Fahrenheit' ? (celsius * 9) / 5 + 32 : celsius)}°`;
+/** The temperature as the screen writes it: "28°", or "28°C" / "82°F" with its letter, converted to fahrenheit when the unit is F. */
+export const formatTemp = (celsius, unit, letter = false) => {
+  const f = unitOf(unit) === 'F';
+  return `${Math.round(f ? (celsius * 9) / 5 + 32 : celsius)}°${letter ? (f ? 'F' : 'C') : ''}`;
+};
 
 /** Up to two currencies with their price and the day's change; an item without a positive price is dropped. */
 export function readQuotes(data, lng) {

@@ -15,7 +15,7 @@ var dsplay_media = {
       weather: {
         type: 'weather',
         status: 'ok',
-        data: { weather: { city: 'São Paulo', country: 'BR', current: { temp: 28, icon: 'c02d', description: 'Parcialmente nublado' } } },
+        data: { unit: 'C', weather: { city: 'São Paulo', country: 'BR', current: { temp: 28, icon: 'c02d', description: 'Parcialmente nublado' } } },
       },
       quotes: {
         type: 'quotes',
@@ -52,8 +52,6 @@ var dsplay_media = {
 var dsplay_template = {
   // the style: classic, terminal, glass, newsroom, paper or neon
   style: 'classic',
-  // the temperature unit: Celsius or Fahrenheit
-  // weather_unit: 'Fahrenheit',
   // the colors every style can take (leave out to keep the style's own)
   // bg_color: '#0b1d3a',
   // bg_image: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Gradient_Abstract_Background.jpg',

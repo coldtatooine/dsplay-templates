@@ -56,11 +56,11 @@ function WeatherIcon({ kind }) {
   );
 }
 
-export function Weather({ weather, unit, tiles }) {
+export function Weather({ weather, tiles }) {
   return (
     <>
       <WeatherIcon kind={weather.kind} />
-      <span className="wx-t">{formatTemp(weather.temp, unit)}</span>
+      <span className="wx-t">{formatTemp(weather.temp, weather.unit, true)}</span>
       {tiles && weather.city && <span className="wx-p">{weather.city}</span>}
     </>
   );

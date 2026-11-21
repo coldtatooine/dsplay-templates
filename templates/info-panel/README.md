@@ -31,7 +31,6 @@ Only looks. What the panel shows is in the media.
 | Key | Type | Description |
 |---|---|---|
 | `style` | string | `classic` (default), `terminal`, `glass`, `newsroom`, `paper` or `neon`. |
-| `weather_unit` | string | `Celsius` (default) or `Fahrenheit`. |
 | `bg_color` | color | Background color of the whole panel (replaces the style's own background). |
 | `bg_image` | image | Background image of the whole panel (wins over `bg_color`). |
 | `text_color` | color | Text color of the whole panel. |
@@ -41,6 +40,8 @@ Only looks. What the panel shows is in the media.
 | `sponsor_logo_box_color` | color | Background color behind the logo (white by default). |
 
 > Remember to also register these as Template Vars (same name and type) when configuring this template in the DSPLAY CMS.
+
+The temperature unit is not a variable: it is the weather widget's own setting in the media (`C` or `F`), which the answer carries as `widgets.weather.data.unit` (`C` when absent), and the panel writes it with its letter, `28°C` or `82°F`.
 
 ## The answer the media sends
 
