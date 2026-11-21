@@ -86,7 +86,7 @@ describe('App', () => {
   it('draws the spotlight family, one slide per widget, when the style is a spotlight style', () => {
     screen(1920, 1080, { style: 'poster' });
     const { container } = render(<App />);
-    expect(container.querySelector('.sp.sf-landscape.st-poster.lay-overlay.sn5.nohead')).not.toBeNull();
+    expect(container.querySelector('.sp.sf-landscape.st-poster.lay-overlay.nohead')).not.toBeNull();
     expect(container.querySelectorAll('.slide')).toHaveLength(5);
     expect(container.querySelectorAll('.dot')).toHaveLength(5);
     expect(container.querySelector('.sl-weather .temp').textContent).toBe('21°C');

@@ -19,7 +19,7 @@ src/
   components/app/            <-- reads the media and the variables, picks format and style
   components/widgets/        <-- the panel's clock, weather, quotes, logo, one rotating slide
   components/spotlight/      <-- the spotlight family: one slide per widget, dots, pinned top bar
-  style.sass, spotlight.sass <-- the approved design, converted from the Claude Design canvas (the spotlight's loop keyframes are generated for 1-11 slides)
+  style.sass, spotlight.sass <-- the approved design, converted from the Claude Design canvas (rotation is driven by lib/rotation.js, not by CSS keyframes)
   fonts.sass, assets/font/   <-- bundled faces (OFL licenses next to them); no font from the network
   test-support/              <-- mock of @dsplay/react-template-utils for the component tests
 ```

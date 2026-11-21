@@ -41,6 +41,11 @@ body
   align-items: center
   animation: cyc 14s ease infinite both
 // ---------- motion ----------
+@keyframes bargrow
+  0%
+    transform: scaleX(0)
+  100%
+    transform: scaleX(1)
 @keyframes cyc
   0%
     opacity: 0
@@ -55,167 +60,6 @@ body
   100%
     opacity: 0
     transform: translateY(-.3em)
-@keyframes rot2
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  6.25%
-    opacity: 1
-    transform: none
-  43.75%
-    opacity: 1
-    transform: none
-  50%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot3
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  4.17%
-    opacity: 1
-    transform: none
-  29.17%
-    opacity: 1
-    transform: none
-  33.33%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot4
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  3.125%
-    opacity: 1
-    transform: none
-  21.875%
-    opacity: 1
-    transform: none
-  25%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot5
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  2.5%
-    opacity: 1
-    transform: none
-  17.5%
-    opacity: 1
-    transform: none
-  20%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot6
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  2.083%
-    opacity: 1
-    transform: none
-  14.583%
-    opacity: 1
-    transform: none
-  16.667%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot6d
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  2.083%
-    opacity: 1
-    transform: none
-  31.25%
-    opacity: 1
-    transform: none
-  33.33%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes swq
-  0%,
-  46%
-    opacity: 1
-    transform: none
-  50%,
-  100%
-    opacity: 0
-    transform: translateY(-.3em)
-@keyframes swa
-  0%,
-  50%
-    opacity: 0
-    transform: translateY(.4em)
-  54%,
-  96%
-    opacity: 1
-    transform: none
-  100%
-    opacity: 0
-@keyframes rot7
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  1.786%
-    opacity: 1
-    transform: none
-  12.5%
-    opacity: 1
-    transform: none
-  14.286%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes rot7d
-  0%
-    opacity: 0
-    transform: translateY(.45em)
-  1.786%
-    opacity: 1
-    transform: none
-  26.79%
-    opacity: 1
-    transform: none
-  28.57%
-    opacity: 0
-    transform: translateY(-.45em)
-  100%
-    opacity: 0
-@keyframes swq7
-  0%,
-  13.4%
-    opacity: 1
-    transform: none
-  14.29%,
-  100%
-    opacity: 0
-    transform: translateY(-.3em)
-@keyframes swa7
-  0%,
-  14.29%
-    opacity: 0
-    transform: translateY(.4em)
-  15.5%,
-  27.5%
-    opacity: 1
-    transform: none
-  28.57%,
-  100%
-    opacity: 0
 @keyframes odo
   0%,
   25%
@@ -280,11 +124,6 @@ body
   100%
     transform: scale(1)
     opacity: 1
-@keyframes grow
-  0%
-    transform: scaleX(0)
-  100%
-    transform: scaleX(1)
 @keyframes ticker
   0%
     transform: translateX(0)
@@ -457,29 +296,15 @@ body
   display: flex
   align-items: center
   opacity: 0
-.ip .rot-n1 .ri
+  visibility: hidden
+  transform: translateY(.45em)
+  transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s
+
+.ip .ri.on
   opacity: 1
-  animation: cyc 14s ease infinite both
-.ip .rot-n2 .ri
-  animation: rot2 8s linear infinite both
-.ip .rot-n3 .ri
-  animation: rot3 12s linear infinite both
-.ip .rot-n4 .ri
-  animation: rot4 16s linear infinite both
-.ip .rot-n5 .ri
-  animation: rot5 20s linear infinite both
-.ip .rot-n6 .ri
-  animation: rot6 24s linear infinite both
-.ip .rot-n6 .ri.dbl
-  animation: rot6d 24s linear infinite both
-.ip .rot-n7 .ri
-  animation: rot7 28s linear infinite both
-.ip .rot-n7 .ri.dbl
-  animation: rot7d 28s linear infinite both
-.ip .rot-n7 .sw-q
-  animation: swq7 28s linear infinite both
-.ip .rot-n7 .sw-a
-  animation: swa7 28s linear infinite both
+  visibility: visible
+  transform: none
+  transition: opacity .4s ease, transform .4s ease, visibility 0s
 .ip .dbl .bar
   display: none
 .ip .swap
@@ -487,13 +312,24 @@ body
   min-width: 0
   width: 100%
 .ip .sw-q
-  animation: swq 8s linear infinite both
+  opacity: 1
+  transition: opacity .35s ease, transform .35s ease
+
+.ip .ri.ph1 .sw-q
+  opacity: 0
+  transform: translateY(-.3em)
 .ip .sw-a
   position: absolute
   left: 0
   top: 0
   right: 0
-  animation: swa 8s linear infinite both
+  opacity: 0
+  transform: translateY(.4em)
+  transition: opacity .35s ease, transform .35s ease
+
+.ip .ri.ph1 .sw-a
+  opacity: 1
+  transform: none
 .ip .tag
   flex: none
   font-weight: 800
@@ -553,7 +389,10 @@ body
   height: .14em
   border-radius: .1em
   transform-origin: left center
-  animation: grow 4s linear infinite both
+  transform: scaleX(0)
+
+.ip .ri.on .bar
+  animation: bargrow .9s ease .2s both
 .ip .ja .answer
   animation: pop 4s ease both infinite
 // ---------- formats ----------

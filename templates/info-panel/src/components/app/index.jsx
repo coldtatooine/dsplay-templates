@@ -5,6 +5,7 @@ import {
 import { formatOf, isFlat, spotFormatOf } from '../../lib/layout';
 import { readPanel } from '../../lib/model';
 import { readSpotlight } from '../../lib/spotlight';
+import { useRotation } from '../../lib/rotation';
 import { lngOf } from '../../lib/strings';
 import {
   Clock, Weather, Quotes, Logo, Slide,
@@ -38,6 +39,8 @@ const FONTS = {
 const FIT = {
   'fmt-slim': { max: 0.78, min: 0.45 }, 'fmt-band': { max: 0.66, min: 0.4 }, 'fmt-landscape': { max: 2.5, min: 0.9 }, 'fmt-square': { max: 2.3, min: 0.9 }, 'fmt-portrait': { max: 2.3, min: 0.9 }, 'fmt-tall': null,
 };
+// how long a slide of the rotating area stays (ms): the media's duration shared among the slides, never more than the maximum nor less than the minimum
+const PANEL_DWELL = { min: 3000, max: 8000 };
 // how much of the strip the rotating area may take, by how many other widgets there are (the horizontal bar's rule: the long text never takes the whole banner)
 const SHARE = [100, 65, 55, 45, 40];
 
@@ -74,6 +77,7 @@ function App() {
 
   const iteration = media && media.iteration;
   const panel = spotlightFamily ? null : readPanel(media, { lng, iteration });
+  const rotation = useRotation({ phases: panel ? panel.slides.map((s) => s.slots) : [], duration: media && media.duration, iteration, ...PANEL_DWELL });
   const spotlight = spotlightFamily ? readSpotlight(media, { lng, iteration, pin }) : null;
   const flat = isFlat(format);
   const tall = format === 'fmt-tall';
@@ -92,13 +96,13 @@ function App() {
 
   let content = null;
   if (panel) {
-    const { order, widgets, slides, slots } = panel;
+    const { order, widgets, slides } = panel;
     const others = order.filter((k) => k !== 'rot').length;
     const share = SHARE[Math.min(others, 4)];
     const rotStyle = tall ? { maxHeight: `${share}%` } : { maxWidth: `${share}%` };
     const rot = (
-      <div key="rot" className={`rot rot-n${Math.min(Math.max(slots, 1), 7)}`} style={flat ? rotStyle : undefined}>
-        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} delay={`${i * 4}s`} />)}
+      <div key="rot" className="rot" style={flat ? rotStyle : undefined}>
+        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
       </div>
     );
     const fixedWidget = (type, index) => (
@@ -128,7 +132,7 @@ function App() {
     return (
       <Loader reveal fonts={FONTS[style]}>
         {spotlight ? (
-          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} />
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} />
         ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
       </Loader>
     );

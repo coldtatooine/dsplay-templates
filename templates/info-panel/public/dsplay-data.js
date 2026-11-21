@@ -7,9 +7,9 @@ var dsplay_media = {
   duration: 30000,
   iteration: 0,
   result: {
-    order: ['clock', 'weather', 'quotes', 'alerts', 'news', 'holidays', 'countdown', 'jokes', 'logo'],
+    order: ['clock', 'weather', 'quotes', 'alerts', 'news', 'holidays', 'countdown', 'jokes', 'horoscope', 'logo'],
     fixed: ['clock', 'weather', 'quotes', 'logo'],
-    rotating: ['alerts', 'news', 'holidays', 'countdown', 'jokes'],
+    rotating: ['alerts', 'news', 'holidays', 'countdown', 'jokes', 'horoscope'],
     widgets: {
       clock: { type: 'clock', status: 'ok', data: { hour12: false } },
       weather: {
@@ -70,6 +70,18 @@ var dsplay_media = {
         status: 'ok',
         data: { schema: 'jokes/1', jokes: [{ setup: 'Por que o livro de matemática ficou triste?', punchline: 'Porque tinha muitos problemas.' }] },
       },
+      horoscope: {
+        type: 'horoscope',
+        status: 'ok',
+        data: {
+          schema: 'horoscope/1',
+          lang: 'pt',
+          signs: [
+            { sign: 'leo', from: '07-23', to: '08-22', element: 'fire', keyword: 'Confiança', text: 'Seu entusiasmo contagia quem está ao redor. Aproveite a manhã para propor aquela ideia que andava guardada.' },
+            { sign: 'virgo', from: '08-23', to: '09-22', element: 'earth', keyword: 'Organização', text: 'Pequenos ajustes de rotina trazem uma sensação boa de controle. Separe um momento para você.' },
+          ],
+        },
+      },
       logo: { type: 'logo', status: 'ok', data: { url: 'https://developers.dsplay.tv/assets/images/dsplay-logo.png' } },
     },
   },
@@ -110,6 +122,8 @@ var dsplay_config = {
   if (iteration) dsplay_media.iteration = Number(iteration);
   var sev = params.get('sev');
   if (sev) dsplay_media.result.widgets.alerts.data.items[0].severity = sev;
+  var dur = params.get('dur');
+  if (dur) dsplay_media.duration = Number(dur);
   var only = params.get('only');
   if (only) {
     var r = dsplay_media.result;

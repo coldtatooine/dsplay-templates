@@ -8,6 +8,7 @@ import {
 } from './model';
 import { flagUrl } from './flags';
 import { stringsOf } from './strings';
+import { GLYPH, signName, signDates } from './zodiac';
 
 const DAY = 86400000;
 
@@ -181,6 +182,18 @@ const alertSlides = (data, ctx) => {
   });
 };
 
+/** One sign per showing, in turn: the glyph and the name in the hero, the keyword as the title and the text of the day under it. */
+const horoscopeSlide = (data, ctx) => {
+  const entry = pick(Array.isArray(data.signs) ? data.signs.filter((s) => s && GLYPH[s.sign] && text(s.text)) : [], ctx.iteration);
+  if (!entry) return null;
+  const name = signName(entry.sign, ctx.lng);
+  const dates = signDates(entry.from, entry.to, ctx.lng);
+  return {
+    kind: 'horo', isHoro: true, isTitled: true, hasTag: true, signName: name, icon: GLYPH[entry.sign], tagText: [ctx.t.horoscope, name, dates].filter(Boolean).join(' \u00b7 '),
+    title: text(entry.keyword) || name, text: text(entry.text), line: `${name}: ${text(entry.keyword) || text(entry.text)}`,
+  };
+};
+
 const logoSlide = (data) => (text(data.url) ? { kind: 'logo', isLogo: true, url: data.url, line: '' } : null);
 
 /**
@@ -218,6 +231,7 @@ export function readSpotlight(media, {
     else if (type === 'holidays') slide = holidaysSlide(data, ctx);
     else if (type === 'countdown' || type === 'countup') slide = counterSlide(type, data, ctx);
     else if (type === 'jokes') slide = jokeSlide(data, ctx);
+    else if (type === 'horoscope') slide = horoscopeSlide(data, ctx);
     else if (type === 'clock') slide = clockSlide(data, ctx);
     else if (type === 'logo') slide = logoSlide(data);
     if (slide) slides.push({ ...slide, key: id, delay: `${slides.length * 8}s` });

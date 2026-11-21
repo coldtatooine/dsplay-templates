@@ -7,6 +7,7 @@
 // jokes/1) or, for the logo, the clock and the counters, the widget's own config. A widget that failed is not listed, so a missing widget is "off or failed", never an error.
 
 import { stringsOf } from './strings';
+import { GLYPH, signName } from './zodiac';
 
 const DAY = 86400000;
 
@@ -168,6 +169,12 @@ const slideOf = (type, id, data, ctx) => {
     const days = Math.floor(Math.abs(type === 'countdown' ? when - ctx.now : ctx.now - when) / DAY);
     if ((type === 'countdown' && when < ctx.now) || (type === 'countup' && when > ctx.now)) return null;
     return { type, tag: t[type], tile: PATH[type], big: String(days), headline: `${type === 'countdown' ? t.daysTo : t.days} ${text(data.title)}`, sub: dateLabel(when, ctx.lng), slots: 1 };
+  }
+  if (type === 'horoscope') {
+    const entry = pick(Array.isArray(data.signs) ? data.signs.filter((s) => s && GLYPH[s.sign] && text(s.text)) : [], ctx.iteration);
+    if (!entry) return null;
+    const name = signName(entry.sign, ctx.lng);
+    return { type: 'horoscope', tag: `${t.horoscope} · ${name}`, lead: name, tile: GLYPH[entry.sign], headline: text(entry.text), sub: text(entry.keyword), slots: 1 };
   }
   if (type === 'jokes') {
     const joke = pick(Array.isArray(data.jokes) ? data.jokes.filter((j) => j && text(j.setup) && text(j.punchline)) : [], ctx.iteration);
