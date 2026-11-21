@@ -22,6 +22,7 @@ It is the template of the **Information panel** media (`HORIZONTAL_INFO_BAR`). T
 - **Six styles:** `classic`, `terminal`, `glass`, `newsroom`, `paper`, `neon`.
 - **Fitted text.** A headline, a joke or a holiday name takes the biggest size, down to a minimum, at which it fits one line (`FittedText`); on the tall banner it wraps instead.
 - **The customer's order.** The widgets come in the order the media sets; the rotating widgets (news, holidays, counters, jokes) share one area that sits where the first of them was put, each taking a turn (4 s, a joke takes two).
+- **Weather alerts** (the `alerts` widget, from the Environment monitor's service): one slide per active alert, moderate or worse, the most severe first; the tag and the icon wear the severity color (yellow, orange, red). With no alert active the widget is left out and takes no room.
 - **A widget that failed is left out**; the panel plays with the rest.
 
 ## Template variables
