@@ -4,7 +4,7 @@
 // the counters, a joke. Every widget that plays is a slide, in the order the media sets; the quotes of the two currencies are one slide. A widget that failed, or that has nothing to show, is left out.
 
 import {
-  bodyOf, typeOfId, weatherKind, formatTemp, pick, shorten,
+  bodyOf, typeOfId, weatherKind, formatTemp, unitOf, pick, shorten,
 } from './model';
 import { flagUrl } from './flags';
 import { stringsOf } from './strings';
@@ -53,6 +53,7 @@ export function chartPoints(series) {
 }
 
 const weatherSlide = (data, ctx) => {
+  const unit = unitOf(data.unit);
   const w = data.weather;
   const current = w && w.current;
   const temp = current && num(current.temp);
@@ -67,18 +68,18 @@ const weatherSlide = (data, ctx) => {
   const forecast = Array.isArray(w.forecast) ? w.forecast : [];
   const todayMin = num(current.min);
   const todayMax = num(current.max);
-  if (todayMin !== null && todayMax !== null) days.push({ d: ctx.t.today, hi: formatTemp(todayMax, ctx.unit), lo: formatTemp(todayMin, ctx.unit), path: KIND_ICON[kind] });
+  if (todayMin !== null && todayMax !== null) days.push({ d: ctx.t.today, hi: formatTemp(todayMax, unit), lo: formatTemp(todayMin, unit), path: KIND_ICON[kind] });
   forecast.slice(0, 5 - days.length).forEach((day) => {
     const date = localDate(day.date);
     if (!date || num(day.max) === null || num(day.min) === null) return;
-    days.push({ d: long(date, ctx.lng, { weekday: 'short' }).replace(/\./g, ''), hi: formatTemp(day.max, ctx.unit), lo: formatTemp(day.min, ctx.unit), path: KIND_ICON[weatherKind(day.icon)] });
+    days.push({ d: long(date, ctx.lng, { weekday: 'short' }).replace(/\./g, ''), hi: formatTemp(day.max, unit), lo: formatTemp(day.min, unit), path: KIND_ICON[weatherKind(day.icon)] });
   });
   days.forEach((day, n) => { day.delay = `${0.3 + n * 0.12}s`; });
   const city = text(w.city);
   const description = text(current.description);
   return {
-    kind: 'weather', isWeather: true, hasTag: true, hasFacts: facts.length > 0, wx: kind, icon: ICON.weather, tagText: city || ctx.t.weather, temp: formatTemp(temp, ctx.unit), text: description, facts, days,
-    line: [city, formatTemp(temp, ctx.unit), description].filter(Boolean).join(' · '),
+    kind: 'weather', isWeather: true, hasTag: true, hasFacts: facts.length > 0, wx: kind, icon: ICON.weather, tagText: city || ctx.t.weather, temp: formatTemp(temp, unit, true), text: description, facts, days,
+    line: [city, formatTemp(temp, unit, true), description].filter(Boolean).join(' · '),
   };
 };
 
@@ -163,14 +164,14 @@ const logoSlide = (data) => (text(data.url) ? { kind: 'logo', isLogo: true, url:
  * dots' count. Returns null when the answer is not a panel's.
  */
 export function readSpotlight(media, {
-  lng = 'en', iteration = 0, now = new Date(), unit = 'Celsius', pin = false,
+  lng = 'en', iteration = 0, now = new Date(), pin = false,
 } = {}) {
   const body = bodyOf(media);
   if (!body) return null;
   const fixed = Array.isArray(body.fixed) ? body.fixed : [];
   const rotating = Array.isArray(body.rotating) ? body.rotating : [];
   const ids = Array.isArray(body.order) ? body.order.filter((id) => fixed.includes(id) || rotating.includes(id)) : [...fixed, ...rotating];
-  const ctx = { lng, iteration, now, unit, t: stringsOf(lng) };
+  const ctx = { lng, iteration, now, t: stringsOf(lng) };
   const slides = [];
   const pinned = {};
   ids.forEach((id) => {

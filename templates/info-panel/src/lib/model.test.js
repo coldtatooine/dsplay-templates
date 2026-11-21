@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  readPanel, bodyOf, weatherKind, readQuotes, formatTemp, shorten, pick, typeOfId,
+  readPanel, bodyOf, weatherKind, readQuotes, formatTemp, readWeather, shorten, pick, typeOfId,
 } from './model';
 
 const NOW = new Date(2026, 10, 21, 9, 14);
@@ -77,9 +77,19 @@ describe('pieces', () => {
     expect(['c01d', 'c02n', 't04d', 'r01d', 's01d', 'a01d', 'c04d', undefined].map(weatherKind)).toEqual(['sun', 'partly', 'storm', 'rain', 'snow', 'fog', 'cloud', 'cloud']);
   });
 
-  it('writes the temperature in celsius or fahrenheit', () => {
-    expect(formatTemp(27.6, 'Celsius')).toBe('28°');
-    expect(formatTemp(0, 'Fahrenheit')).toBe('32°');
+  it('writes the temperature in celsius or fahrenheit, with its letter when asked', () => {
+    expect(formatTemp(27.6, 'C')).toBe('28°');
+    expect(formatTemp(0, 'F')).toBe('32°');
+    expect(formatTemp(27.6, 'C', true)).toBe('28°C');
+    expect(formatTemp(27.6, 'F', true)).toBe('82°F');
+    expect(formatTemp(0, 'Fahrenheit', true)).toBe('32°F');
+  });
+
+  it('reads the unit the weather widget was set to, Celsius when it names none', () => {
+    const weather = { weather: { city: 'Lisboa', current: { temp: 21, icon: 'c01d' } } };
+    expect(readWeather({ ...weather, unit: 'F' })).toMatchObject({ temp: 21, unit: 'F', kind: 'sun', city: 'Lisboa' });
+    expect(readWeather(weather).unit).toBe('C');
+    expect(readWeather({ weather: { current: {} } })).toBeNull();
   });
 
   it('reads two currencies with their change and drops the ones without a price', () => {

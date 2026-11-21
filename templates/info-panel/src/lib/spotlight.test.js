@@ -39,10 +39,19 @@ describe('readSpotlight', () => {
 
   it('reads the weather in detail: the facts, today and the forecast', () => {
     const weather = readSpotlight(answer(), { lng: 'pt', now: NOW }).slides[1];
-    expect(weather).toMatchObject({ temp: '28°', wx: 'partly', tagText: 'São Paulo', text: 'Parcialmente nublado' });
+    expect(weather).toMatchObject({ temp: '28°C', wx: 'partly', tagText: 'São Paulo', text: 'Parcialmente nublado' });
     expect(weather.facts.map((f) => f.v)).toEqual(['62%', '14 km/h', '05:40', '18:20']);
     expect(weather.days.map((d) => [d.hi, d.lo])).toEqual([['29°', '21°'], ['27°', '20°'], ['26°', '19°']]);
     expect(weather.days[0].d).toBe('Hoje');
+  });
+
+  it('writes the temperature in Fahrenheit, with its letter, when the widget was set to F', () => {
+    const base = answer();
+    base.result.widgets.weather.data.unit = 'F';
+    const weather = readSpotlight(base, { lng: 'pt', now: NOW }).slides[1];
+    expect(weather.temp).toBe('82°F');
+    expect(weather.days[0]).toMatchObject({ hi: '84°', lo: '70°' });
+    expect(weather.line).toBe('São Paulo · 82°F · Parcialmente nublado');
   });
 
   it('draws the chart only for a currency that has a series', () => {

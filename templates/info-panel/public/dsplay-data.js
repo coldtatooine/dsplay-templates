@@ -16,6 +16,7 @@ var dsplay_media = {
         type: 'weather',
         status: 'ok',
         data: {
+          unit: 'C', // 'F' for Fahrenheit: the unit the media's weather widget was set to
           weather: {
             city: 'São Paulo',
             country: 'BR',
@@ -70,8 +71,6 @@ var dsplay_template = {
   style: 'classic',
   // the style: the panel family (classic, terminal, glass, newsroom, paper, neon) or the spotlight family (poster, cards, split, night, minimal)
   // pin: 'both' keeps the clock and the logo on the top bar of a spotlight instead of making them slides
-  // the temperature unit: Celsius or Fahrenheit
-  // weather_unit: 'Fahrenheit',
   // the colors every style can take (leave out to keep the style's own)
   // bg_color: '#0b1d3a',
   // bg_image: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Gradient_Abstract_Background.jpg',

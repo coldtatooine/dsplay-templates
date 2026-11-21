@@ -38,7 +38,7 @@ describe('App', () => {
     const { container } = render(<App />);
     expect(container.querySelector('.ip.fmt-slim.s120.st-classic.flat')).not.toBeNull();
     expect(container.querySelector('.wk-clock')).not.toBeNull();
-    expect(container.querySelector('.wk-weather .wx-t').textContent).toBe('21°');
+    expect(container.querySelector('.wk-weather .wx-t').textContent).toBe('21°C');
     expect([...container.querySelectorAll('.q-c')].map((n) => n.textContent)).toEqual(['USD', 'EUR']);
     expect(container.querySelector('.wk-logo img').getAttribute('src')).toBe('https://example.com/logo.png');
     expect(container.querySelector('.rot .headline').textContent).toBe('Uma notícia');
@@ -74,10 +74,13 @@ describe('App', () => {
     expect(container.querySelector('.ip').className).toContain('st-classic');
   });
 
-  it('shows the temperature in fahrenheit when the template asks for it', () => {
-    screen(1920, 120, { weather_unit: 'Fahrenheit' });
-    const { container } = render(<App />);
-    expect(container.querySelector('.wx-t').textContent).toBe('70°');
+  it('writes the temperature with the unit the media set, C by default', () => {
+    const { container, unmount } = render(<App />);
+    expect(container.querySelector('.wx-t').textContent).toBe('21°C');
+    unmount();
+    player.media = { duration: 30000, result: { ...answer, widgets: { ...answer.widgets, weather: { ...answer.widgets.weather, data: { ...answer.widgets.weather.data, unit: 'F' } } } } };
+    const again = render(<App />);
+    expect(again.container.querySelector('.wx-t').textContent).toBe('70°F');
   });
 
   it('draws the spotlight family, one slide per widget, when the style is a spotlight style', () => {
@@ -86,7 +89,7 @@ describe('App', () => {
     expect(container.querySelector('.sp.sf-landscape.st-poster.lay-overlay.sn5.nohead')).not.toBeNull();
     expect(container.querySelectorAll('.slide')).toHaveLength(5);
     expect(container.querySelectorAll('.dot')).toHaveLength(5);
-    expect(container.querySelector('.sl-weather .temp').textContent).toBe('21°');
+    expect(container.querySelector('.sl-weather .temp').textContent).toBe('21°C');
   });
 
   it('pins the clock and the logo to the top bar of the spotlight when the template asks for it', () => {

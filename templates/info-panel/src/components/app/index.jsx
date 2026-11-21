@@ -68,14 +68,13 @@ function App() {
   const bgColor = useTemplateVal('bg_color');
   const bgImage = useTemplateVal('bg_image');
   const textColor = useTemplateVal('text_color');
-  const unit = useTemplateVal('weather_unit', 'Celsius');
   const quoteBox = boxOf(useTemplateVal('currency_box_color'), useTemplateVal('currency_text_color'));
   const newsBox = boxOf(useTemplateVal('rss_logo_box_color'));
   const logoBox = boxOf(useTemplateVal('sponsor_logo_box_color'));
 
   const iteration = media && media.iteration;
   const panel = spotlightFamily ? null : readPanel(media, { lng, iteration });
-  const spotlight = spotlightFamily ? readSpotlight(media, { lng, iteration, unit, pin }) : null;
+  const spotlight = spotlightFamily ? readSpotlight(media, { lng, iteration, pin }) : null;
   const flat = isFlat(format);
   const tall = format === 'fmt-tall';
   const fit = FIT[format.split(' ')[0]];
@@ -105,7 +104,7 @@ function App() {
     const fixedWidget = (type, index) => (
       <div key={type} className={`w wk-${type}`} style={{ animationDelay: `${index * 0.12}s` }}>
         {type === 'clock' && <Clock lng={lng} {...widgets.clock} />}
-        {type === 'weather' && <Weather weather={widgets.weather} unit={unit} tiles={!flat} />}
+        {type === 'weather' && <Weather weather={widgets.weather} tiles={!flat} />}
         {type === 'quotes' && <Quotes quotes={widgets.quotes} boxStyle={quoteBox} />}
       </div>
     );
