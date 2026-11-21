@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatOf, isFlat } from './layout';
+import { formatOf, isFlat, spotFormatOf } from './layout';
 
 describe('formatOf', () => {
   it('knows the formats of the design', () => {
@@ -20,5 +20,13 @@ describe('formatOf', () => {
   it('puts the strips and the banners in one list, the rest in tiles', () => {
     expect(['fmt-slim s120', 'fmt-band', 'fmt-tall'].every(isFlat)).toBe(true);
     expect(['fmt-landscape', 'fmt-square', 'fmt-portrait'].some(isFlat)).toBe(false);
+  });
+});
+
+describe('spotFormatOf', () => {
+  it('knows the formats of the spotlight design', () => {
+    expect([[1920, 480], [1920, 320], [1920, 240], [1920, 192], [1920, 81], [1920, 1080], [1080, 1080], [1080, 1920], [320, 1080]].map(([w, h]) => spotFormatOf(w, h))).toEqual([
+      'sf-band b4', 'sf-band b6', 'sf-band b8', 'sf-band b10', 'sf-slim', 'sf-landscape', 'sf-square', 'sf-portrait', 'sf-tall',
+    ]);
   });
 });

@@ -2,7 +2,7 @@
 //
 // `dsplay_media.result` is what the DSPLAY player gateway answers for an Information panel media: the widgets that play (`order`), split into `fixed` (side by side) and `rotating`
 // (taking turns in the long area), and, by id, the body of each widget's own provider. To try another screen from the dev server add ?size=1920x120 (also 1920x81, 1920x56, 1920x240,
-// 1080x1080, 1080x1920, 320x1080), ?style=classic|terminal|glass|newsroom|paper|neon, ?locale=en, ?iteration=N (the next headline, joke), ?few=1 (only a clock and the news).
+// 1080x1080, 1080x1920, 320x1080), ?style=classic|terminal|glass|newsroom|paper|neon|poster|cards|split|night|minimal, ?pin=both (spotlight), ?locale=en, ?iteration=N (the next headline, joke), ?few=1 (only a clock and the news), ?only=weather|quotes|news|holidays|countdown|jokes|clock|logo (one widget).
 var dsplay_media = {
   duration: 30000,
   iteration: 0,
@@ -15,12 +15,28 @@ var dsplay_media = {
       weather: {
         type: 'weather',
         status: 'ok',
-        data: { weather: { city: 'São Paulo', country: 'BR', current: { temp: 28, icon: 'c02d', description: 'Parcialmente nublado' } } },
+        data: {
+          weather: {
+            city: 'São Paulo',
+            country: 'BR',
+            current: { temp: 28, icon: 'c02d', description: 'Parcialmente nublado', humidity: 62, wind: 3.9, min: 21, max: 29, sunrise: '05:40', sunset: '18:20' },
+            forecast: [
+              { date: '2026-11-22', min: 20, max: 27, icon: 'c04d' },
+              { date: '2026-11-23', min: 19, max: 26, icon: 'r01d' },
+              { date: '2026-11-24', min: 20, max: 28, icon: 'c04d' },
+              { date: '2026-11-25', min: 22, max: 30, icon: 'c01d' },
+            ],
+          },
+        },
       },
       quotes: {
         type: 'quotes',
         status: 'ok',
-        data: { schema: 'currency-quotes/1', base: 'BRL', items: [{ code: 'USD', price: 5.13, changePct: 0.4 }, { code: 'EUR', price: 5.56, changePct: -0.3 }] },
+        data: { schema: 'currency-quotes/1', base: 'BRL', items: [
+            { code: 'USD', name: 'US Dollar', price: 5.13, changePct: 0.4, series: [5.21, 5.18, 5.12, 5.08, 5.1, 5.04, 5.02, 5.07, 5.11, 5.13] },
+            { code: 'EUR', name: 'Euro', price: 5.56, changePct: -0.3, series: [5.48, 5.52, 5.6, 5.66, 5.62, 5.58, 5.6, 5.57, 5.58, 5.56] },
+          ],
+        },
       },
       news: {
         type: 'news',
@@ -28,7 +44,7 @@ var dsplay_media = {
         data: {
           title: 'Notícias',
           items: [
-            { title: 'Prefeitura inaugura nova ciclovia na zona sul da cidade', description: 'A obra tem 12 km e liga três bairros; a abertura é neste sábado.' },
+            { title: 'Prefeitura inaugura nova ciclovia na zona sul da cidade', description: 'A obra tem 12 km e liga três bairros; a abertura é neste sábado.', images: ['https://upload.wikimedia.org/wikipedia/commons/4/48/Gradient_Abstract_Background.jpg'] },
             { title: 'Feira de tecnologia reúne mais de 300 expositores', description: 'O evento segue até domingo, com entrada gratuita.' },
           ],
         },
@@ -36,7 +52,7 @@ var dsplay_media = {
       holidays: {
         type: 'holidays',
         status: 'ok',
-        data: { schema: 'holidays/1', date: '2026-11-21', holidays: [{ date: '2026-12-25', name: 'Natal' }, { date: '2027-01-01', name: 'Ano Novo' }] },
+        data: { schema: 'holidays/1', date: '2026-11-21', holidays: [{ date: '2026-12-25', name: 'Natal' }, { date: '2027-01-01', name: 'Confraternização Universal' }, { date: '2027-02-09', name: 'Carnaval' }] },
       },
       countdown: { type: 'countdown', status: 'ok', data: { date: '2026-11-27T00:00', title: 'a Black Friday' } },
       jokes: {
@@ -52,6 +68,8 @@ var dsplay_media = {
 var dsplay_template = {
   // the style: classic, terminal, glass, newsroom, paper or neon
   style: 'classic',
+  // the style: the panel family (classic, terminal, glass, newsroom, paper, neon) or the spotlight family (poster, cards, split, night, minimal)
+  // pin: 'both' keeps the clock and the logo on the top bar of a spotlight instead of making them slides
   // the temperature unit: Celsius or Fahrenheit
   // weather_unit: 'Fahrenheit',
   // the colors every style can take (leave out to keep the style's own)
@@ -76,10 +94,19 @@ var dsplay_config = {
   var params = new URLSearchParams(window.location.search);
   var style = params.get('style');
   if (style) dsplay_template.style = style;
+  var pin = params.get('pin');
+  if (pin) dsplay_template.pin = pin;
   var locale = params.get('locale');
   if (locale) dsplay_config.locale = locale;
   var iteration = params.get('iteration');
   if (iteration) dsplay_media.iteration = Number(iteration);
+  var only = params.get('only');
+  if (only) {
+    var r = dsplay_media.result;
+    r.order = [only];
+    r.fixed = r.fixed.indexOf(only) >= 0 ? [only] : [];
+    r.rotating = r.rotating.indexOf(only) >= 0 ? [only] : [];
+  }
   if (params.get('few')) {
     dsplay_media.result.order = ['clock', 'news'];
     dsplay_media.result.fixed = ['clock'];

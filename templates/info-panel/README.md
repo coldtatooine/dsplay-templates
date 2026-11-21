@@ -19,10 +19,11 @@ It is the template of the **Information panel** media (`HORIZONTAL_INFO_BAR`). T
   | Landscape, square, portrait | the widgets as translucent tiles, the rotating text large |
   | Tall banner, 3:1 or taller (320x1080) | one column; a long text wraps over several lines |
 
-- **Six styles:** `classic`, `terminal`, `glass`, `newsroom`, `paper`, `neon`.
+- **Two families, eleven styles.** The **panel** shows every widget at once (`classic`, `terminal`, `glass`, `newsroom`, `paper`, `neon`). The **spotlight** shows one widget at a time, with its detail (`poster`, `cards`, `split`, `night`, `minimal`): a photo for the news, the forecast and the facts for the weather, both currencies with their 30-day charts, the next three holidays, the counters, the joke. Each slide lasts 8 s; the dots at the foot tell which one it is. On a strip 14:1 or longer a spotlight is too thin for detail and shows one line.
 - **Fitted text.** A headline, a joke or a holiday name takes the biggest size, down to a minimum, at which it fits one line (`FittedText`); on the tall banner it wraps instead.
 - **The customer's order.** The widgets come in the order the media sets; the rotating widgets (news, holidays, counters, jokes) share one area that sits where the first of them was put, each taking a turn (4 s, a joke takes two).
 - **A widget that failed is left out**; the panel plays with the rest.
+- **Charts need a series.** The spotlight draws a currency's chart, minimum and maximum only when its `items[].series` is in the answer; the quotes widget of the bar is chartless by design (ADR 0070), so it shows the two prices and changes without them.
 
 ## Template variables
 
@@ -30,7 +31,8 @@ Only looks. What the panel shows is in the media.
 
 | Key | Type | Description |
 |---|---|---|
-| `style` | string | `classic` (default), `terminal`, `glass`, `newsroom`, `paper` or `neon`. |
+| `style` | string | `classic` (default), `terminal`, `glass`, `newsroom`, `paper`, `neon` (the panel), or `poster`, `cards`, `split`, `night`, `minimal` (the spotlight). |
+| `pin` | string | Spotlight only: `both` keeps the clock and the logo on the top bar instead of making them slides of the loop. |
 | `weather_unit` | string | `Celsius` (default) or `Fahrenheit`. |
 | `bg_color` | color | Background color of the whole panel (replaces the style's own background). |
 | `bg_image` | image | Background image of the whole panel (wins over `bg_color`). |
@@ -66,7 +68,7 @@ npm install                       # once
 npm start -- --filter=dsplay-template-info-panel
 ```
 
-`public/dsplay-data.js` defines the mock `dsplay_config`/`dsplay_media`/`dsplay_template` globals used only outside the DSPLAY app. The dev server takes `?style=newsroom`, `?locale=en`, `?iteration=1` (the next headline or joke) and `?few=1` (only a clock and the news); resize the window to try a format.
+`public/dsplay-data.js` defines the mock `dsplay_config`/`dsplay_media`/`dsplay_template` globals used only outside the DSPLAY app. The dev server takes `?style=newsroom` (or `poster`...), `?pin=both`, `?only=weather` (one widget), `?locale=en`, `?iteration=1` (the next headline or joke) and `?few=1` (only a clock and the news); resize the window to try a format.
 
 ## Packing (release build)
 

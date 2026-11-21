@@ -25,3 +25,22 @@ export function formatOf(width, height) {
 
 /** True for the formats that lay the widgets out in one list (the strips and the two banners), false for the ones that group them in tiles. */
 export const isFlat = (format) => /fmt-(slim|band|tall)/.test(format);
+
+/**
+ * The format class of the spotlight family, which tells the horizontal banners apart by their height (the design draws 1920x480, x320, x240 and x192):
+ * `sf-slim` from 14:1 (too thin for a spotlight: one line), `sf-band b10`/`b8`/`b6`/`b4` from 9:1, 7:1, 5:1 and 3.5:1, then the same tiles and column as the panel.
+ */
+export function spotFormatOf(width, height) {
+  const w = Number(width) > 0 ? Number(width) : 1920;
+  const h = Number(height) > 0 ? Number(height) : 1080;
+  const ratio = w / h;
+  if (ratio >= 14) return 'sf-slim';
+  if (ratio >= 9) return 'sf-band b10';
+  if (ratio >= 7) return 'sf-band b8';
+  if (ratio >= 5) return 'sf-band b6';
+  if (ratio >= 3.5) return 'sf-band b4';
+  if (ratio >= 1.2) return 'sf-landscape';
+  if (ratio >= 0.85) return 'sf-square';
+  if (ratio > 1 / 3) return 'sf-portrait';
+  return 'sf-tall';
+}

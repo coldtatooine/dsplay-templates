@@ -12,11 +12,14 @@ The DSPLAY **Information Panel** template: one responsive layout (a strip, a ban
 public/dsplay-data.js        <-- mock DSPLAY data for local development (a full answer)
 src/
   lib/model.js               <-- the answer -> widgets and slides (pure, tested)
-  lib/layout.js              <-- width x height -> format class (pure, tested)
+  lib/layout.js              <-- width x height -> format class, for each family (pure, tested)
+  lib/spotlight.js           <-- the answer -> the spotlight's slides (pure, tested)
+  lib/flags.js, assets/flags <-- flag of a currency (flag-icons, MIT)
   lib/strings.js             <-- the few words the template writes, six languages
   components/app/            <-- reads the media and the variables, picks format and style
-  components/widgets/        <-- clock, weather, quotes, logo, one rotating slide
-  style.sass                 <-- the approved design, converted from the Claude Design canvas
+  components/widgets/        <-- the panel's clock, weather, quotes, logo, one rotating slide
+  components/spotlight/      <-- the spotlight family: one slide per widget, dots, pinned top bar
+  style.sass, spotlight.sass <-- the approved design, converted from the Claude Design canvas (the spotlight's loop keyframes are generated for 1-11 slides)
   fonts.sass, assets/font/   <-- bundled faces (OFL licenses next to them); no font from the network
   test-support/              <-- mock of @dsplay/react-template-utils for the component tests
 ```
