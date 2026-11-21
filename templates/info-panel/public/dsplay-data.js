@@ -7,9 +7,9 @@ var dsplay_media = {
   duration: 30000,
   iteration: 0,
   result: {
-    order: ['clock', 'weather', 'quotes', 'news', 'holidays', 'countdown', 'jokes', 'logo'],
+    order: ['clock', 'weather', 'quotes', 'alerts', 'news', 'holidays', 'countdown', 'jokes', 'logo'],
     fixed: ['clock', 'weather', 'quotes', 'logo'],
-    rotating: ['news', 'holidays', 'countdown', 'jokes'],
+    rotating: ['alerts', 'news', 'holidays', 'countdown', 'jokes'],
     widgets: {
       clock: { type: 'clock', status: 'ok', data: { hour12: false } },
       weather: {
@@ -37,6 +37,15 @@ var dsplay_media = {
             { code: 'USD', name: 'US Dollar', price: 5.13, changePct: 0.4, series: [5.21, 5.18, 5.12, 5.08, 5.1, 5.04, 5.02, 5.07, 5.11, 5.13] },
             { code: 'EUR', name: 'Euro', price: 5.56, changePct: -0.3, series: [5.48, 5.52, 5.6, 5.66, 5.62, 5.58, 5.6, 5.57, 5.58, 5.56] },
           ],
+        },
+      },
+      alerts: {
+        type: 'alerts',
+        status: 'ok',
+        // the alerts active now, worst first; none = the widget is left out. severity: moderate (yellow), severe (orange), extreme (red)
+        data: {
+          schema: 'alerts/1',
+          items: [{ id: 'a1', event: 'Tempestade forte', severity: 'severe', color: null, description: 'Risco de queda de árvores e alagamentos; evite áreas abertas.', areas: ['São Paulo'], areaCount: 1, onset: '2026-11-21T14:00:00', expires: '2026-11-21T18:00:00', sender: 'INMET' }],
         },
       },
       news: {
@@ -99,6 +108,8 @@ var dsplay_config = {
   if (locale) dsplay_config.locale = locale;
   var iteration = params.get('iteration');
   if (iteration) dsplay_media.iteration = Number(iteration);
+  var sev = params.get('sev');
+  if (sev) dsplay_media.result.widgets.alerts.data.items[0].severity = sev;
   var only = params.get('only');
   if (only) {
     var r = dsplay_media.result;

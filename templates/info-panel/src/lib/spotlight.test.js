@@ -85,6 +85,40 @@ describe('readSpotlight', () => {
   });
 });
 
+describe('the forecast icons', () => {
+  it('say which of the sun, the cloud and the drops each day draws', () => {
+    const days = readSpotlight(answer(), { lng: 'pt', now: NOW }).slides[1].days;
+    expect(days.map((d) => [!!d.sun, !!d.cloud, !!d.drops])).toEqual([[true, true, false], [false, true, false], [false, true, true]]);
+  });
+});
+
+describe('the weather alert', () => {
+  const alerts = (items) => {
+    const base = answer();
+    base.result.order = ['alerts', 'weather'];
+    base.result.rotating = ['alerts'];
+    base.result.fixed = ['weather'];
+    base.result.widgets.alerts = { type: 'alerts', status: 'ok', data: { schema: 'alerts/1', items } };
+    return base;
+  };
+  const storm = { id: 'a', event: 'Tempestade forte', severity: 'severe', areas: ['São Paulo'], onset: '2026-11-21T14:00:00', expires: '2026-11-21T18:00:00', sender: 'INMET', description: 'Risco de queda de árvores.' };
+
+  it('is a slide per active alert, its severity in the slide class, with severity, start, end and source as facts', () => {
+    const { slides } = readSpotlight(alerts([storm, { ...storm, id: 'b', event: 'Vendaval', severity: 'extreme' }]), { lng: 'pt', now: NOW });
+    expect(slides.map((s) => s.kind)).toEqual(['alert sev-severe', 'alert sev-extreme', 'weather']);
+    expect(slides[0]).toMatchObject({ isAlert: true, title: 'Tempestade forte · São Paulo', tagText: 'Alerta · Tempestade forte' });
+    expect(slides[0].facts.map((f) => [f.k, f.v === '' ? '' : typeof f.v])).toEqual([['Severidade', 'string'], ['Início', 'string'], ['Fim', 'string'], ['Fonte', 'string']]);
+    expect(slides[0].facts[0].v).toBe('Severa');
+    expect(slides[0].delay).toBe('0s');
+    expect(slides[2].delay).toBe('16s');
+  });
+
+  it('leaves the widget out when there is no alert, or only a minor one', () => {
+    expect(readSpotlight(alerts([]), { now: NOW }).slides.map((s) => s.kind)).toEqual(['weather']);
+    expect(readSpotlight(alerts([{ ...storm, severity: 'minor' }]), { now: NOW }).slides.map((s) => s.kind)).toEqual(['weather']);
+  });
+});
+
 describe('chartPoints', () => {
   it('scales a series into the 290x100 box, and is empty below two values', () => {
     expect(chartPoints([1, 3, 2])).toBe('0,90.0 145,10.0 290,50.0');

@@ -33,6 +33,15 @@ function PinnedClock({ hour12, timezone, lng }) {
   return <div className="sclock"><span className="sdate">{date}</span><span className="stime">{hours}<span className="blink">:</span>{minutes}</span></div>;
 }
 
+/** The little icon of a forecast day, drawn with HTML boxes so it can move (no animation on SVG on Android 4.4): the sun's rays turn, the cloud drifts, the drops fall. */
+const DayIcon = ({ day }) => (
+  <div className="dwx">
+    {day.sun && <i className="dsun"><i className="dspin">{RAYS.map((deg) => <i key={deg} className="dray" style={{ transform: `rotate(${deg}deg)` }} />)}</i><i className="dcore" /></i>}
+    {day.cloud && <i className="dcloud"><i className="b" /><i className="c1" /><i className="c2" /></i>}
+    {day.drops && <i className="ddrops"><i /><i /><i /></i>}
+  </div>
+);
+
 function Hero({ s }) {
   if (s.isNews) {
     return (
@@ -59,6 +68,7 @@ function Hero({ s }) {
   if (s.isClock) return <div className="bigtime a-pop">{s.hours}<span className="blink">:</span>{s.minutes}</div>;
   if (s.isLogo) return <div className="slogo biglogo a-pop"><img src={s.url} alt="" /></div>;
   if (s.isJoke) return <div className="bigic a-pop"><Icon path={s.icon} width={1.5} /></div>;
+  if (s.isAlert) return <div className="bigic alertic a-pop"><Icon path={s.icon} width={1.6} /></div>;
   return null;
 }
 
@@ -106,7 +116,7 @@ function Info({ s }) {
           {s.days.map((d) => (
             <div className="day a-rise" style={{ animationDelay: d.delay }} key={d.d + d.hi}>
               <small>{d.d}</small>
-              <Icon path={d.path} />
+              <DayIcon day={d} />
               <span className="trow tmax"><Thermometer kind="hi" />{d.hi}</span>
               <span className="trow tmin"><Thermometer kind="lo" />{d.lo}</span>
             </div>

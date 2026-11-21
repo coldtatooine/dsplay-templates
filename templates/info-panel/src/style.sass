@@ -670,9 +670,9 @@ body
 .fmt-band .wk-clock .time
   font-size: 1.3em
 .fmt-band .wx
-  font-size: 1.6em
+  font-size: 1.2em
 .fmt-band .wx-t
-  font-size: 1.9em
+  font-size: 1.2em
 .fmt-band .wx-p
   display: none
 .fmt-band .wk-quotes .q-c
@@ -1625,3 +1625,42 @@ body
 
 .ip .wx-storm .drops i
   background: #ffd93b
+
+// the h-banner: the widgets never touch, whatever their size (space-between spreads the rest)
+.fmt-band.flat > * + *
+  margin-left: .9em
+
+.fmt-band.flat > .w + .rot
+  margin-left: .9em
+
+// the weather alert (the service's severity, CAP scale): the tag and the tile take the severity's color in every style, so a screen from afar reads yellow, orange or red
+.ip .ri.sev-moderate .tag
+  background: #f5b031 !important
+  color: #3a2a00 !important
+
+.ip .ri.sev-severe .tag
+  background: #ff7a1a !important
+  color: #fff !important
+
+.ip .ri.sev-extreme .tag
+  background: #e5392c !important
+  color: #fff !important
+
+.ip .ri.sev-moderate .tile
+  background: #f5b031
+  color: #3a2a00
+
+.ip .ri.sev-severe .tile
+  background: #ff7a1a
+  color: #fff
+
+.ip .ri.sev-extreme .tile
+  background: #e5392c
+  color: #fff
+
+.ip .ri.sev-moderate .tile, .ip .ri.sev-severe .tile, .ip .ri.sev-extreme .tile
+  border-radius: .3em
+  padding: .14em
+
+.ip .ri.sev-extreme .headline
+  font-weight: 800

@@ -102,7 +102,7 @@ export function Slide({ slide, fit, newsBoxStyle, delay }) {
     ? <FittedText className={className} style={style} text={value} max={fit.max} min={fit.min} />
     : <span className={className} style={style}>{value}</span>);
   return (
-    <div className={`ri ${slide.alt ? 'dbl' : ''}`} style={{ animationDelay: delay }}>
+    <div className={`ri ${slide.alt ? 'dbl' : ''} ${slide.sev ? `sev-${slide.sev}` : ''}`} style={{ animationDelay: delay }}>
       <div className="rtop">
         {slide.ico && <span className="ico" style={newsBoxStyle}>{slide.logo ? <img src={slide.logo} alt="" /> : 'N'}</span>}
         {slide.tile && (

@@ -23,7 +23,11 @@ const ICON = {
   joke: 'M4 4.5h16v11H10l-5 4.5v-4.5H4z M9 9h.01 M15 9h.01 M8.5 12c1.8 1.6 5.2 1.6 7 0',
   clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7v5l3 2',
 };
-const KIND_ICON = { sun: ICON.sun, partly: ICON.weather, cloud: ICON.weather, fog: ICON.weather, snow: ICON.weather, rain: ICON.rain, storm: ICON.rain };
+const ALERT_PATH = 'M12 3.2 L21.4 19.6 H2.6 Z M12 9.5 V14 M12 16.9 h.01';
+// the little icon of a day, drawn with HTML boxes (so it can move): which of the sun, the cloud and the falling drops it has
+const DAY_ICON = {
+  sun: { sun: true }, partly: { sun: true, cloud: true }, cloud: { cloud: true }, fog: { cloud: true }, snow: { cloud: true }, rain: { cloud: true, drops: true }, storm: { cloud: true, drops: true },
+};
 
 const text = (value) => (typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '');
 const num = (value) => (typeof value === 'number' && Number.isFinite(value) ? value : null);
@@ -68,11 +72,11 @@ const weatherSlide = (data, ctx) => {
   const forecast = Array.isArray(w.forecast) ? w.forecast : [];
   const todayMin = num(current.min);
   const todayMax = num(current.max);
-  if (todayMin !== null && todayMax !== null) days.push({ d: ctx.t.today, hi: formatTemp(todayMax, unit), lo: formatTemp(todayMin, unit), path: KIND_ICON[kind] });
+  if (todayMin !== null && todayMax !== null) days.push({ d: ctx.t.today, hi: formatTemp(todayMax, unit), lo: formatTemp(todayMin, unit), ...DAY_ICON[kind] });
   forecast.slice(0, 5 - days.length).forEach((day) => {
     const date = localDate(day.date);
     if (!date || num(day.max) === null || num(day.min) === null) return;
-    days.push({ d: long(date, ctx.lng, { weekday: 'short' }).replace(/\./g, ''), hi: formatTemp(day.max, unit), lo: formatTemp(day.min, unit), path: KIND_ICON[weatherKind(day.icon)] });
+    days.push({ d: long(date, ctx.lng, { weekday: 'short' }).replace(/\./g, ''), hi: formatTemp(day.max, unit), lo: formatTemp(day.min, unit), ...DAY_ICON[weatherKind(day.icon)] });
   });
   days.forEach((day, n) => { day.delay = `${0.3 + n * 0.12}s`; });
   const city = text(w.city);
@@ -157,6 +161,26 @@ const clockSlide = (data, ctx) => {
   };
 };
 
+const hourOf = (iso, lng) => {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? '' : safe(() => date.toLocaleTimeString(lng, { hour: '2-digit', minute: '2-digit' }), '');
+};
+
+/** One slide per active alert (the gateway sends them worst first): the severity colors the hero, the facts are severity, start, end and source. */
+const alertSlides = (data, ctx) => {
+  const items = (Array.isArray(data.items) ? data.items : []).filter((a) => a && text(a.event) && ['moderate', 'severe', 'extreme'].includes(a.severity));
+  return items.map((a) => {
+    const until = hourOf(a.expires, ctx.lng);
+    const place = text(Array.isArray(a.areas) ? a.areas[0] : '');
+    const facts = [{ k: ctx.t.severity, v: ctx.t[a.severity] }, { k: ctx.t.start, v: hourOf(a.onset, ctx.lng) }, { k: ctx.t.end, v: until }, { k: ctx.t.source, v: text(a.sender) }].filter((f) => f.v);
+    const title = [text(a.event), place].filter(Boolean).join(' · ');
+    return {
+      kind: `alert sev-${a.severity}`, isAlert: true, isTitled: true, hasTag: true, hasFacts: facts.length > 0, icon: ALERT_PATH, tagText: `${ctx.t.alert} · ${text(a.event)}`, title,
+      text: [until && `${ctx.t.until} ${until}`, shorten(a.description, 160)].filter(Boolean).join('. '), facts, line: `⚠ ${title}${until ? ` · ${ctx.t.until} ${until}` : ''}`,
+    };
+  });
+};
+
 const logoSlide = (data) => (text(data.url) ? { kind: 'logo', isLogo: true, url: data.url, line: '' } : null);
 
 /**
@@ -181,6 +205,10 @@ export function readSpotlight(media, {
     const data = widget.data || {};
     if (pin && (type === 'clock' || type === 'logo')) {
       pinned[type] = type === 'clock' ? { hour12: data.hour12 === true, timezone: text(data.timezone) } : text(data.url) ? { url: data.url } : null;
+      return;
+    }
+    if (type === 'alerts') {
+      alertSlides(data, ctx).forEach((alertSlide) => slides.push({ ...alertSlide, key: `${id}-${slides.length}`, delay: `${slides.length * 8}s` }));
       return;
     }
     let slide = null;

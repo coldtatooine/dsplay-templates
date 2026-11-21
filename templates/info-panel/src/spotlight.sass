@@ -1339,3 +1339,137 @@
 .sp .cal .mon
   background: #d93a5c
   color: #fff
+
+// the forecast's little icons, drawn with HTML boxes so they can move (no animation on SVG for Android 4.4): the sun's rays turn, the cloud drifts, the drops fall
+@keyframes kfall
+  0%
+    opacity: 0
+    transform: translateY(-.12em)
+  30%
+    opacity: 1
+  100%
+    opacity: 0
+    transform: translateY(.28em)
+
+.sp .day .dwx
+  position: relative
+  width: 1.6em
+  height: 1.4em
+  margin-bottom: .2em
+  flex: none
+
+.sp .dwx .dsun
+  position: absolute
+  left: .05em
+  top: 0
+  width: .95em
+  height: .95em
+
+.sp .dwx .dsun .dspin
+  position: absolute
+  left: 0
+  top: 0
+  width: .95em
+  height: .95em
+  animation: kspin 14s linear infinite
+
+.sp .dwx .dsun .dcore
+  position: absolute
+  left: .2em
+  top: .2em
+  width: .55em
+  height: .55em
+  border-radius: 50%
+  background: #ffd93b
+
+.sp .dwx .dsun .dray
+  position: absolute
+  left: .42em
+  top: 0
+  width: .11em
+  height: .16em
+  border-radius: .05em
+  background: #ffd93b
+  transform-origin: .055em .475em
+
+.sp .dwx .dcloud
+  position: absolute
+  left: .38em
+  top: .5em
+  width: 1.15em
+  height: .75em
+  animation: kdrift 6s ease-in-out infinite
+
+.sp .dwx .dcloud i
+  position: absolute
+  display: block
+  background: #eef3fa
+  border-radius: 50%
+
+.sp .dwx .dcloud .b
+  left: 0
+  top: .32em
+  width: 1.15em
+  height: .43em
+  border-radius: .26em
+
+.sp .dwx .dcloud .c1
+  left: .12em
+  top: .12em
+  width: .48em
+  height: .48em
+
+.sp .dwx .dcloud .c2
+  left: .47em
+  top: 0
+  width: .52em
+  height: .52em
+
+.sp .dwx .ddrops
+  position: absolute
+  left: .42em
+  top: 1.08em
+  width: 1.1em
+  height: .35em
+
+.sp .dwx .ddrops i
+  position: absolute
+  top: 0
+  width: .08em
+  height: .2em
+  border-radius: .04em
+  background: #7fc4ff
+  animation: kfall 1s linear infinite
+
+.sp .dwx .ddrops i:nth-child(1)
+  left: .12em
+
+.sp .dwx .ddrops i:nth-child(2)
+  left: .5em
+  animation-delay: .33s
+
+.sp .dwx .ddrops i:nth-child(3)
+  left: .88em
+  animation-delay: .66s
+
+// the weather alert slide: the hero takes the severity's color in every style (a safety message is read by its color first)
+.sp .sl-alert.sev-moderate .hero
+  background: linear-gradient(160deg,#f7c548,#c98a05) !important
+
+.sp .sl-alert.sev-severe .hero
+  background: linear-gradient(160deg,#ff8a3d,#c2410c) !important
+
+.sp .sl-alert.sev-extreme .hero
+  background: linear-gradient(160deg,#ef4444,#7f1020) !important
+
+.sp .alertic
+  color: #fff
+  border-radius: 50%
+  background: rgba(0,0,0,.18)
+
+.sp .sl-alert.sev-moderate .alertic
+  color: #3a2a00
+  background: rgba(255,255,255,.35)
+
+.sp .sl-alert .tag
+  background: transparent

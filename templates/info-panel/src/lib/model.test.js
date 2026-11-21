@@ -72,6 +72,34 @@ describe('readPanel', () => {
   });
 });
 
+describe('the weather alert', () => {
+  const withAlerts = (items) => {
+    const base = answer();
+    base.result.order = ['clock', 'alerts', 'news'];
+    base.result.fixed = ['clock'];
+    base.result.rotating = ['alerts', 'news'];
+    base.result.widgets.alerts = { type: 'alerts', status: 'ok', data: { schema: 'alerts/1', items } };
+    return base;
+  };
+  const storm = { id: 'a', event: 'Tempestade forte', severity: 'severe', areas: ['São Paulo', 'Osasco'], expires: '2026-11-21T18:00:00', description: 'Risco de queda de árvores e alagamentos.' };
+
+  it('is a slide per active alert, wearing its severity, with the event, the place and until when', () => {
+    const { slides } = readPanel(withAlerts([storm, { ...storm, id: 'b', event: 'Vendaval', severity: 'extreme', areas: [] }]), { lng: 'pt', now: NOW });
+    expect(slides.map((s) => [s.type, s.sev, s.headline])).toEqual([['alert', 'severe', 'Tempestade forte · São Paulo'], ['alert', 'extreme', 'Vendaval'], ['news', undefined, 'A']]);
+    expect(slides[0]).toMatchObject({ tag: 'Alerta · Tempestade forte' });
+    expect(slides[0].sub).toMatch(/^até \d{2}:\d{2} · Risco de queda/);
+  });
+
+  it('leaves the widget out when there is no alert, so the rotation is the others', () => {
+    const { slides } = readPanel(withAlerts([]), { lng: 'pt', now: NOW });
+    expect(slides.map((s) => s.type)).toEqual(['news']);
+  });
+
+  it('ignores an alert of a severity it does not know', () => {
+    expect(readPanel(withAlerts([{ ...storm, severity: 'minor' }]), { now: NOW }).slides.map((s) => s.type)).toEqual(['news']);
+  });
+});
+
 describe('pieces', () => {
   it('names the drawing of a weather icon', () => {
     expect(['c01d', 'c02n', 't04d', 'r01d', 's01d', 'a01d', 'c04d', undefined].map(weatherKind)).toEqual(['sun', 'partly', 'storm', 'rain', 'snow', 'fog', 'cloud', 'cloud']);

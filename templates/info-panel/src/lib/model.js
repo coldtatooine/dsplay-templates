@@ -16,6 +16,7 @@ const PATH = {
   countdown: 'M7 3h10 M7 21h10 M7 3c0 5 5 6 5 9s-5 4-5 9 M17 3c0 5-5 6-5 9s5 4 5 9',
   countup: 'M10 2h4 M12 14l3-3 M12 6a8 8 0 1 0 0 16 8 8 0 0 0 0-16z',
   joke: 'M4 4.5h16v11H10l-5 4.5v-4.5H4z M9 9h.01 M15 9h.01 M8.5 12c1.8 1.6 5.2 1.6 7 0',
+  alert: 'M12 3.2 L21.4 19.6 H2.6 Z M12 9.5 V14 M12 16.9 h.01',
 };
 
 const text = (value) => (typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '');
@@ -121,6 +122,32 @@ const localDate = (value) => {
   return m ? new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0)) : null;
 };
 
+const SEVERITIES = ['moderate', 'severe', 'extreme'];
+
+/** The hour of an ISO instant as "18:00", in the screen's own clock (the alert says when it ends). */
+const hourOf = (iso, lng) => {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  try {
+    return date.toLocaleTimeString(lng, { hour: '2-digit', minute: '2-digit' });
+  } catch {
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+};
+
+/** One slide per active alert, the most severe first (the gateway sorts them): the event as the source words it, the place, until when. */
+export function alertSlides(data, ctx) {
+  const t = stringsOf(ctx.lng);
+  const items = Array.isArray(data.items) ? data.items : [];
+  return items.filter((a) => a && text(a.event) && SEVERITIES.includes(a.severity)).map((a) => {
+    const until = hourOf(a.expires, ctx.lng);
+    const place = text(Array.isArray(a.areas) ? a.areas[0] : '');
+    return {
+      type: 'alert', sev: a.severity, tag: `${t.alert} · ${text(a.event)}`, tile: PATH.alert, headline: [text(a.event), place].filter(Boolean).join(' · '), sub: [until && `${t.until} ${until}`, shorten(a.description, 90)].filter(Boolean).join(' · '), slots: 1,
+    };
+  });
+}
+
 /** A slide is one showing of a rotating widget: `{ type, tag, ico?, tile?, big?, headline, alt?, sub?, slots }`. `alt` is the second half of a joke (it takes two turns). */
 const slideOf = (type, id, data, ctx) => {
   const t = stringsOf(ctx.lng);
@@ -173,11 +200,12 @@ export function readPanel(media, { lng = 'en', iteration = 0, now = new Date() }
     if (!data) return;
     if (rotating.includes(id)) {
       if (!order.includes('rot')) order.push('rot');
-      const slide = slideOf(type, id, data, ctx);
-      if (slide && slots + slide.slots <= MAX_SLOTS) {
-        slots += slide.slots;
-        slides = [...slides, slide];
-      }
+      (type === 'alerts' ? alertSlides(data, ctx) : [slideOf(type, id, data, ctx)]).forEach((slide) => {
+        if (slide && slots + slide.slots <= MAX_SLOTS) {
+          slots += slide.slots;
+          slides = [...slides, slide];
+        }
+      });
       return;
     }
     if (type === 'clock') widgets.clock = { hour12: data.hour12 === true, timezone: text(data.timezone) };
