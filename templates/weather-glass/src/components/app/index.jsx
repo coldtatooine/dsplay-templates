@@ -22,7 +22,7 @@ import './style.sass';
 import '../../entrance.css';
 
 // @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+const fonts = [{ family: 'Oswald', weight: 400 }, { family: 'Roboto Condensed', weight: 400 }];
 
 const LAYOUTS = {
   landscape: Landscape, portrait: Portrait, square: Square, wide: Wide, 'bar-h': BarH, 'bar-v': BarV,
@@ -73,9 +73,10 @@ function Screen() {
       <Loader
         reveal
         fonts={fonts}
+        images={photo ? [photo] : []}
       >
         <div
-          className={`app format-${stage.format}${glass ? ' glass-on' : ''}`}
+          className={`app format-${stage.format}${glass ? ' glass-on' : ''}${settings.animationEnabled ? ' anim' : ''}`}
           style={{ backgroundColor: look.backgroundColor, color: settings.theme.text }}
         >
           <Background look={look} photo={photo} family={cond.family} night={night} lights={glass && settings.weatherBackground === 'auto'} />

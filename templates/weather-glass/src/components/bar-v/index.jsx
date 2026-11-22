@@ -19,7 +19,7 @@ function BarV() {
   const hasRange = Number.isFinite(current.min) && Number.isFinite(current.max);
   return (
     <div className="bar-v" style={{ color: theme.text }}>
-      <Icon name={cond.icon} size={14} />
+      <Icon name={cond.icon} size={14} className="v-icon" />
       <div className="v-temp">{`${temperature(current.temp, unit)}°`}</div>
       {settings.showMinMax && hasRange && (
         <div className="v-mm" style={{ color: theme.muted }}>{`${temperature(current.min, unit)}°/${temperature(current.max, unit)}°`}</div>

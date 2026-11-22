@@ -27,11 +27,11 @@ export function statsOf(data, settings, locale) {
  */
 function Stats({ items, box, s }) {
   const { t } = useTranslation();
-  const { theme, settings } = useView();
+  const { theme } = useView();
   const film = theme.film;
   return (
     <Panel blur group className="stats" style={box}>
-      <div className={`stats-row${settings.animationEnabled ? ' fade-in' : ''}`}>
+      <div className="stats-row">
         {items.map((item) => (
           <div
             key={item.key}

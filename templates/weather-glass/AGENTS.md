@@ -124,3 +124,11 @@ Every commit title must start with an emoji, followed by a short, imperative sum
 - The human maintainer uses [gitmoji-cli](https://github.com/carloscuesta/gitmoji-cli) for manual commits, so gitmoji conventions (`✨` feature, `🐛` fix, `⬆️` upgrade deps, `♻️` refactor, `📝` docs, `🎨` structure/format) are a good default.
 - Agents are not required to stick to the official gitmoji list — pick whichever emoji best represents the actual change in that commit, as long as it's placed at the start of the title.
 - Version bumps (`package.json`'s `version` field) get their own commit, titled with just the version number and no emoji (e.g. `4.1.0`), separate from the commit(s) that made the actual change — see the git log for examples.
+
+## Entrance and idle motion (the loading standard of Jokes)
+
+No loader screen: `Loader` runs in `reveal` mode, with `fonts` listing every face drawn (`{ family, weight }`) and `images` listing the operator's background photo (its box is the full-screen `.bg`, so its room is already reserved). Everything in `src/entrance.css` starts from `.dsplay-ready`, only on `.app.anim` (the `animation_enabled` variable).
+
+- **Entrance (about 600 ms):** the content of the main panel rises first, then the detail cards, the forecast days (60 ms apart) and the logo tile. Only the content is animated, never a `.panel` itself: those carry `backdrop-filter`, and animating them would recompute the blur on every frame.
+- **Idle motion:** the weather icon of the main panel and of the bars bobs (`wg-bob`) and the lights of the glass mode breathe (`wg-glow`); slow, every keyframe starts and ends on the resting state.
+- Only `opacity` and `transform`, prefixed, no CSS variables, nothing animated on SVG elements; `prefers-reduced-motion: reduce` turns all of it off.

@@ -46,7 +46,7 @@ function Now({ box, s }) {
     : '';
   return (
     <Panel blur shadow radius={3.2} className="now" style={{ ...box, color: theme.text }}>
-      <div className={`now-body${settings.animationEnabled ? ' fade-in' : ''}`} style={{ padding: `${s.padding || 3}rem 4rem` }}>
+      <div className="now-body" style={{ padding: `${s.padding || 3}rem 4rem` }}>
         {settings.showCity && data.city && <div className="city" style={{ fontSize: `${s.city}rem` }}>{data.city}</div>}
         <div className="now-main">
           <Icon name={cond.icon} size={s.icon} />
