@@ -21,7 +21,7 @@ import './style.sass';
 import '../../entrance.css';
 
 // @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+const fonts = [{ family: 'Oswald', weight: 400 }, { family: 'Roboto Condensed', weight: 400 }];
 
 function Screen() {
   const config = useConfig();
@@ -84,12 +84,12 @@ function Screen() {
         reveal
         fonts={fonts}
       >
-        <div className={`app set-${set}`} style={{ backgroundColor: theme.base, color: theme.text }}>
+        <div className={`app set-${set}${settings.animationEnabled ? ' animated' : ''}`} style={{ backgroundColor: theme.base, color: theme.text }}>
           {fadeFrom && settings.animationEnabled && (
             <div className="veil" key={fadeFrom + theme.base} style={{ backgroundColor: fadeFrom }} />
           )}
           <div
-            className={`stage ${settings.animationEnabled ? 'fade-in' : ''}`}
+            className="stage"
             style={{ width: `${stage.w}rem`, height: `${stage.h}rem` }}
           >
             {content}

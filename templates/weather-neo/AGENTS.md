@@ -25,6 +25,14 @@ scripts/
   pack.mjs                   <-- zips the Vite build output into template.zip (Windows/macOS/Linux)
 ```
 
+## Entrance and idle motion (no loader screen)
+
+`Loader` runs in `reveal` mode (`fonts` lists `Oswald` and `Roboto Condensed`, both weight 400, the only faces in `src/fonts.sass`; no `images`: the weather icons are inline data URIs). Everything animated lives in `src/entrance.css` and starts from `.dsplay-ready`, never from mount; see [`docs/entrance-style.md`](../../docs/entrance-style.md).
+
+- **Entrance (600 ms in total):** the cards (`.now`, `.details-row`, `.forecast`, `.badge`) rise and fade one after the other (80 ms apart), the condition icon pops in; the bar sets (`a`/`b`) and the vertical bar (`v`) rise their parts in order (60 ms apart).
+- **Idle motion:** the condition icons bob slowly (the forecast days out of step), the place marker glows. Every keyframe starts and ends on the resting state.
+- **Rules:** only `opacity` and `transform`, prefixed, on HTML boxes (the icons are `<img>`, never SVG elements). `.now`'s sub row and the bar's city are measured with `getBoundingClientRect`, so their ancestors only move on Y, never scale; scale only on leaf images. All of it only runs when `animation_enabled` is on (the app gets the class `animated`), and `prefers-reduced-motion: reduce` turns it all off. The old `veil` crossfade of the base color is separate and unchanged.
+
 ## File and folder naming
 
 - **kebab-case everywhere** in `src/` (and anywhere else in this repo we author ourselves) — folders, JS/JSX files, Sass files, test files. E.g. `setup-tests.js`, not `setupTests.js`. This does *not* apply to files whose name is a fixed convention from tooling (`package.json`, `README.md`, `vite.config.js`, `.nvmrc`, etc.) — only to files/folders we're free to name.
