@@ -39,7 +39,7 @@ Only looks. What the panel shows is in the media.
 | `text_color` | color | Text color of the whole panel. |
 | `currency_box_color` | color | Background color behind each currency value. |
 | `currency_text_color` | color | Text color of each currency value. |
-| `rss_logo_box_color` | color | Background color behind the news icon or the feed's logo. |
+| `rss_logo_box_color` | color | Background color behind the news icon (the "N"). The feed's own logo has no box, unless this is set. |
 | `sponsor_logo_box_color` | color | Background color behind the logo (white by default). |
 
 > Remember to also register these as Template Vars (same name and type) when configuring this template in the DSPLAY CMS.

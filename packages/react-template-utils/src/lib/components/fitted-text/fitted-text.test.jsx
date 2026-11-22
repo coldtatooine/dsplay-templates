@@ -101,4 +101,21 @@ describe('FittedText', () => {
     expect(container.firstChild.style.visibility).toBe('');
     vi.useRealTimers();
   });
+
+  it('calls onReady once when the text is final, and does not measure again after that', () => {
+    vi.useFakeTimers();
+    boxWidth = 500;
+    const onReady = vi.fn();
+    const { container } = render(<FittedText text="A name" max={3} min={1.2} onReady={onReady} />);
+    expect(onReady).not.toHaveBeenCalled();
+    act(() => { vi.advanceTimersByTime(400); });
+    expect(onReady).toHaveBeenCalledTimes(1);
+    // the box shrinks after it is final: the later measures (1 s, 2.5 s) leave the size alone
+    const size = container.firstChild.style.fontSize;
+    boxWidth = 100;
+    act(() => { vi.advanceTimersByTime(3000); });
+    expect(container.firstChild.style.fontSize).toBe(size);
+    expect(onReady).toHaveBeenCalledTimes(1);
+    vi.useRealTimers();
+  });
 });

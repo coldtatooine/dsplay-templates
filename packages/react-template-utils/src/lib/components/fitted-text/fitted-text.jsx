@@ -1,4 +1,6 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from 'react';
 
 // the search stops when the two sizes are this close, in em
 const PRECISION = 0.02;
@@ -14,6 +16,9 @@ const REMEASURE_AFTER = [300, 1000, 2500];
  * The text stays invisible (it still takes its place, so it can be measured) until it is at its final size: the fonts are in and the first 300 ms have passed. Measured in the fallback font a
  * text would be drawn too big and then shrink when the real font arrives; this way that first size is never seen.
  *
+ * Once it is final it is not measured again (a late measure would move the text under the eye, and whatever is laid out around it with it), except when `text`, `max`, `min` or `lines`
+ * change. `onReady` is called once, when it becomes final: a parent that must not show its other elements before the text has settled (they would jump when it does) waits for it.
+ *
  * With `lines` above 1 the text may wrap over that many lines instead: the size is the biggest, from `max` down to `min`, at which it fits in them, and only a text that does not
  * fit in `lines` lines even at `min` is cut, with an ellipsis on the last line (`-webkit-line-clamp`). A one-line text is never cut while it can still shrink.
  *
@@ -26,12 +31,13 @@ const REMEASURE_AFTER = [300, 1000, 2500];
  * @param {number} [props.lines] - How many lines the text may take, 1 by default (one line, never wrapped)
  * @param {string} [props.as] - Tag of the element, `span` by default
  * @param {string} [props.className] - Class applied to the element
+ * @param {() => void} [props.onReady] - Called once, when the text is at its final size and shown
  * @param {React.ReactNode} [props.children] - What to draw instead of `text`, for a text with markup in it (a blinking colon); `text` must say the same words
  * @param {React.CSSProperties} [props.style] - Extra styles merged into the element (the size and the one-line rules always win)
  * @returns {React.ReactElement}
  */
 function FittedText({
-  as: Tag = 'span', text, max, min, lines = 1, className = '', style = {}, children,
+  as: Tag = 'span', text, max, min, lines = 1, className = '', style = {}, children, onReady,
 }) {
   const ref = useRef(null);
   const [size, setSize] = useState(max);
@@ -41,6 +47,7 @@ function FittedText({
   // false until the size is the final one (see above); once true it stays true
   const [ready, setReady] = useState(false);
   const settledRef = useRef(false);
+  const readyRef = useRef(false);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -74,12 +81,16 @@ function FittedText({
       setClamped(wraps && !fits(best));
       // final only when the fonts are in and the first measures are past
       const { fonts } = document;
-      if (settledRef.current && (!fonts || !fonts.status || fonts.status === 'loaded')) setReady(true);
+      if (settledRef.current && (!fonts || !fonts.status || fonts.status === 'loaded')) {
+        readyRef.current = true;
+        setReady(true);
+      }
     };
 
     fit();
     let live = true;
-    const again = () => { if (live) fit(); };
+    // once final, only a change of the text or the limits measures again (this effect runs again for those, before the paint)
+    const again = () => { if (live && !readyRef.current) fit(); };
     const { fonts } = document;
     if (fonts && fonts.ready) fonts.ready.then(again, () => {});
     if (fonts && fonts.addEventListener) fonts.addEventListener('loadingdone', again);
@@ -93,6 +104,11 @@ function FittedText({
       if (fonts && fonts.removeEventListener) fonts.removeEventListener('loadingdone', again);
     };
   }, [text, max, min, lines, wraps]);
+
+  useEffect(() => {
+    if (ready && onReady) onReady();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- called once, when it becomes final
+  }, [ready]);
 
   return (
     <Tag
