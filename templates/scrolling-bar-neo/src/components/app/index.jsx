@@ -12,11 +12,19 @@ import useStage from '../../hooks/use-stage';
 import useLogo from '../../hooks/use-logo';
 import { droppedAt } from '../../util/layout';
 import { reliefShadow } from '../../util/theme';
+import defaultLogo from '../../assets/image/dsplay-logo-header.svg';
 import './style.sass';
 import '../../entrance.css';
 
 // @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+// every face the template draws, with its weight (both are regular, 400)
+const fonts = [
+  { family: 'Oswald', weight: 400 },
+  { family: 'Roboto Condensed', weight: 400 },
+];
+
+// the bundled company logo is on the first frame whenever the operator has none (the company tile reserves its size)
+const images = [defaultLogo];
 
 const WIDGETS = {
   clock: Clock, weather: Weather, ticker: News, company: Company,
@@ -90,6 +98,7 @@ function Screen() {
       <Loader
         reveal
         fonts={fonts}
+        images={images}
       >
         <div className={`app set-${stage.set} pos-${settings.position}`} style={{ ...surface, color: theme.text }}>
           {frame}
