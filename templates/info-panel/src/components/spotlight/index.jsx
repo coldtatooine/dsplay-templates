@@ -51,6 +51,8 @@ const BIGTIME_MAX = {
 
 // the strip draws one line a slide: its little icon goes before it (the channel's logo for the news, else the icon of the widget; the sign for the horoscope)
 function SlimIcon({ s, size }) {
+  // the weather is the animated icon of its kind (sun, partly cloudy, cloud, rain...), the same as the forecast days draw
+  if (s.isWeather && s.dayIcon) return <span className="sicon wx" style={{ fontSize: `${size}em` }}><DayIcon day={s.dayIcon} /></span>;
   if (s.isNews && s.logo) return <span className="sicon logo" style={{ fontSize: `${size}em` }}><img src={s.logo} alt="" /></span>;
   return s.icon ? <span className="sicon" style={{ fontSize: `${size}em` }}><Icon path={s.icon} /></span> : null;
 }

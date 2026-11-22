@@ -100,6 +100,14 @@ describe('App', () => {
     expect(container.querySelector('.slide.sl-clock .sicon svg')).not.toBeNull();
   });
 
+  it('puts the animated weather icon of the place before the weather line on the thin strip', () => {
+    screen(1920, 120, { style: 'poster' });
+    player.media = { duration: 30000, result: { ...answer, order: ['weather', 'clock'], rotating: [], fixed: ['weather', 'clock'], widgets: { clock: answer.widgets.clock, weather: { type: 'weather', status: 'ok', data: { weather: { city: 'Lisboa', current: { temp: 18, icon: 'r01d' } } } } } } };
+    const { container } = render(<App />);
+    expect(container.querySelector('.slide.sl-weather .sicon.wx .dwx .dcloud')).not.toBeNull();
+    expect(container.querySelector('.slide.sl-weather .sicon.wx .dwx .ddrops')).not.toBeNull();
+  });
+
   it('draws the animated icons of the forecast and the alert slide of the spotlight', () => {
     screen(1920, 1080, { style: 'poster' });
     player.media = { duration: 30000, result: { ...answer, order: ['alerts', 'weather'], rotating: ['alerts'], fixed: ['weather'], widgets: { ...answer.widgets, alerts: { type: 'alerts', status: 'ok', data: { items: [{ id: 'a', event: 'Vendaval', severity: 'extreme', areas: [], expires: '2099-01-01T00:00:00' }] } }, weather: { type: 'weather', status: 'ok', data: { weather: { current: { temp: 20, icon: 'c01d', min: 15, max: 25 }, forecast: [{ date: '2026-11-22', min: 14, max: 22, icon: 'r01d' }] } } } } } };
