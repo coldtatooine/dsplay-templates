@@ -45,14 +45,16 @@ export function locate(step, phases) {
 }
 
 /**
- * The item showing now and its phase. With nothing to rotate (one phase) it stays on the first item and sets no timer.
+ * The item showing now and its phase. With nothing to rotate (one phase) it stays on the first item and sets no timer. The turns the media holds are played one after the other, and after the last
+ * phase of the last turn it stays there until the media ends: it does not go back to the first phase unless there was time for another whole turn (the 2 s kept back for the loading are slack
+ * for the last phase, not the start of a new round).
  * @param {{phases: number[], duration: number, max: number}} options
  */
 export function useRotation({ phases, duration, max }) {
   const key = phases.join(',');
   const list = useMemo(() => phasesOf(key ? key.split(',').map(Number) : []), [key]);
   const total = list.reduce((sum, n) => sum + n, 0);
-  const { dwell } = dwellFor(duration, total, max);
+  const { dwell, turns } = dwellFor(duration, total, max);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -60,9 +62,18 @@ export function useRotation({ phases, duration, max }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStep(0);
     if (total <= 1) return undefined;
-    const timer = setInterval(() => setStep((s) => (s + 1) % total), dwell);
+    const last = turns * total;
+    let played = 0;
+    const timer = setInterval(() => {
+      played += 1;
+      if (played >= last) {
+        clearInterval(timer);
+        return;
+      }
+      setStep(played % total);
+    }, dwell);
     return () => clearInterval(timer);
-  }, [dwell, total]);
+  }, [dwell, total, turns]);
 
   return locate(step % Math.max(1, total), list);
 }

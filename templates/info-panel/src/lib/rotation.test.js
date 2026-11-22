@@ -45,17 +45,35 @@ describe('locate', () => {
 describe('useRotation', () => {
   afterEach(() => vi.useRealTimers());
 
-  it('moves to the next phase every dwell and goes round', () => {
+  it('moves to the next phase every dwell and stays on the last one when the media has no time for another turn', () => {
     vi.useFakeTimers();
-    // 4 phases in 6 s (nothing taken off a media of 6 s or less): 1.5 s each
+    // 4 phases in 6 s (nothing taken off a media of 6 s or less): 1.5 s each, one turn
     const { result } = renderHook(() => useRotation({ phases: [1, 2, 1], duration: 6000, max: PANEL_MAX_PHASE }));
     expect(result.current).toEqual({ active: 0, phase: 0 });
     act(() => { vi.advanceTimersByTime(1500); });
     expect(result.current).toEqual({ active: 1, phase: 0 });
     act(() => { vi.advanceTimersByTime(1500); });
     expect(result.current).toEqual({ active: 1, phase: 1 });
-    act(() => { vi.advanceTimersByTime(3000); });
-    expect(result.current).toEqual({ active: 0, phase: 0 });
+    act(() => { vi.advanceTimersByTime(1500); });
+    expect(result.current).toEqual({ active: 2, phase: 0 });
+    // the last phase is the end: it does not go back to the first one, however long the player keeps the media
+    act(() => { vi.advanceTimersByTime(60000); });
+    expect(result.current).toEqual({ active: 2, phase: 0 });
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('goes round again only for the whole turns the media holds, then stays on the last phase', () => {
+    vi.useFakeTimers();
+    // 62 s, 2 s of loading, 3 phases of at most 8 s: 3 turns of 6.666 s a phase
+    const { result } = renderHook(() => useRotation({ phases: [1, 1, 1], duration: 62000, max: PANEL_MAX_PHASE }));
+    const active = [];
+    for (let at = 0; at < 9; at += 1) {
+      active.push(result.current.active);
+      act(() => { vi.advanceTimersByTime(6666); });
+    }
+    expect(active).toEqual([0, 1, 2, 0, 1, 2, 0, 1, 2]);
+    act(() => { vi.advanceTimersByTime(60000); });
+    expect(result.current.active).toBe(2);
   });
 
   it('shows every phase for the same time inside the media, the last one included', () => {
