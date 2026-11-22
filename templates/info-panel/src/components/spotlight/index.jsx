@@ -49,6 +49,12 @@ const BIGTIME_MAX = {
   'sf-landscape': 9.5, 'sf-square': 7.4, 'sf-portrait': 8.6, 'sf-tall': 4.6, 'sf-band': 2.5,
 };
 
+// the strip draws one line a slide: its little icon goes before it (the channel's logo for the news, else the icon of the widget; the sign for the horoscope)
+function SlimIcon({ s, size }) {
+  if (s.isNews && s.logo) return <span className="sicon logo" style={{ fontSize: `${size}em` }}><img src={s.logo} alt="" /></span>;
+  return s.icon ? <span className="sicon" style={{ fontSize: `${size}em` }}><Icon path={s.icon} /></span> : null;
+}
+
 function Hero({ s, format }) {
   if (s.isNews) {
     return (
@@ -197,6 +203,7 @@ export default function Spotlight({
           <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key}>
             <div className="hero"><Hero s={s} format={format} /></div>
             <Info s={s} boost={boost} />
+            {slim && <SlimIcon s={s} size={slimMax} />}
             {slim ? <FittedText className="sline" text={lineOf(s, i)} max={slimMax} min={0.45} /> : <span className="sline">{s.line}</span>}
           </div>
         ))}

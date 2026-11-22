@@ -116,7 +116,7 @@ const newsSlide = (data, ctx) => {
   if (!item) return null;
   const images = Array.isArray(item.images) ? item.images : [];
   const image = images.map((im) => (typeof im === 'string' ? im : im && im.url)).find((u) => /^https?:/.test(u || ''));
-  return { kind: 'news', isNews: true, isTitled: true, hasTag: true, icon: ICON.news, tagText: [ctx.t.news, text(data.title)].filter(Boolean).join(' · '), image: image || '', title: text(item.title), text: shorten(item.description, 160), line: text(item.title) };
+  return { kind: 'news', isNews: true, isTitled: true, hasTag: true, icon: ICON.news, logo: /^https?:/.test(text(data.logo)) ? text(data.logo) : '', tagText: [ctx.t.news, text(data.title)].filter(Boolean).join(' · '), image: image || '', title: text(item.title), text: shorten(item.description, 160), line: text(item.title) };
 };
 
 const holidaysSlide = (data, ctx) => {
