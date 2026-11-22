@@ -72,7 +72,7 @@ export function Quotes({ quotes, boxStyle }) {
       {quotes.map((q) => (
         <div className="q" key={q.code}>
           <div className="q-cv">
-            <span className="q-c">{q.code}</span>
+            <span className="q-c">{q.code}{q.base && <span className="q-b">{` / ${q.base}`}</span>}</span>
             <span className="q-v" style={boxStyle}>{q.value}</span>
           </div>
           {q.arrow && (

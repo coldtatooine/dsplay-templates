@@ -88,6 +88,7 @@ export function readQuotes(data, lng) {
       const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
       return {
         code: text(item.code).toUpperCase(),
+        base: text(data.base).toUpperCase(),
         value: format.format(item.price),
         dir,
         arrow: dir === 'up' ? '▲' : dir === 'down' ? '▼' : '',

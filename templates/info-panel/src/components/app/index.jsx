@@ -3,7 +3,7 @@ import {
   Loader, useConfig, useMedia, useTemplateVal,
 } from '@dsplay/react-template-utils';
 import { formatOf, isFlat, spotFormatOf } from '../../lib/layout';
-import { scaleOf } from '../../lib/scale';
+import { fillOf, scaleOf } from '../../lib/scale';
 import { readPanel } from '../../lib/model';
 import { readSpotlight } from '../../lib/spotlight';
 import { useRotation } from '../../lib/rotation';
@@ -115,9 +115,11 @@ function App() {
     const { order, widgets, slides } = panel;
     const others = order.filter((k) => k !== 'rot').length;
     const share = SHARE[Math.min(others, 4)];
+    const boost = fillOf(format, size[0], size[1]);
+    const fillStyle = boost > 1.02 ? { fontSize: `${boost}em` } : undefined;
     const rotStyle = tall ? { maxHeight: `${share}%` } : { maxWidth: `${share}%` };
     const rot = (
-      <div key="rot" className="rot" style={flat ? rotStyle : undefined}>
+      <div key="rot" className="rot" style={flat ? rotStyle : fillStyle}>
         {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
       </div>
     );
@@ -139,7 +141,7 @@ function App() {
       });
     } else {
       const fixedTypes = order.filter((k) => k !== 'rot' && k !== 'logo');
-      content = [<div key="fx" className="fx">{fixedTypes.map(fixedWidget)}</div>, slides.length ? rot : null, logo];
+      content = [<div key="fx" className="fx" style={fillStyle}>{fixedTypes.map(fixedWidget)}</div>, slides.length ? rot : null, logo];
     }
   }
 
@@ -149,7 +151,7 @@ function App() {
       <Loader reveal fonts={FONTS[style]}>
         <Scaled format={format} size={size}>
         {spotlight ? (
-          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} />
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} boost={fillOf(format, size[0], size[1])} />
         ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
         </Scaled>
       </Loader>

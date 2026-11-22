@@ -128,10 +128,10 @@ describe('pieces', () => {
   });
 
   it('reads two currencies with their change and drops the ones without a price', () => {
-    const quotes = readQuotes({ items: [{ code: 'usd', price: 5.13, changePct: 0.4 }, { code: 'xxx', price: 0 }, { code: 'eur', price: 5.56, changePct: -0.3 }] }, 'en');
+    const quotes = readQuotes({ base: 'brl', items: [{ code: 'usd', price: 5.13, changePct: 0.4 }, { code: 'xxx', price: 0 }, { code: 'eur', price: 5.56, changePct: -0.3 }] }, 'en');
     expect(quotes).toEqual([
-      { code: 'USD', value: '5.13', dir: 'up', arrow: '▲', pct: '0.40%' },
-      { code: 'EUR', value: '5.56', dir: 'down', arrow: '▼', pct: '0.30%' },
+      { code: 'USD', base: 'BRL', value: '5.13', dir: 'up', arrow: '▲', pct: '0.40%' },
+      { code: 'EUR', base: 'BRL', value: '5.56', dir: 'down', arrow: '▼', pct: '0.30%' },
     ]);
   });
 

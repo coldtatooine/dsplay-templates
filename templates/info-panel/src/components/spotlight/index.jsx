@@ -82,7 +82,7 @@ function Info({ s }) {
           {s.items.map((it) => (
             <div className="q2" key={it.tagText}>
               <div className="q2m">
-                <div className="q2h">{it.flag && <img className="flag" src={it.flag} alt="" />}{it.tagText}{it.full && <span className="q2n">{it.full}</span>}</div>
+                <div className="q2h">{it.flag && <img className="flag" src={it.flag} alt="" />}{it.tagText}{s.base && <span className="q2b">{` / ${s.base}`}</span>}{it.full && <span className="q2n">{it.full}</span>}</div>
                 <div className="q2p">{it.b}{it.delta && <span className="delta">{it.delta}</span>}</div>
                 {it.lo && <div className="q2f">{`Mín ${it.lo} · Máx ${it.hi}`}</div>}
               </div>
@@ -147,7 +147,7 @@ const LAYOUT = { poster: 'lay-overlay', night: 'lay-overlay', cards: 'lay-side',
 
 /** @param {{spotlight: {slides: object[], pinned: object}, style: string, format: string, lng: string}} props */
 export default function Spotlight({
-  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration,
+  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration, boost = 1,
 }) {
   const { slides, pinned } = spotlight;
   const { active, phase } = useRotation({ phases: slides.map((s) => (s.isJoke ? 2 : 1)), duration, iteration, ...SPOT_DWELL });
@@ -161,7 +161,7 @@ export default function Spotlight({
       </div>
       <div className="stage">
         {slides.map((s, i) => (
-          <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key}>
+          <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key} style={boost > 1.02 ? { fontSize: `${boost}em` } : undefined}>
             <div className="hero"><Hero s={s} /></div>
             <Info s={s} />
             <span className="sline">{s.line}</span>
