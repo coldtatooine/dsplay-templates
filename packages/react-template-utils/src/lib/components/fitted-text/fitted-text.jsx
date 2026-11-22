@@ -11,6 +11,9 @@ const REMEASURE_AFTER = [300, 1000, 2500];
  * once the fonts are in (`Loader` mounts the template hidden while they load, and a text measured in the fallback font would be cut, or too small, when the real
  * one arrives). If even `min` is too much the text is cut with an ellipsis. A short text keeps `max`.
  *
+ * The text stays invisible (it still takes its place, so it can be measured) until it is at its final size: the fonts are in and the first 300 ms have passed. Measured in the fallback font a
+ * text would be drawn too big and then shrink when the real font arrives; this way that first size is never seen.
+ *
  * With `lines` above 1 the text may wrap over that many lines instead: the size is the biggest, from `max` down to `min`, at which it fits in them, and only a text that does not
  * fit in `lines` lines even at `min` is cut, with an ellipsis on the last line (`-webkit-line-clamp`). A one-line text is never cut while it can still shrink.
  *
@@ -35,6 +38,9 @@ function FittedText({
   // true when the text still does not fit in `lines` lines at `min`: the last line is then cut with an ellipsis
   const [clamped, setClamped] = useState(false);
   const wraps = lines > 1;
+  // false until the size is the final one (see above); once true it stays true
+  const [ready, setReady] = useState(false);
+  const settledRef = useRef(false);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -66,6 +72,9 @@ function FittedText({
       el.style.fontSize = `${best}em`;
       setSize(best);
       setClamped(wraps && !fits(best));
+      // final only when the fonts are in and the first measures are past
+      const { fonts } = document;
+      if (settledRef.current && (!fonts || !fonts.status || fonts.status === 'loaded')) setReady(true);
     };
 
     fit();
@@ -74,7 +83,10 @@ function FittedText({
     const { fonts } = document;
     if (fonts && fonts.ready) fonts.ready.then(again, () => {});
     if (fonts && fonts.addEventListener) fonts.addEventListener('loadingdone', again);
-    const timers = REMEASURE_AFTER.map((ms) => setTimeout(again, ms));
+    const timers = REMEASURE_AFTER.map((ms, index) => setTimeout(() => {
+      if (index === 0) settledRef.current = true;
+      again();
+    }, ms));
     return () => {
       live = false;
       timers.forEach(clearTimeout);
@@ -94,6 +106,8 @@ function FittedText({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         ...(wraps && clamped ? { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: lines } : {}),
+        // inherited (not `visible`) once final: a text inside a hidden slide stays hidden
+        ...(ready ? {} : { visibility: 'hidden' }),
       }}
     >
       {children !== undefined ? children : text}

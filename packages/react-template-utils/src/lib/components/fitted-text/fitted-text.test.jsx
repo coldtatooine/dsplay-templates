@@ -2,7 +2,7 @@ import React from 'react';
 import {
   describe, it, expect, afterEach, beforeEach, vi,
 } from 'vitest';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react';
 import FittedText from './fitted-text';
 
 // jsdom has no layout: a text is `em * 100` px wide and the box is `boxWidth` px. A wrapping text is as wide as the box at most and 20 px a line (`ceil(width / box)` lines).
@@ -72,5 +72,33 @@ describe('FittedText', () => {
     boxWidth = 100;
     const { style } = render(<FittedText text="A very long text" max={3} min={2.5} lines={2} />).container.firstChild;
     expect(style.display).toBe('-webkit-box');
+  });
+
+  it('is invisible until it is at its final size: after the first 300 ms, and the fonts when there is an API for them', () => {
+    vi.useFakeTimers();
+    boxWidth = 500;
+    const fonts = { status: 'loading', ready: new Promise(() => {}), addEventListener: vi.fn(), removeEventListener: vi.fn() };
+    Object.defineProperty(document, 'fonts', { value: fonts, configurable: true });
+    const { container } = render(<FittedText text="A name" max={3} min={1.2} />);
+    const el = container.firstChild;
+    expect(el.style.visibility).toBe('hidden');
+    act(() => { vi.advanceTimersByTime(400); });
+    // the 300 ms have passed, but the fonts are still loading
+    expect(el.style.visibility).toBe('hidden');
+    fonts.status = 'loaded';
+    act(() => { vi.advanceTimersByTime(700); });
+    expect(el.style.visibility).toBe('');
+    delete document.fonts;
+    vi.useRealTimers();
+  });
+
+  it('shows after the first 300 ms when the web view has no font API', () => {
+    vi.useFakeTimers();
+    boxWidth = 500;
+    const { container } = render(<FittedText text="A name" max={3} min={1.2} />);
+    expect(container.firstChild.style.visibility).toBe('hidden');
+    act(() => { vi.advanceTimersByTime(400); });
+    expect(container.firstChild.style.visibility).toBe('');
+    vi.useRealTimers();
   });
 });
