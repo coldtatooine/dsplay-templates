@@ -4,7 +4,7 @@
 
 A [React](https://reactjs.org/) [HTML-based template](https://developers.dsplay.tv/docs/html-templates) for the [DSPLAY - Digital Signage](https://dsplay.tv/) platform: one responsive panel that shows a clock, the weather, two currency quotes, the news, the next holiday, countdowns and count ups, a joke of the day and a logo, at any resolution, from a thin 1920x56 strip to a full portrait screen.
 
-It is the template of the **Information panel** media (`HORIZONTAL_INFO_BAR`). The media holds the data (which widgets, in which order, which city, which currencies, which feed); this template holds only the looks.
+It is the template of the **Information panel** media (`HORIZONTAL_INFO_BAR`), published as **two templates from this one source**: *Information panel* (the panel family) and *Information panel: spotlight* (the spotlight family), so each CMS template offers only its own styles. The media holds the data (which widgets, in which order, which city, which currencies, which feed); this template holds only the looks.
 
 > Built with [Vite](https://vitejs.dev/), requires Node.js 22.22.2+, 24.15.0+, or 26+ (see the repository's [`.nvmrc`](https://github.com/dsplay/dsplay-templates/blob/main/.nvmrc)).
 
@@ -32,8 +32,8 @@ Only looks. What the panel shows is in the media.
 
 | Key | Type | Description |
 |---|---|---|
-| `style` | string | `classic` (default), `terminal`, `glass`, `newsroom`, `paper`, `neon` (the panel), or `poster`, `cards`, `split`, `night`, `minimal` (the spotlight). |
-| `pin` | string | Spotlight only: `both` keeps the clock and the logo on the top bar instead of making them slides of the loop. |
+| `style` | selection | Register it as a **selection** (a list, not text) with these options in `extra`: panel template `classic` (default), `terminal`, `glass`, `newsroom`, `paper`, `neon`; spotlight template `poster` (default), `cards`, `split`, `night`, `minimal`. A value from the other family falls back to the default. |
+| `pin` | selection | Spotlight template only (do not register it on the panel). Register it as a **selection** with `slide` (default: the clock and the logo are slides of the loop) and `both` (they stay on the top bar instead). Any other value counts as `slide`. |
 | `bg_color` | color | Background color of the whole panel (replaces the style's own background). |
 | `bg_image` | image | Background image of the whole panel (wins over `bg_color`). |
 | `text_color` | color | Text color of the whole panel. |
@@ -75,7 +75,8 @@ npm start -- --filter=dsplay-template-info-panel
 ## Packing (release build)
 
 ```sh
-npm run zip -- --filter=./templates/info-panel   # from the repository root
+npm run zip -- --filter=./templates/info-panel   # from the repository root: template-panel.zip and template-spotlight.zip
+# one family only: npm run zip:panel  or  npm run zip:spotlight (vite build --mode panel|spotlight)
 ```
 
 ## Maintaining dependencies

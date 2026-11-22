@@ -14,12 +14,16 @@
   "scripts": {
     "start": "vite",
     "build": "npm run linter && vite build",
+    "build:panel": "npm run linter && vite build --mode panel",
+    "build:spotlight": "npm run linter && vite build --mode spotlight",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "linter": "eslint src",
     "linter:fix": "eslint src --fix",
-    "zip": "npm run build && node scripts/pack.mjs"
+    "zip": "npm run zip:panel && npm run zip:spotlight",
+    "zip:panel": "npm run build:panel && node scripts/pack.mjs panel",
+    "zip:spotlight": "npm run build:spotlight && node scripts/pack.mjs spotlight"
   },
   "browserslist": [
     ">0.2%",

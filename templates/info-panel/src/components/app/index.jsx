@@ -19,7 +19,10 @@ import '../../spotlight.sass';
 // the panel family (every widget at once) and the spotlight family (one widget at a time, with its detail)
 const PANEL_STYLES = ['classic', 'terminal', 'glass', 'newsroom', 'paper', 'neon'];
 const SPOTLIGHT_STYLES = ['poster', 'cards', 'split', 'night', 'minimal'];
-const STYLES = [...PANEL_STYLES, ...SPOTLIGHT_STYLES];
+// one source, two templates: `vite build --mode panel` and `--mode spotlight` each keep only their family's styles (the dev server and the tests keep both)
+const FAMILIES = { panel: PANEL_STYLES, spotlight: SPOTLIGHT_STYLES };
+const STYLES = FAMILIES[import.meta.env.MODE] || [...PANEL_STYLES, ...SPOTLIGHT_STYLES];
+const DEFAULT_STYLE = STYLES[0];
 
 // the faces a style draws with, loaded before the template is shown (the bundled ones, see fonts.sass)
 const FONTS = {
@@ -76,8 +79,8 @@ function App() {
   const media = useMedia();
   const { locale } = useConfig();
   const lng = lngOf(locale);
-  const styleVar = useTemplateVal('style', 'classic');
-  const style = STYLES.includes(styleVar) ? styleVar : 'classic';
+  const styleVar = useTemplateVal('style', DEFAULT_STYLE);
+  const style = STYLES.includes(styleVar) ? styleVar : DEFAULT_STYLE;
   const spotlightFamily = SPOTLIGHT_STYLES.includes(style);
   const { format, size } = useFormat(spotlightFamily ? spotFormatOf : formatOf);
   const pin = useTemplateVal('pin') === 'both';
