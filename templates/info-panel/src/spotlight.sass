@@ -990,20 +990,63 @@
   font-size: .55em
 // ---------- quotes with both currencies: the horizontal banners (and the slim strip's line) have room for two, side by side ----------
 .sp .flags2
+  display: flex
+  align-items: center
+.sp .fgroup
+  display: flex
+  flex-direction: column
+  align-items: center
+.sp .fpair
   position: relative
   width: 7.4em
   height: 4em
-.sp .flags2 .flag
+.sp .fpair .flag
   position: absolute
   top: 0
   width: 4em
   height: 4em
   margin: 0
   border: .14em solid rgba(255,255,255,.9)
-.sp .flags2 .f1
+.sp .fpair .f1
   left: 0
-.sp .flags2 .f2
+.sp .fpair .f2
   left: 3.2em
+// the base currency: one ball of its own (a flag, or the code where the currency has none), a rule between it and the pair, and a name under each
+.sp .fbase .flag
+  width: 4em
+  height: 4em
+  margin: 0
+  border: .14em solid rgba(255,255,255,.9)
+.sp .flag.nof
+  display: flex
+  align-items: center
+  justify-content: center
+  background: rgba(255,255,255,.22)
+  font-weight: 800
+  font-size: .9em
+  letter-spacing: .04em
+.sp .fsep
+  flex: none
+  width: .08em
+  height: 3.6em
+  margin: 0 .8em
+  background: currentColor
+  opacity: .35
+.sp .flabel
+  margin-top: .5em
+  font-size: .55em
+  font-weight: 800
+  letter-spacing: .1em
+  text-transform: uppercase
+  opacity: .85
+  white-space: nowrap
+.sf-band .fbase,
+.sf-band .fsep,
+.sf-band .flabel,
+.sf-tall .fbase,
+.sf-tall .fsep,
+.sf-tall .flabel
+  display: none
 .sp .q2row
   display: flex
   align-items: center
@@ -1167,10 +1210,6 @@
   border-radius: 50%
   background: currentColor
 // quotes with both currencies in every format: a row each (flag, price and change, chart); stacked in the big formats and the tall banner, side by side in the horizontal ones
-.sp .q2b
-  font-weight: 600
-  opacity: .75
-  letter-spacing: 0
 .sp .q2n
   margin-left: .6em
   font-weight: 600
@@ -1183,8 +1222,7 @@
   font-weight: 600
   white-space: nowrap
 .sf-band .q2n,
-.sf-band .q2f,
-.sf-band .q2b
+.sf-band .q2f
   display: none
 .sf-landscape .q2row,
 .sf-square .q2row,
@@ -1237,8 +1275,7 @@
   font-size: .85em
 .sf-tall .q2p
   font-size: 1.9em
-.sf-tall .q2n,
-.sf-tall .q2b
+.sf-tall .q2n
   display: none
 
 // ---------- the loop ----------

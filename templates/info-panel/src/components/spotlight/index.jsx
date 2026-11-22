@@ -68,7 +68,24 @@ function Hero({ s, format }) {
     );
   }
   if (s.isQuotes2) {
-    return <div className="flags2 a-pop">{s.flag1 && <img className="flag f1" src={s.flag1} alt="" />}{s.flag2 && <img className="flag f2" src={s.flag2} alt="" />}</div>;
+    // the base currency is a ball of its own, apart and named, then the currencies quoted in it: the screen says which is which
+    return (
+      <div className="flags2 a-pop">
+        {s.base && (
+          <>
+            <div className="fgroup fbase">
+              {s.baseFlag ? <img className="flag" src={s.baseFlag} alt="" /> : <span className="flag nof">{s.base}</span>}
+              <span className="flabel">{`${s.labelBase} · ${s.base}`}</span>
+            </div>
+            <span className="fsep" />
+          </>
+        )}
+        <div className="fgroup">
+          <div className="fpair">{s.flag1 && <img className="flag f1" src={s.flag1} alt="" />}{s.flag2 && <img className="flag f2" src={s.flag2} alt="" />}</div>
+          {s.base && <span className="flabel">{s.labelVs}</span>}
+        </div>
+      </div>
+    );
   }
   if (s.isHol) return <div className="cal a-pop"><div className="mon">{s.mon}</div><div className="day2">{s.dayNum}</div></div>;
   if (s.isBig) return <div className="bignum a-pop">{s.big}</div>;
@@ -95,7 +112,7 @@ function Info({ s, boost }) {
           {s.items.map((it) => (
             <div className="q2" key={it.tagText}>
               <div className="q2m">
-                <div className="q2h">{it.flag && <img className="flag" src={it.flag} alt="" />}{it.tagText}{s.base && <span className="q2b">{` / ${s.base}`}</span>}{it.full && <span className="q2n">{it.full}</span>}</div>
+                <div className="q2h">{it.flag && <img className="flag" src={it.flag} alt="" />}{it.tagText}{it.full && <span className="q2n">{it.full}</span>}</div>
                 <div className="q2p">{it.b}{it.delta && <span className="delta">{it.delta}</span>}</div>
                 {it.lo && <div className="q2f">{`Mín ${it.lo} · Máx ${it.hi}`}</div>}
               </div>
@@ -153,21 +170,18 @@ function Info({ s, boost }) {
   );
 }
 
-// how long a slide stays (ms): the media's duration shared among the slides, never more than the maximum nor less than the minimum (a joke has two phases)
-const SPOT_DWELL = { min: 5000, max: 12000 };
-
 const LAYOUT = { poster: 'lay-overlay', night: 'lay-overlay', cards: 'lay-side', split: 'lay-side', minimal: 'lay-side' };
 
 /** @param {{spotlight: {slides: object[], pinned: object}, style: string, format: string, lng: string}} props */
 export default function Spotlight({
-  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration, boost = 1, height = 0,
+  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, boost = 1, height = 0, max,
 }) {
   const { slides, pinned } = spotlight;
   // the strip draws one line per slide, fitted to its width instead of cut
   const slim = /sf-slim/.test(format);
   // the strip's line takes the height it has (23px is the strip's type size): a 120px strip draws it at about 50px, a 56px one at 23px
   const slimMax = Math.min(2.4, Math.max(0.9, ((Number(height) || 0) * 0.42) / 23));
-  const { active, phase } = useRotation({ phases: slides.map((s) => (s.isJoke ? 2 : 1)), duration, iteration, ...SPOT_DWELL });
+  const { active, phase } = useRotation({ phases: slides.map((s) => (s.isJoke ? 2 : 1)), duration, max });
   const hasHead = Boolean(pinned.clock || pinned.logo);
   // on the strip a joke's line is its question, then its answer, as in the other formats
   const lineOf = (s, i) => (s.isJoke && i === active && phase === 1 ? s.a : s.line);

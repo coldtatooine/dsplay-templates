@@ -6,5 +6,7 @@ export const mockUtils = () => ({
   useConfig: () => ({ locale: player.locale }),
   useTemplateVal: (key, fallback) => (player.template[key] === undefined ? fallback : player.template[key]),
   Loader: ({ children }) => children,
-  FittedText: ({ text, className, style }) => <span className={className} style={style}>{text}</span>,
+  FittedText: ({
+    text, className, style, children,
+  }) => <span className={className} style={style}>{children !== undefined ? children : text}</span>,
 });
