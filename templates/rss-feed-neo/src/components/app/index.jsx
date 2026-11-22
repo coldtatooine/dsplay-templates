@@ -1,17 +1,21 @@
 import { useEffect, useMemo } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import { Loader, useConfig } from '@dsplay/react-template-utils';
+import { Loader, useConfig, useMedia } from '@dsplay/react-template-utils';
 import News from '../news';
 import i18n from '../../i18n';
 import ViewContext from '../../hooks/view-context';
 import useSettings from '../../hooks/use-settings';
 import useStage from '../../hooks/use-stage';
 import useLogo from '../../hooks/use-logo';
+import { feedStories } from '../../util/feed';
 import './style.sass';
 import '../../entrance.css';
 
-// @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+// @font-face's are in fonts.sass: one face (regular) of each family, the only ones drawn
+const fonts = [
+  { family: 'Oswald', weight: 400 },
+  { family: 'Roboto Condensed', weight: 400 },
+];
 
 function Screen() {
   const config = useConfig();
@@ -34,6 +38,13 @@ function Screen() {
     }),
     [settings, stage, logo, feedLogo],
   );
+  // the photo of the first story is the picture of the first frame; the Loader never waits for it past its 4 s cap, and the photo's box is
+  // reserved (fixed size in rem) so a late photo only fades in
+  const media = useMedia();
+  const leadImage = useMemo(() => {
+    const [lead] = feedStories(media, config);
+    return lead && lead.image ? [lead.image] : [];
+  }, [media, config]);
   const surface = { backgroundColor: settings.theme.base };
 
   return (
@@ -41,6 +52,7 @@ function Screen() {
       <Loader
         reveal
         fonts={fonts}
+        images={leadImage}
       >
         <div className={`app format-${stage.format}`} style={surface}>
           <div
