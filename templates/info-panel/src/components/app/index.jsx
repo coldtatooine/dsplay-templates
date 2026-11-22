@@ -3,7 +3,7 @@ import {
   Loader, useConfig, useMedia, useTemplateVal,
 } from '@dsplay/react-template-utils';
 import { formatOf, isFlat, spotFormatOf } from '../../lib/layout';
-import { scaleOf } from '../../lib/scale';
+import { fillOf, scaleOf } from '../../lib/scale';
 import { readPanel } from '../../lib/model';
 import { readSpotlight } from '../../lib/spotlight';
 import { useRotation } from '../../lib/rotation';
@@ -19,7 +19,10 @@ import '../../spotlight.sass';
 // the panel family (every widget at once) and the spotlight family (one widget at a time, with its detail)
 const PANEL_STYLES = ['classic', 'terminal', 'glass', 'newsroom', 'paper', 'neon'];
 const SPOTLIGHT_STYLES = ['poster', 'cards', 'split', 'night', 'minimal'];
-const STYLES = [...PANEL_STYLES, ...SPOTLIGHT_STYLES];
+// one source, two templates: `vite build --mode panel` and `--mode spotlight` each keep only their family's styles (the dev server and the tests keep both)
+const FAMILIES = { panel: PANEL_STYLES, spotlight: SPOTLIGHT_STYLES };
+const STYLES = FAMILIES[import.meta.env.MODE] || [...PANEL_STYLES, ...SPOTLIGHT_STYLES];
+const DEFAULT_STYLE = STYLES[0];
 
 // the faces a style draws with, loaded before the template is shown (the bundled ones, see fonts.sass)
 const FONTS = {
@@ -76,8 +79,8 @@ function App() {
   const media = useMedia();
   const { locale } = useConfig();
   const lng = lngOf(locale);
-  const styleVar = useTemplateVal('style', 'classic');
-  const style = STYLES.includes(styleVar) ? styleVar : 'classic';
+  const styleVar = useTemplateVal('style', DEFAULT_STYLE);
+  const style = STYLES.includes(styleVar) ? styleVar : DEFAULT_STYLE;
   const spotlightFamily = SPOTLIGHT_STYLES.includes(style);
   const { format, size } = useFormat(spotlightFamily ? spotFormatOf : formatOf);
   const pin = useTemplateVal('pin') === 'both';
@@ -112,9 +115,11 @@ function App() {
     const { order, widgets, slides } = panel;
     const others = order.filter((k) => k !== 'rot').length;
     const share = SHARE[Math.min(others, 4)];
+    const boost = fillOf(format, size[0], size[1]);
+    const fillStyle = boost > 1.02 ? { fontSize: `${boost}em` } : undefined;
     const rotStyle = tall ? { maxHeight: `${share}%` } : { maxWidth: `${share}%` };
     const rot = (
-      <div key="rot" className="rot" style={flat ? rotStyle : undefined}>
+      <div key="rot" className="rot" style={flat ? rotStyle : fillStyle}>
         {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
       </div>
     );
@@ -136,7 +141,7 @@ function App() {
       });
     } else {
       const fixedTypes = order.filter((k) => k !== 'rot' && k !== 'logo');
-      content = [<div key="fx" className="fx">{fixedTypes.map(fixedWidget)}</div>, slides.length ? rot : null, logo];
+      content = [<div key="fx" className="fx" style={fillStyle}>{fixedTypes.map(fixedWidget)}</div>, slides.length ? rot : null, logo];
     }
   }
 
@@ -146,7 +151,7 @@ function App() {
       <Loader reveal fonts={FONTS[style]}>
         <Scaled format={format} size={size}>
         {spotlight ? (
-          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} />
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} boost={fillOf(format, size[0], size[1])} />
         ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
         </Scaled>
       </Loader>

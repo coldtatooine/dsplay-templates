@@ -6,7 +6,9 @@ import { resolve } from 'node:path';
 import { ZipArchive } from 'archiver';
 
 const buildDir = resolve('build');
-const zipPath = resolve('template.zip');
+// `node scripts/pack.mjs panel|spotlight` names the zip after the template it is (see the README)
+const family = process.argv[2];
+const zipPath = resolve(family ? `template-${family}.zip` : 'template.zip');
 
 rmSync(resolve(buildDir, 'test-assets'), { recursive: true, force: true });
 rmSync(zipPath, { force: true });
@@ -18,7 +20,7 @@ writeFileSync(resolve(buildDir, 'dsplay-data.js'), '// the content of this file 
 const output = createWriteStream(zipPath);
 const archive = new ZipArchive();
 
-output.on('close', () => console.log('template.zip generated with success!'));
+output.on('close', () => console.log(`${zipPath} generated with success!`));
 archive.on('warning', (err) => { throw err; });
 archive.on('error', (err) => { throw err; });
 

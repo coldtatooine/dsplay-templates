@@ -108,7 +108,7 @@ const quotesSlide = (data, ctx) => {
       series: chartPoints(series), lo: series.length ? format.format(Math.min(...series)) : '', hi: series.length ? format.format(Math.max(...series)) : '',
     };
   });
-  return { kind: 'quotes2', isQuotes2: true, flag1: items[0].flag, flag2: items[1] ? items[1].flag : null, items, line: items.map((i) => `${i.tagText} ${i.b} ${i.delta}`.trim()).join(' · ') };
+  return { kind: 'quotes2', isQuotes2: true, base: text(data.base).toUpperCase(), flag1: items[0].flag, flag2: items[1] ? items[1].flag : null, items, line: items.map((i) => `${i.tagText} ${i.b} ${i.delta}`.trim()).join(' · ') };
 };
 
 const newsSlide = (data, ctx) => {

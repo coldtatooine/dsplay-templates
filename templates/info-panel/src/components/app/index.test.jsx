@@ -39,7 +39,7 @@ describe('App', () => {
     expect(container.querySelector('.ip.fmt-slim.s120.st-classic.flat')).not.toBeNull();
     expect(container.querySelector('.wk-clock')).not.toBeNull();
     expect(container.querySelector('.wk-weather .wx-t').textContent).toBe('21°C');
-    expect([...container.querySelectorAll('.q-c')].map((n) => n.textContent)).toEqual(['USD', 'EUR']);
+    expect([...container.querySelectorAll('.q-c')].map((n) => n.firstChild.textContent)).toEqual(['USD', 'EUR']);
     expect(container.querySelector('.wk-logo img').getAttribute('src')).toBe('https://example.com/logo.png');
     expect(container.querySelector('.rot .headline').textContent).toBe('Uma notícia');
   });
