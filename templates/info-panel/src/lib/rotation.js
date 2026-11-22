@@ -8,6 +8,10 @@
 import { useEffect, useMemo, useState } from 'react';
 
 const DEFAULT_DURATION = 20000;
+// What the player spends before the first page is on screen (the web view loads the template, the fonts and the data arrive, the page fades in) counts against the media's duration, and
+// it would all come out of the last page. The pages share the duration without it, so the last one gets its whole time. A media that short keeps its whole duration.
+const LEAD = 2000;
+const MIN_FOR_LEAD = 6000;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
@@ -16,15 +20,16 @@ export const phasesOf = (items) => items.map((item) => Math.max(1, Math.trunc(Nu
 
 /**
  * The time of one phase, in ms, and how many phases a showing of this media can hold.
- * @param {number} duration the media's duration, ms (the default is 20 s when it is unknown)
+ * @param {number} duration the media's duration, ms (the default is 20 s when it is unknown); the first 2 s of a media of more than 6 s are not shared (the page is loading)
  * @param {number} total phases in one turn of the items
  * @param {{min: number, max: number}} limits ms
  */
 export function dwellFor(duration, total, { min, max }) {
-  const length = Number(duration) > 0 ? Number(duration) : DEFAULT_DURATION;
+  const full = Number(duration) > 0 ? Number(duration) : DEFAULT_DURATION;
+  const length = full > MIN_FOR_LEAD ? full - LEAD : full;
   const dwell = clamp(length / Math.max(1, total), min, max);
   const fit = clamp(Math.floor(length / dwell), 1, Math.max(1, total));
-  return { dwell: Math.round(dwell), fit };
+  return { dwell: Math.floor(dwell), fit };
 }
 
 /** Which item, and which of its phases, a step of the turn is on. */

@@ -8,7 +8,7 @@ const LIMITS = { min: 3000, max: 8000 };
 
 describe('dwellFor', () => {
   it('shares the media\'s duration among the phases', () => {
-    expect(dwellFor(30000, 6, LIMITS)).toEqual({ dwell: 5000, fit: 6 });
+    expect(dwellFor(30000, 6, LIMITS)).toEqual({ dwell: 4666, fit: 6 });
   });
 
   it('never keeps an item longer than the maximum, however long the media is', () => {
@@ -22,8 +22,16 @@ describe('dwellFor', () => {
   });
 
   it('takes 20 s when the media has no duration', () => {
-    expect(dwellFor(undefined, 4, LIMITS)).toEqual({ dwell: 5000, fit: 4 });
-    expect(dwellFor(0, 4, LIMITS)).toEqual({ dwell: 5000, fit: 4 });
+    expect(dwellFor(undefined, 4, LIMITS)).toEqual({ dwell: 4500, fit: 4 });
+    expect(dwellFor(0, 4, LIMITS)).toEqual({ dwell: 4500, fit: 4 });
+  });
+
+  it('does not share the first seconds, which the player spends loading the page: the last page keeps its whole time', () => {
+    // 24 s for 6 pages would be 4 s each, and a 2 s load would leave the last one 2 s; 22 s is shared instead, and every page can be shown for its dwell before the media ends
+    const { dwell, fit } = dwellFor(24000, 6, LIMITS);
+    expect(dwell).toBe(3666);
+    expect(2000 + dwell * fit).toBeLessThanOrEqual(24000);
+    expect(dwellFor(5000, 2, LIMITS).dwell).toBe(3000);
   });
 });
 
