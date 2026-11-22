@@ -115,6 +115,13 @@ describe('App', () => {
     expect(container.querySelector('.ri .ico.logo img').getAttribute('src')).toBe('https://example.com/channel.png');
   });
 
+  it('keeps a slide hidden until its texts are final, so nothing around them moves while they are fitted', () => {
+    screen(1920, 1080, { style: 'classic' });
+    const { container } = render(<App />);
+    // the stand-in for FittedText reports at once, so every slide is shown...
+    expect(container.querySelectorAll('.ri.unfit')).toHaveLength(0);
+  });
+
   it('draws the animated icons of the forecast and the alert slide of the spotlight', () => {
     screen(1920, 1080, { style: 'poster' });
     player.media = { duration: 30000, result: { ...answer, order: ['alerts', 'weather'], rotating: ['alerts'], fixed: ['weather'], widgets: { ...answer.widgets, alerts: { type: 'alerts', status: 'ok', data: { items: [{ id: 'a', event: 'Vendaval', severity: 'extreme', areas: [], expires: '2099-01-01T00:00:00' }] } }, weather: { type: 'weather', status: 'ok', data: { weather: { current: { temp: 20, icon: 'c01d', min: 15, max: 25 }, forecast: [{ date: '2026-11-22', min: 14, max: 22, icon: 'r01d' }] } } } } } };
