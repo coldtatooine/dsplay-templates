@@ -17,7 +17,7 @@ import './style.sass';
 import '../../entrance.css';
 
 // @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+const fonts = [{ family: 'Oswald', weight: 400 }, { family: 'Roboto Condensed', weight: 400 }];
 
 const WIDGETS = {
   clock: Clock, weather: Weather, quotes: Quotes, news: News, company: Company,

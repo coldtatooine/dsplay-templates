@@ -25,6 +25,14 @@ scripts/
   pack.mjs                   <-- zips the Vite build output into template.zip (Windows/macOS/Linux)
 ```
 
+## Entrance and idle motion (no loader screen)
+
+`Loader` runs in `reveal` mode (`fonts` lists Oswald 400 and Roboto Condensed 400, the only faces drawn; the logos and the weather icon are not in `images` because they load on their own and never hold the screen). `src/entrance.css` holds everything that moves, and all of it starts from `.dsplay-ready`, never at mount:
+
+- **Entrance:** the frame fades in (`.fade-in` in `src/style.sass`, only when the animation setting is on) and the widgets rise one after the other, 80 ms apart (clock, weather, quotes, news, company; about 600 ms in all).
+- **Idle:** the weather icon bobs slowly and the news marker breathes, so the bar is never frozen. Every keyframe starts and ends at rest.
+- Only `opacity` and `transform` (`translateY`, which does not change the width `Row` measures), prefixed, on HTML boxes; `@media (prefers-reduced-motion: reduce)` turns all of it off. See [`docs/entrance-style.md`](../../docs/entrance-style.md) in the repo root.
+
 ## File and folder naming
 
 - **kebab-case everywhere** in `src/` (and anywhere else in this repo we author ourselves) — folders, JS/JSX files, Sass files, test files. E.g. `setup-tests.js`, not `setupTests.js`. This does *not* apply to files whose name is a fixed convention from tooling (`package.json`, `README.md`, `vite.config.js`, `.nvmrc`, etc.) — only to files/folders we're free to name.
