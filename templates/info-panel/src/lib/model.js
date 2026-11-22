@@ -88,7 +88,6 @@ export function readQuotes(data, lng) {
       const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
       return {
         code: text(item.code).toUpperCase(),
-        base: text(data.base).toUpperCase(),
         value: format.format(item.price),
         dir,
         arrow: dir === 'up' ? '▲' : dir === 'down' ? '▼' : '',
@@ -155,7 +154,7 @@ const slideOf = (type, id, data, ctx) => {
   const t = stringsOf(ctx.lng);
   if (type === 'news') {
     const item = pick(Array.isArray(data.items) ? data.items.filter((it) => it && text(it.title)) : [], ctx.iteration);
-    return item && { type, tag: t.news, ico: true, headline: text(item.title), sub: shorten(item.description, 110), slots: 1 };
+    return item && { type, tag: t.news, ico: true, logo: /^https?:/.test(text(data.logo)) ? text(data.logo) : '', headline: text(item.title), sub: shorten(item.description, 110), slots: 1 };
   }
   if (type === 'holidays') {
     const today = localDate(data.date) || ctx.now;

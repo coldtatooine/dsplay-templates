@@ -108,7 +108,7 @@ const quotesSlide = (data, ctx) => {
       series: chartPoints(series), lo: series.length ? format.format(Math.min(...series)) : '', hi: series.length ? format.format(Math.max(...series)) : '',
     };
   });
-  return { kind: 'quotes2', isQuotes2: true, base: text(data.base).toUpperCase(), flag1: items[0].flag, flag2: items[1] ? items[1].flag : null, items, line: items.map((i) => `${i.tagText} ${i.b} ${i.delta}`.trim()).join(' · ') };
+  return { kind: 'quotes2', isQuotes2: true, base: text(data.base).toUpperCase(), baseFlag: flagUrl(text(data.base).toUpperCase()), labelBase: ctx.t.quoteBase, labelVs: ctx.t.quoteVs, flag1: items[0].flag, flag2: items[1] ? items[1].flag : null, items, line: items.map((i) => `${i.tagText} ${i.b} ${i.delta}`.trim()).join(' · ') };
 };
 
 const newsSlide = (data, ctx) => {
@@ -116,7 +116,7 @@ const newsSlide = (data, ctx) => {
   if (!item) return null;
   const images = Array.isArray(item.images) ? item.images : [];
   const image = images.map((im) => (typeof im === 'string' ? im : im && im.url)).find((u) => /^https?:/.test(u || ''));
-  return { kind: 'news', isNews: true, isTitled: true, hasTag: true, icon: ICON.news, tagText: [ctx.t.news, text(data.title)].filter(Boolean).join(' · '), image: image || '', title: text(item.title), text: shorten(item.description, 160), line: text(item.title) };
+  return { kind: 'news', isNews: true, isTitled: true, hasTag: true, icon: ICON.news, logo: /^https?:/.test(text(data.logo)) ? text(data.logo) : '', tagText: [ctx.t.news, text(data.title)].filter(Boolean).join(' · '), image: image || '', title: text(item.title), text: shorten(item.description, 160), line: text(item.title) };
 };
 
 const holidaysSlide = (data, ctx) => {

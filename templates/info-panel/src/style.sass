@@ -264,16 +264,6 @@ body
   font-weight: 700
   letter-spacing: .04em
   margin-bottom: .15em
-// the base currency, beside the code (EUR / USD), only where there is room
-.ip .q-b
-  display: none
-  font-weight: 600
-  opacity: .7
-  letter-spacing: 0
-.fmt-landscape .q-b,
-.fmt-square .q-b,
-.fmt-portrait .q-b
-  display: inline
 .ip .q-v
   display: flex
   align-items: center
@@ -368,6 +358,8 @@ body
   display: flex
   flex-direction: column
   min-width: 0
+  // never wider than the area it sits in: a long text must shrink (FittedText) or wrap, not push the box out under the neighbours
+  max-width: 100%
 .ip .ri
   min-width: 0
 .ip .rtop
@@ -419,13 +411,13 @@ body
 .fmt-slim .fx
   display: flex
   align-items: center
-  padding: 0 .5em
+  padding: 0 .8em
 .fmt-slim .fx .w + .w
-  margin-left: .9em
+  margin-left: 1.6em
 .fmt-slim .rot
   flex: 1
   min-width: 0
-  margin: 0 .6em
+  margin: 0 .6em 0 1.4em
 .fmt-slim .anchor
   display: flex
   align-items: stretch
@@ -441,9 +433,9 @@ body
 .fmt-slim .wk-clock .time
   font-size: 1.15em
 .fmt-slim .wx
-  font-size: 1.3em
+  font-size: 1em
 .fmt-slim .wx-t
-  font-size: 1.5em
+  font-size: 1.15em
 .fmt-slim .wx-p
   display: none
 .fmt-slim .wk-quotes .q-c
@@ -656,7 +648,7 @@ body
   line-height: 1.15
   font-weight: 700
 .fmt-landscape .sub
-  font-size: .95em
+  font-size: 1.2em
   margin-top: .7em
 .fmt-landscape .big
   font-size: 6em
@@ -743,7 +735,7 @@ body
   line-height: 1.15
   font-weight: 700
 .fmt-square .sub
-  font-size: .9em
+  font-size: 1.1em
   margin-top: .6em
 .fmt-square .big
   font-size: 5em
@@ -829,8 +821,17 @@ body
   line-height: 1.18
   font-weight: 700
 .fmt-portrait .sub
-  font-size: .9em
+  font-size: 1.1em
   margin-top: .7em
+// the description of a news item wraps over up to four lines in the big formats (a strip keeps one)
+.fmt-landscape .sub,
+.fmt-square .sub,
+.fmt-portrait .sub
+  white-space: normal
+  line-height: 1.3
+  display: -webkit-box
+  -webkit-box-orient: vertical
+  -webkit-line-clamp: 4
 .fmt-portrait .big
   font-size: 6.4em
   line-height: 1

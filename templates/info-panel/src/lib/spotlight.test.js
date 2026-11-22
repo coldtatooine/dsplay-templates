@@ -75,6 +75,13 @@ describe('readSpotlight', () => {
     expect(slides[5].text).toContain('5 d 14 h 46 min');
   });
 
+  it('carries the channel logo of the news when the feed has one', () => {
+    const a = answer();
+    a.result.widgets.news.data.logo = 'https://example.com/channel.png';
+    expect(readSpotlight(a, { lng: 'pt', now: NOW }).slides[3].logo).toBe('https://example.com/channel.png');
+    expect(readSpotlight(answer(), { lng: 'pt', now: NOW }).slides[3].logo).toBe('');
+  });
+
   it('keeps the clock and the logo on the top bar when they are pinned, and out of the loop', () => {
     const { slides, pinned } = readSpotlight(answer(), { lng: 'pt', now: NOW, pin: true });
     expect(slides.map((s) => s.kind)).not.toContain('clock');

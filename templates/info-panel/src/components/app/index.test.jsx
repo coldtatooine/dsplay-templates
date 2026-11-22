@@ -39,7 +39,7 @@ describe('App', () => {
     expect(container.querySelector('.ip.fmt-slim.s120.st-classic.flat')).not.toBeNull();
     expect(container.querySelector('.wk-clock')).not.toBeNull();
     expect(container.querySelector('.wk-weather .wx-t').textContent).toBe('21°C');
-    expect([...container.querySelectorAll('.q-c')].map((n) => n.firstChild.textContent)).toEqual(['USD', 'EUR']);
+    expect([...container.querySelectorAll('.q-c')].map((n) => n.textContent)).toEqual(['USD', 'EUR']);
     expect(container.querySelector('.wk-logo img').getAttribute('src')).toBe('https://example.com/logo.png');
     expect(container.querySelector('.rot .headline').textContent).toBe('Uma notícia');
   });
@@ -90,6 +90,14 @@ describe('App', () => {
     expect(container.querySelectorAll('.slide')).toHaveLength(5);
     expect(container.querySelectorAll('.dot')).toHaveLength(5);
     expect(container.querySelector('.sl-weather .temp').textContent).toBe('21°C');
+  });
+
+  it('puts the icon of each widget before its line on the thin strip of the spotlight: the channel logo for the news, the widget icon for the others', () => {
+    screen(1920, 120, { style: 'poster' });
+    player.media = { duration: 30000, result: { ...answer, order: ['news', 'clock'], rotating: ['news'], fixed: ['clock'], widgets: { clock: answer.widgets.clock, news: { type: 'news', status: 'ok', data: { logo: 'https://example.com/channel.png', items: [{ title: 'Uma notícia' }] } } } } };
+    const { container } = render(<App />);
+    expect(container.querySelector('.slide.sl-news .sicon.logo img').getAttribute('src')).toBe('https://example.com/channel.png');
+    expect(container.querySelector('.slide.sl-clock .sicon svg')).not.toBeNull();
   });
 
   it('draws the animated icons of the forecast and the alert slide of the spotlight', () => {
