@@ -75,6 +75,12 @@ describe('readSpotlight', () => {
     expect(slides[5].text).toContain('5 d 14 h 46 min');
   });
 
+  it('carries the animated icon of the weather kind of the place', () => {
+    const { slides } = readSpotlight(answer(), { lng: 'pt', now: NOW });
+    expect(slides[1].dayIcon).toBeTruthy();
+    expect(Object.keys(slides[1].dayIcon).every((k) => ['sun', 'cloud', 'drops'].includes(k))).toBe(true);
+  });
+
   it('carries the channel logo of the news when the feed has one', () => {
     const a = answer();
     a.result.widgets.news.data.logo = 'https://example.com/channel.png';

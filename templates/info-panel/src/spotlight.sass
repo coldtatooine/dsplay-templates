@@ -650,6 +650,18 @@
 .sf-slim .sicon svg
   width: 100%
   height: 100%
+// the animated weather icon: the forecast day's, at the size of the strip's text
+.sf-slim .sicon.wx
+  width: 1.9em
+  height: 1.6em
+  // a soft shadow so the white cloud still shows on a light background
+  -webkit-filter: drop-shadow(0 .03em .06em rgba(0,0,0,.45))
+  filter: drop-shadow(0 .03em .06em rgba(0,0,0,.45))
+.sf-slim .sicon.wx .dwx
+  position: relative
+  width: 1.6em
+  height: 1.4em
+  flex: none
 .sf-slim .sicon.logo
   width: auto
   min-width: 1.5em

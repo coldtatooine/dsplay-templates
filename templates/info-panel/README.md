@@ -24,7 +24,7 @@ It is the template of the **Information panel** media (`HORIZONTAL_INFO_BAR`), p
 - **The customer's order.** The widgets come in the order the media sets; the rotating widgets (news, holidays, counters, jokes) share one area that sits where the first of them was put, each taking a turn (4 s, a joke takes two).
 - **Weather alerts** (the `alerts` widget, from the Environment monitor's service): one slide per active alert, moderate or worse, the most severe first; the tag and the icon wear the severity color (yellow, orange, red). With no alert active the widget is left out and takes no room.
 - **A widget that failed is left out**; the panel plays with the rest.
-- **Charts need a series.** The spotlight draws a currency's chart, minimum and maximum only when its `items[].series` is in the answer; the quotes widget of the bar is chartless by design (ADR 0070), so it shows the two prices and changes without them.
+- **Charts need a series.** The spotlight draws a currency's chart, minimum and maximum only when its `items[].series` is in the answer, and only in the formats with room (landscape, square, portrait, tall; not the banners). The media's quotes widget carries the 30-day series (the panel ignores it, and shows the two prices and changes).
 
 ## Template variables
 

@@ -83,7 +83,7 @@ const weatherSlide = (data, ctx) => {
   const city = text(w.city);
   const description = text(current.description);
   return {
-    kind: 'weather', isWeather: true, hasTag: true, hasFacts: facts.length > 0, wx: kind, icon: ICON.weather, tagText: city || ctx.t.weather, temp: formatTemp(temp, unit, true), text: description, facts, days,
+    kind: 'weather', isWeather: true, hasTag: true, hasFacts: facts.length > 0, wx: kind, dayIcon: DAY_ICON[kind], icon: ICON.weather, tagText: city || ctx.t.weather, temp: formatTemp(temp, unit, true), text: description, facts, days,
     line: [city, formatTemp(temp, unit, true), description].filter(Boolean).join(' · '),
   };
 };
