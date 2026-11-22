@@ -48,6 +48,9 @@ const PANEL_DWELL = { min: 3000, max: 8000 };
 // how much of the strip the rotating area may take, by how many other widgets there are (the horizontal bar's rule: the long text never takes the whole banner)
 const SHARE = [100, 65, 55, 45, 40];
 
+// how many lines a rotating text may take: a strip has one, a banner two, the tile formats three
+const linesOf = (format) => (/fmt-slim/.test(format) ? 1 : /fmt-band/.test(format) ? 2 : 3);
+
 const windowSize = () => [window.innerWidth, window.innerHeight];
 
 /** The format class of the screen for a family's `of` function, again whenever the window is resized. */
@@ -117,10 +120,13 @@ function App() {
     const share = SHARE[Math.min(others, 4)];
     const boost = fillOf(format, size[0], size[1]);
     const fillStyle = boost > 1.02 ? { fontSize: `${boost}em` } : undefined;
+    // the big tile of the tile formats is mostly air at the design's size: its content is drawn a third bigger, on top of what the room left over adds
+    const rotBoost = boost * (/fmt-(landscape|square|portrait)/.test(format) ? 1.3 : 1);
+    const rotFill = rotBoost > 1.02 ? { fontSize: `${rotBoost}em` } : undefined;
     const rotStyle = tall ? { maxHeight: `${share}%` } : { maxWidth: `${share}%` };
     const rot = (
-      <div key="rot" className="rot" style={flat ? rotStyle : fillStyle}>
-        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
+      <div key="rot" className="rot" style={flat ? rotStyle : rotFill}>
+        {slides.map((slide, i) => <Slide key={slide.type + i} slide={slide} fit={fit} lines={linesOf(format)} newsBoxStyle={newsBox} active={rotation.active === i} phase={rotation.phase} />)}
       </div>
     );
     const fixedWidget = (type, index) => (
@@ -151,7 +157,7 @@ function App() {
       <Loader reveal fonts={FONTS[style]}>
         <Scaled format={format} size={size}>
         {spotlight ? (
-          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} boost={fillOf(format, size[0], size[1])} />
+          <Spotlight spotlight={spotlight} style={style} format={format} lng={lng} backgroundStyle={bgStyle} textColor={textColor} logoBoxStyle={logoBox} duration={media && media.duration} iteration={iteration} boost={fillOf(format, size[0], size[1])} height={size[1]} />
         ) : <div className="sp nohead" style={{ width: '100%', height: '100%' }}><div className="sbg" style={bgStyle} /></div>}
         </Scaled>
       </Loader>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FittedText } from '@dsplay/react-template-utils';
 import { useRotation } from '../../lib/rotation';
 
 // The spotlight family (Claude Design canvas, ADR 0070): one widget at a time, with its detail. Markup and class names as in the approved design; style.sass's sibling spotlight.sass has the looks.
@@ -43,7 +44,12 @@ const DayIcon = ({ day }) => (
   </div>
 );
 
-function Hero({ s }) {
+// the biggest size of the clock's digits by format, in em of the hero's type size (what the format's CSS draws)
+const BIGTIME_MAX = {
+  'sf-landscape': 9.5, 'sf-square': 7.4, 'sf-portrait': 8.6, 'sf-tall': 4.6, 'sf-band': 2.5,
+};
+
+function Hero({ s, format }) {
   if (s.isNews) {
     return (
       <div className={`photo ${s.image ? 'real' : ''}`} style={s.image ? { backgroundImage: `url('${s.image}')` } : undefined}>
@@ -66,7 +72,14 @@ function Hero({ s }) {
   }
   if (s.isHol) return <div className="cal a-pop"><div className="mon">{s.mon}</div><div className="day2">{s.dayNum}</div></div>;
   if (s.isBig) return <div className="bignum a-pop">{s.big}</div>;
-  if (s.isClock) return <div className="bigtime a-pop">{s.hours}<span className="blink">:</span>{s.minutes}</div>;
+  if (s.isClock) {
+    // the digits are as wide as the hero allows: fitted, not a size that overflows a narrow region
+    return (
+      <FittedText className="bigtime a-pop" text={`${s.hours}:${s.minutes}`} max={BIGTIME_MAX[String(format).split(' ')[0]] || 9.5} min={1.5} style={{ width: '100%', textAlign: 'center' }}>
+        {s.hours}<span className="blink">:</span>{s.minutes}
+      </FittedText>
+    );
+  }
   if (s.isLogo) return <div className="slogo biglogo a-pop"><img src={s.url} alt="" /></div>;
   if (s.isHoro) return <div className="signbox"><div className="sign a-pop"><Icon path={s.icon} /></div><div className="signname a-rise">{s.signName}</div></div>;
   if (s.isJoke) return <div className="bigic a-pop"><Icon path={s.icon} width={1.5} /></div>;
@@ -74,9 +87,9 @@ function Hero({ s }) {
   return null;
 }
 
-function Info({ s }) {
+function Info({ s, boost }) {
   return (
-    <div className="info">
+    <div className="info" style={boost > 1.02 ? { fontSize: `${boost}em` } : undefined}>
       {s.isQuotes2 && (
         <div className="q2row">
           {s.items.map((it) => (
@@ -147,11 +160,17 @@ const LAYOUT = { poster: 'lay-overlay', night: 'lay-overlay', cards: 'lay-side',
 
 /** @param {{spotlight: {slides: object[], pinned: object}, style: string, format: string, lng: string}} props */
 export default function Spotlight({
-  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration, boost = 1,
+  spotlight, style, format, lng, backgroundStyle, textColor, logoBoxStyle, duration, iteration, boost = 1, height = 0,
 }) {
   const { slides, pinned } = spotlight;
+  // the strip draws one line per slide, fitted to its width instead of cut
+  const slim = /sf-slim/.test(format);
+  // the strip's line takes the height it has (23px is the strip's type size): a 120px strip draws it at about 50px, a 56px one at 23px
+  const slimMax = Math.min(2.4, Math.max(0.9, ((Number(height) || 0) * 0.42) / 23));
   const { active, phase } = useRotation({ phases: slides.map((s) => (s.isJoke ? 2 : 1)), duration, iteration, ...SPOT_DWELL });
   const hasHead = Boolean(pinned.clock || pinned.logo);
+  // on the strip a joke's line is its question, then its answer, as in the other formats
+  const lineOf = (s, i) => (s.isJoke && i === active && phase === 1 ? s.a : s.line);
   return (
     <div className={`sp ${format} st-${style} ${LAYOUT[style]} ${hasHead ? 'withhead' : 'nohead'}`} style={{ width: '100%', height: '100%', color: textColor || undefined }}>
       <div className="sbg" style={backgroundStyle} />
@@ -161,10 +180,10 @@ export default function Spotlight({
       </div>
       <div className="stage">
         {slides.map((s, i) => (
-          <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key} style={boost > 1.02 ? { fontSize: `${boost}em` } : undefined}>
-            <div className="hero"><Hero s={s} /></div>
-            <Info s={s} />
-            <span className="sline">{s.line}</span>
+          <div className={`slide sl-${s.kind} ${i === active ? 'on' : ''} ${i === active && phase === 1 ? 'ph1' : ''}`} key={s.key}>
+            <div className="hero"><Hero s={s} format={format} /></div>
+            <Info s={s} boost={boost} />
+            {slim ? <FittedText className="sline" text={lineOf(s, i)} max={slimMax} min={0.45} /> : <span className="sline">{s.line}</span>}
           </div>
         ))}
       </div>

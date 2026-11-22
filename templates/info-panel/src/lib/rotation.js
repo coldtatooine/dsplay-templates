@@ -37,8 +37,38 @@ export function locate(step, phases) {
   return { active: 0, phase: 0 };
 }
 
-/** The step a showing starts on: the previous showings are over, each of them held `fit` steps. */
-export const startStep = (iteration, fit, total) => ((Math.abs(Math.trunc(Number(iteration) || 0)) * fit) % Math.max(1, total));
+/**
+ * The step a showing starts on. A showing holds whole items only, as many as fit in `fit` phases (at least one), so it never ends between the question of a joke and its answer; the next
+ * showing starts at the item after the last one. The start of showing `iteration` is found by playing the showings before it (the place repeats, so a long count is reduced).
+ */
+export function startStep(iteration, fit, phases) {
+  const count = Math.abs(Math.trunc(Number(iteration) || 0));
+  const items = phases.length;
+  if (!items || !count) return 0;
+  const next = (from) => {
+    let index = from;
+    let used = 0;
+    for (let taken = 0; taken < items; taken += 1) {
+      if (taken > 0 && used + phases[index] > fit) break;
+      used += phases[index];
+      index = (index + 1) % items;
+    }
+    return index;
+  };
+  const seen = new Map();
+  let index = 0;
+  for (let shown = 0; shown < count; shown += 1) {
+    if (seen.has(index)) {
+      // the same item starts the showing again: from here the places repeat with this period
+      const period = shown - seen.get(index);
+      for (let left = (count - shown) % period; left > 0; left -= 1) index = next(index);
+      break;
+    }
+    seen.set(index, shown);
+    index = next(index);
+  }
+  return phases.slice(0, index).reduce((sum, n) => sum + n, 0);
+}
 
 /**
  * The item showing now and its phase. With nothing to rotate (one phase) it stays on the first item and sets no timer.
@@ -49,7 +79,7 @@ export function useRotation({ phases, duration, iteration, min, max }) {
   const list = useMemo(() => phasesOf(key ? key.split(',').map(Number) : []), [key]);
   const total = list.reduce((sum, n) => sum + n, 0);
   const { dwell, fit } = dwellFor(duration, total, { min, max });
-  const first = startStep(iteration, fit, total);
+  const first = startStep(iteration, fit, list);
   const [step, setStep] = useState(first);
 
   useEffect(() => {

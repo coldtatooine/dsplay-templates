@@ -11,32 +11,48 @@ const REMEASURE_AFTER = [300, 1000, 2500];
  * once the fonts are in (`Loader` mounts the template hidden while they load, and a text measured in the fallback font would be cut, or too small, when the real
  * one arrives). If even `min` is too much the text is cut with an ellipsis. A short text keeps `max`.
  *
+ * With `lines` above 1 the text may wrap over that many lines instead: the size is the biggest, from `max` down to `min`, at which it fits in them, and only a text that does not
+ * fit in `lines` lines even at `min` is cut, with an ellipsis on the last line (`-webkit-line-clamp`). A one-line text is never cut while it can still shrink.
+ *
  * It differs from `FitText`, which fills a fixed box with no biggest or smallest size and so would blow a short text up to the whole box. The element is a block
  * as wide as its parent leaves it: give the parent the width the text may use.
  * @param {object} props
- * @param {string} props.text - The text, one line
+ * @param {string} props.text - The text, one line (what is measured again when it changes)
  * @param {number} props.max - Biggest font size, in em of the parent's font size (the size a short text gets)
  * @param {number} props.min - Smallest font size, in em of the parent's font size
+ * @param {number} [props.lines] - How many lines the text may take, 1 by default (one line, never wrapped)
  * @param {string} [props.as] - Tag of the element, `span` by default
  * @param {string} [props.className] - Class applied to the element
+ * @param {React.ReactNode} [props.children] - What to draw instead of `text`, for a text with markup in it (a blinking colon); `text` must say the same words
  * @param {React.CSSProperties} [props.style] - Extra styles merged into the element (the size and the one-line rules always win)
  * @returns {React.ReactElement}
  */
 function FittedText({
-  as: Tag = 'span', text, max, min, className = '', style = {},
+  as: Tag = 'span', text, max, min, lines = 1, className = '', style = {}, children,
 }) {
   const ref = useRef(null);
   const [size, setSize] = useState(max);
+  // true when the text still does not fit in `lines` lines at `min`: the last line is then cut with an ellipsis
+  const [clamped, setClamped] = useState(false);
+  const wraps = lines > 1;
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    // the text fits when nothing sticks out sideways of the box the parent gives it
+    // the text fits when nothing sticks out sideways of the box the parent gives it (and, when it may wrap, when it takes no more than `lines` lines)
     const fits = (candidate) => {
       el.style.fontSize = `${candidate}em`;
-      return el.scrollWidth <= el.clientWidth;
+      if (el.scrollWidth > el.clientWidth) return false;
+      if (!wraps) return true;
+      const lineHeight = parseFloat(window.getComputedStyle(el).lineHeight) || parseFloat(window.getComputedStyle(el).fontSize) * 1.2;
+      return el.scrollHeight <= lineHeight * lines + 2;
     };
     const fit = () => {
+      if (wraps) {
+        // measured unclamped, so the height is the whole text's
+        el.style.display = 'block';
+        el.style.webkitLineClamp = 'unset';
+      }
       let best = min;
       if (fits(max)) best = max;
       else {
@@ -49,6 +65,7 @@ function FittedText({
       }
       el.style.fontSize = `${best}em`;
       setSize(best);
+      setClamped(wraps && !fits(best));
     };
 
     fit();
@@ -63,7 +80,7 @@ function FittedText({
       timers.forEach(clearTimeout);
       if (fonts && fonts.removeEventListener) fonts.removeEventListener('loadingdone', again);
     };
-  }, [text, max, min]);
+  }, [text, max, min, lines, wraps]);
 
   return (
     <Tag
@@ -73,12 +90,13 @@ function FittedText({
         ...style,
         display: 'block',
         fontSize: `${size}em`,
-        whiteSpace: 'nowrap',
+        whiteSpace: wraps ? 'normal' : 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        ...(wraps && clamped ? { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: lines } : {}),
       }}
     >
-      {text}
+      {children !== undefined ? children : text}
     </Tag>
   );
 }

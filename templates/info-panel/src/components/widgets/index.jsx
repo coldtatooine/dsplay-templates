@@ -97,11 +97,11 @@ export function Logo({ url, boxStyle }) {
 
 /** One slide of the rotating area: the icon and the tag, then the text, which is fitted to the room it has (a joke shows the question, then the answer). */
 export function Slide({
-  slide, fit, newsBoxStyle, active, phase,
+  slide, fit, lines = 1, newsBoxStyle, active, phase,
 }) {
-  // `fit` is null on the tall banner, where a long text wraps over several lines at one size instead of shrinking
+  // `fit` is null on the tall banner, where a long text wraps over several lines at one size instead of shrinking; `lines` is how many lines a text may take before it shrinks no more and is cut (a joke gets one more, for the question and the answer are long)
   const headline = (value, className, style) => (fit
-    ? <FittedText className={className} style={style} text={value} max={fit.max} min={fit.min} />
+    ? <FittedText className={className} style={style} text={value} max={fit.max} min={fit.min} lines={slide.alt ? lines + 1 : lines} />
     : <span className={className} style={style}>{value}</span>);
   return (
     <div className={`ri ${slide.alt ? 'dbl' : ''} ${slide.sev ? `sev-${slide.sev}` : ''} ${active ? 'on' : ''} ${active && phase === 1 ? 'ph1' : ''}`}>

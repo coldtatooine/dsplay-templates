@@ -368,6 +368,8 @@ body
   display: flex
   flex-direction: column
   min-width: 0
+  // never wider than the area it sits in: a long text must shrink (FittedText) or wrap, not push the box out under the neighbours
+  max-width: 100%
 .ip .ri
   min-width: 0
 .ip .rtop
@@ -656,7 +658,7 @@ body
   line-height: 1.15
   font-weight: 700
 .fmt-landscape .sub
-  font-size: .95em
+  font-size: 1.2em
   margin-top: .7em
 .fmt-landscape .big
   font-size: 6em
@@ -743,7 +745,7 @@ body
   line-height: 1.15
   font-weight: 700
 .fmt-square .sub
-  font-size: .9em
+  font-size: 1.1em
   margin-top: .6em
 .fmt-square .big
   font-size: 5em
@@ -829,8 +831,17 @@ body
   line-height: 1.18
   font-weight: 700
 .fmt-portrait .sub
-  font-size: .9em
+  font-size: 1.1em
   margin-top: .7em
+// the description of a news item wraps over up to four lines in the big formats (a strip keeps one)
+.fmt-landscape .sub,
+.fmt-square .sub,
+.fmt-portrait .sub
+  white-space: normal
+  line-height: 1.3
+  display: -webkit-box
+  -webkit-box-orient: vertical
+  -webkit-line-clamp: 4
 .fmt-portrait .big
   font-size: 6.4em
   line-height: 1

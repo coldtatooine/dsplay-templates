@@ -36,8 +36,21 @@ describe('locate and startStep', () => {
   });
 
   it('starts each showing where the last one stopped, so every item is seen in the end', () => {
-    expect([0, 1, 2, 3, 4].map((i) => startStep(i, 6, 11))).toEqual([0, 6, 1, 7, 2]);
-    expect(startStep(7, 1, 1)).toBe(0);
+    expect([0, 1, 2, 3, 4].map((i) => startStep(i, 6, phasesOf(Array(11).fill(1))))).toEqual([0, 6, 1, 7, 2]);
+    expect(startStep(7, 1, [1])).toBe(0);
+  });
+
+  it('never ends a showing between the question of a joke and its answer', () => {
+    // items of 1, 1, 2 (the joke), 1, 1 phases; a showing holds 3 phases: it takes the whole joke or leaves it for the next showing
+    const phases = [1, 1, 2, 1, 1];
+    expect([0, 1, 2, 3].map((i) => startStep(i, 3, phases))).toEqual([0, 2, 5, 2]);
+    // a showing of one phase still takes a whole item, even a joke
+    expect([0, 1, 2, 3].map((i) => startStep(i, 1, [1, 2, 1]))).toEqual([0, 1, 3, 0]);
+  });
+
+  it('finds the start of a very late showing without playing them all', () => {
+    const ones = phasesOf(Array(11).fill(1));
+    expect(startStep(1000003, 6, ones)).toBe((6 * 1000003) % 11);
   });
 });
 
