@@ -44,7 +44,7 @@ function Cards({ items, photos }) {
 
   const currentCard = (
     <div className="slot current" style={{ height: `${geo.currentH}rem` }}>
-      <Card marker delay={300}>
+      <Card marker delay={160}>
         <MarkedText>
           <div className="text">
             <FitDescription text={description} width={geo.textWidth} height={geo.currentH - 8} maxLines={geo.descLines} />
@@ -60,7 +60,7 @@ function Cards({ items, photos }) {
       key={`${index}-${item.headline}`}
       style={{ height: `${geo.nextH}rem`, marginTop: index || geo.portrait ? gap : 0 }}
     >
-      <NextCard item={item} thumb={geo.thumb} delay={400 + index * 100} />
+      <NextCard item={item} thumb={geo.thumb} delay={240 + index * 80} />
     </div>
   ));
 

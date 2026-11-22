@@ -42,7 +42,7 @@ function Hero({ news, photos }) {
             )}
           </Cover>
         )}
-        <Card rect={geo.card} marker delay={300}>
+        <Card rect={geo.card} marker delay={160}>
           <MarkedText>
             <div className={`text${anim ? ' fade-in' : ''}`}>
             {(kicker || showFeedCircle) && (
@@ -94,7 +94,7 @@ function Hero({ news, photos }) {
         )}
       </Cover>
       {geo.desc && (
-        <Card rect={geo.desc} marker delay={300}>
+        <Card rect={geo.desc} marker delay={160}>
           <MarkedText>
             <div className={`text${anim ? ' fade-in' : ''}`}>
               <FitDescription text={description} width={geo.desc.w - 9} height={geo.desc.h - 8} maxLines={geo.descLines} />
@@ -103,7 +103,7 @@ function Hero({ news, photos }) {
         </Card>
       )}
       {geo.qr && (
-        <Card rect={geo.qr} delay={400} row={false}>
+        <Card rect={geo.qr} delay={240} row={false}>
           <QrBox link={link} size={20} />
         </Card>
       )}

@@ -125,9 +125,13 @@ Every commit title must start with an emoji, followed by a short, imperative sum
 - Agents are not required to stick to the official gitmoji list — pick whichever emoji best represents the actual change in that commit, as long as it's placed at the start of the title.
 - Version bumps (`package.json`'s `version` field) get their own commit, titled with just the version number and no emoji (e.g. `4.1.0`), separate from the commit(s) that made the actual change — see the git log for examples.
 
-## Entrance (no loader screen)
+## Entrance and idle motion (no loader screen)
 
-`Loader` runs in `reveal` mode: the template mounts hidden, is shown with the class `dsplay-ready` once fonts and images are in, and `src/entrance.css` fades it in from that class. There is no intro component, placeholder or minimum time; see [`docs/entrance-style.md`](../../docs/entrance-style.md) in the repo root.
+`Loader` runs in `reveal` mode (`fonts`: Oswald 400 and Roboto Condensed 400, the only faces drawn; `images`: the cover photo of the showing, 4 s cap): the template mounts hidden and is shown with the class `dsplay-ready`. Everything animated starts from that class, never at mount; see [`docs/entrance-style.md`](../../docs/entrance-style.md) in the repo root.
+
+- **Entrance:** `.fade-in`, `.crossfade` and `.rise-in` (`src/style.sass`) are gated under `.dsplay-ready`. `src/entrance.css` adds the stagger: company tile, clock, headline block (160 ms), cards (160 to 320 ms); in the bars the feed circle, chip, headline, QR and tile rise 80 ms apart.
+- **Idle motion** (`src/entrance.css`, every keyframe starts and ends at rest): the cover photo drifts closer and back (36 s), the category chip breathes (opacity), "Read more" nudges its opacity. Opacity and transform on HTML boxes only; never the QR SVG, never boxes that `fit-description` or the headline sizing measure.
+- Off with `animation_enabled=false` (no `.animated` on `.app`) and under `prefers-reduced-motion`. Old Android WebView rules: prefixed, no custom properties, no `gap`, no grid, no `clamp()`.
 
 ## Testing with a real feed (dev only)
 `npm run feed` (or `node scripts/fetch-feed.mjs [feed-url] [max-items] [file-name]`, G1 by default; e.g. `npm run feed -- https://www.cnnbrasil.com.br/feed/ 40 real-feed-cnn.json`) saves the feed to `public/test-assets/real-feed.json`; then open `http://localhost:5183/?feed=real&layout=cards` (`&feed_file=cnn` for `real-feed-cnn.json`) (`&iteration=<n>` picks the news).
