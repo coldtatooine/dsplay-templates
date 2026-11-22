@@ -1439,6 +1439,11 @@ body
   height: 100%
   object-fit: contain
 
+// the feed's own logo has no box of its own: the style's color behind it would often clash with the logo's (a customer's `rss_logo_box_color` still wins, it is inline)
+.ip .ico.logo
+  background: transparent
+  color: inherit
+
 // rain, snow and storm: drops under the cloud
 .ip .drops
   position: absolute

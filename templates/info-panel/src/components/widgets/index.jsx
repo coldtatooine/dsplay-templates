@@ -106,7 +106,7 @@ export function Slide({
   return (
     <div className={`ri ${slide.alt ? 'dbl' : ''} ${slide.sev ? `sev-${slide.sev}` : ''} ${active ? 'on' : ''} ${active && phase === 1 ? 'ph1' : ''}`}>
       <div className="rtop">
-        {slide.ico && <span className="ico" style={newsBoxStyle}>{slide.logo ? <img src={slide.logo} alt="" /> : 'N'}</span>}
+        {slide.ico && <span className={`ico ${slide.logo ? 'logo' : ''}`} style={newsBoxStyle}>{slide.logo ? <img src={slide.logo} alt="" /> : 'N'}</span>}
         {slide.tile && (
           <span className="tile">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={slide.tile} /></svg>

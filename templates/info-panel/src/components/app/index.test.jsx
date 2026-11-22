@@ -108,6 +108,13 @@ describe('App', () => {
     expect(container.querySelector('.slide.sl-weather .sicon.wx .dwx .ddrops')).not.toBeNull();
   });
 
+  it('draws the feed logo of a news item in the panel without a box of its own (the "logo" class has no background)', () => {
+    screen(1920, 1080, { style: 'classic' });
+    player.media = { duration: 30000, result: { ...answer, widgets: { ...answer.widgets, news: { type: 'news', status: 'ok', data: { logo: 'https://example.com/channel.png', items: [{ title: 'Uma notícia' }] } } } } };
+    const { container } = render(<App />);
+    expect(container.querySelector('.ri .ico.logo img').getAttribute('src')).toBe('https://example.com/channel.png');
+  });
+
   it('draws the animated icons of the forecast and the alert slide of the spotlight', () => {
     screen(1920, 1080, { style: 'poster' });
     player.media = { duration: 30000, result: { ...answer, order: ['alerts', 'weather'], rotating: ['alerts'], fixed: ['weather'], widgets: { ...answer.widgets, alerts: { type: 'alerts', status: 'ok', data: { items: [{ id: 'a', event: 'Vendaval', severity: 'extreme', areas: [], expires: '2099-01-01T00:00:00' }] } }, weather: { type: 'weather', status: 'ok', data: { weather: { current: { temp: 20, icon: 'c01d', min: 15, max: 25 }, forecast: [{ date: '2026-11-22', min: 14, max: 22, icon: 'r01d' }] } } } } } };
