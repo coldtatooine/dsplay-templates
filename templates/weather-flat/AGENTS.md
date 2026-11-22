@@ -8,7 +8,13 @@ Standalone template (outside the monorepo): copy this folder into `dsplay-templa
 - Legacy keys are read by a computed key on purpose (see `src/hooks/use-settings.js`): they stay out of `template-variables.json`.
 - Dev server port 5187.
 
-## Entrance (no loader screen)
+## Entrance and idle motion (no loader screen)
 
-`Loader` runs in `reveal` mode: the template mounts hidden, is shown with the class `dsplay-ready` once fonts and images are in, and `src/entrance.css` fades it in from that class. There is no intro component, placeholder or minimum time; see [`docs/entrance-style.md`](../../docs/entrance-style.md) in the repo root.
+`Loader` runs in `reveal` mode: the template mounts hidden and is shown with the class `dsplay-ready` once the fonts (`Oswald` and `Roboto Condensed`, both weight 400) and images are in. There is no intro component, placeholder or minimum time; see [`docs/entrance-style.md`](../../docs/entrance-style.md) in the repo root. The jokes template is the reference for the pattern.
+
+- **Entrance** (`src/entrance.css`, from `.dsplay-ready`): the screen root fades in (`.fade-in`, `src/style.sass`), and its blocks rise a little one after the other (about 40 ms apart, 600 ms in all): the now card, the logo, the stat cards and the forecast pills in the full-screen layouts; the direct children in reading order, then the forecast days, in the bars.
+- **Idle motion**: the weather icons bob very slowly (`wfl-bob`, 6-7 s, forecast icons out of step), so the screen is never frozen. Every keyframe starts and ends at rest.
+- Both are off when the `animation_enabled` variable is false (no `.fade-in` on the root) and under `prefers-reduced-motion: reduce`.
+- Only `opacity` and `transform`, prefixed, on HTML boxes (the animated box is the `span` around the inline SVG, never the SVG); no custom properties, `gap`, grid or `clamp()`; flat, so no shadow. Keep new keyframes inside the banned-CSS list of `src/sanity.test.js`.
+
 

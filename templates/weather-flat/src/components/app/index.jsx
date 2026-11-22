@@ -12,7 +12,11 @@ import './style.sass';
 import '../../entrance.css';
 
 // @font-face's are in fonts.sass
-const fonts = ['Oswald', 'Roboto Condensed'];
+// both faces are drawn at weight 400 only; no pictures to wait for (the icons are inline SVG, the logo never blocks)
+const fonts = [
+  { family: 'Oswald', weight: 400 },
+  { family: 'Roboto Condensed', weight: 400 },
+];
 
 function Screen() {
   const config = useConfig();
@@ -42,6 +46,7 @@ function Screen() {
       <Loader
         reveal
         fonts={fonts}
+        images={[]}
       >
         <div className={`app format-${stage.format}`} style={{ ...surface, color: settings.theme.text }}>
           <WeatherView />
