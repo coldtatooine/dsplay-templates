@@ -34,12 +34,15 @@
     "Android >= 4.4"
   ],
   "devDependencies": {
+    "@babel/core": "7.29.13",
+    "@babel/preset-env": "7.29.14",
     "@dsplay/template-manifest": "1.0.5",
     "@eslint/js": "9.39.5",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
     "@vitejs/plugin-legacy": "8.2.3",
     "@vitejs/plugin-react": "6.1.2",
+    "acorn": "8.19.0",
     "archiver": "8.0.0",
     "eslint": "9.39.5",
     "eslint-plugin-import": "2.32.0",
