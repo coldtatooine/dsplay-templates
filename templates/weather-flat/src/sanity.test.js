@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { parse } from 'acorn';
 
 const read = (file) => readFileSync(resolve(import.meta.dirname, '..', file), 'utf8');
 const pkg = JSON.parse(read('package.json'));
@@ -83,5 +84,25 @@ describe('CSS restrictions for old WebViews', () => {
     expect(offenders).toEqual([]);
     // an aspect-ratio query must keep the slash: "6" alone is not valid on Chrome 45
     expect(css).not.toMatch(/aspect-ratio\s*:\s*\d+\s*\)/);
+  });
+});
+
+// Chrome 44 (the default WebView of Android 6) reads ES5 only. The `browserslist` floor stays Chrome 45 (monorepo rule), so the
+// legacy chunks must be ES5 anyway: vite.config.js down-levels `polyfills-legacy`, which plugin-legacy never hands to Babel.
+describe('legacy chunks are ES5 (Chrome 44)', () => {
+  const assets = resolve(import.meta.dirname, '..', 'build', 'assets');
+  const legacy = existsSync(assets) ? readdirSync(assets).filter((f) => /legacy.*\.js$/.test(f)) : [];
+
+  it.skipIf(legacy.length === 0)('every *-legacy chunk parses as ES5', () => {
+    const failures = legacy.flatMap((file) => {
+      try {
+        parse(readFileSync(resolve(assets, file), 'utf8'), { ecmaVersion: 5 });
+        return [];
+      } catch (error) {
+        return [`${file}: ${error.message}`];
+      }
+    });
+    expect(failures).toEqual([]);
+    expect(legacy.some((f) => f.startsWith('polyfills-legacy'))).toBe(true);
   });
 });
