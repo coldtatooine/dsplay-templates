@@ -20,6 +20,8 @@ $ink: #141414
   top: 3rem
   right: 3rem
   bottom: 3rem
+  // definite height: Chrome 44 resolves flex-basis % of column children against it (top/bottom alone is not enough)
+  height: calc(100% - 6rem)
   left: 3rem
   box-sizing: border-box
   background-color: inherit
@@ -110,6 +112,8 @@ $ink: #141414
     top: 2rem
     right: 2rem
     bottom: 2rem
+    // definite height: Chrome 44 resolves flex-basis % of column children against it (top/bottom alone is not enough)
+    height: calc(100% - 4rem)
     left: 2rem
     padding: 2rem 2.8rem 2.8rem 2rem
   .alert-icon, &.long-text .alert-icon
@@ -133,6 +137,8 @@ $ink: #141414
     top: 0
     right: 0
     bottom: 0
+    // definite height: Chrome 44 resolves flex-basis % of column children against it (top/bottom alone is not enough)
+    height: 100%
     left: 0
     padding: .3rem 1.5rem
     -webkit-align-items: center
@@ -171,6 +177,8 @@ $ink: #141414
     top: 0
     right: 0
     bottom: 0
+    // definite height: Chrome 44 resolves flex-basis % of column children against it (top/bottom alone is not enough)
+    height: 100%
     left: 0
     padding: .6rem
     -webkit-flex-direction: column
