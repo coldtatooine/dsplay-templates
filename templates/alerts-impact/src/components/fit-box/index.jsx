@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import './style.sass';
 
 const STEP = 0.5;
+const LINE_HEIGHT = 1.4; // keep equal to .fit-text line-height: Oswald accents need room above the cap height
 
 /**
  * Largest font size (rem) in [min, max] where the text fits the box: no overflow in height, and no word wider than the box
@@ -36,7 +37,7 @@ function FitBox({
       let lines = 0;
       // ellipsis only when the HEIGHT is the problem; a word wider than the box is never broken (it is clipped by the box)
       if (el.scrollHeight > box.clientHeight + 1) {
-        lines = Math.max(1, Math.floor(box.clientHeight / (size * rem * 1.1)));
+        lines = Math.max(1, Math.floor(box.clientHeight / (size * rem * LINE_HEIGHT)));
       }
       // the final size is written on the element itself (React only owns color): a re-render never undoes it
       el.style.fontSize = `${size}rem`;
