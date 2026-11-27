@@ -9,7 +9,7 @@ A React [HTML-based template](https://developers.dsplay.tv/docs/html-templates) 
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `theme` | `light` \| `dark` | `light` | Tema / Theme / Tema. Legacy `background_theme` is read (`sky` becomes `dark`) |
-| `clock_theme` | `default` \| `aluminum` | `default` | Estilo do relógio / Clock style / Estilo del reloj. Only `aluminum` means something; old `dark`/`light` values are ignored |
+| `clock_theme` | `default` \| `aluminum` | `default` | Estilo do relógio / Clock style / Estilo del reloj. Only `aluminum` means something; old `dark`/`light` values are ignored. **`aluminum` uses the operator's colors, not `theme`**: with `theme=dark&clock_theme=aluminum` and no `color_*` set, the face is the default white with `#111111` hands and seconds hand (by design; set `color_face`, `color_hands` and `color_second_hand` for a dark aluminum) |
 | `background_color` | color | `#E4E9F0` / `#23272E` | Cor da base / Base color / Color de la base (screen and face share it) |
 | `color_primary` | color | `#D94A22` (light) / `#E5562D` (dark) | Cor de destaque (segundeiro e pino). Under 3:1 against the base it falls back to the text color |
 | `color_face`, `color_hands`, `color_second_hand` | color | `#FFFFFF` / `#111111` / `#111111` | Only with `aluminum`: the base of screen and face, hands and numerals, seconds hand and pin |
